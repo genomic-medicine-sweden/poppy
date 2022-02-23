@@ -5,4 +5,7 @@ default_resources:
   time: "12:00:00"
   mem_mb: 1024
   mem_per_cpu: 3072
-  partition: core
+  partition: low
+
+fastp_pe:
+  threads: 5

@@ -18,8 +18,7 @@ min_version("6.8.0")
 
 ### Set and validate config file
 
-
-configfile: "config.yaml"
+configfile: "Bin/pomfrey_hydra/config/config.yaml"
 
 
 validate(config, schema="../schemas/config.schema.yaml")
@@ -33,8 +32,11 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-
-units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "run", "lane"], drop=False).sort_index()
+units = (
+    pd.read_table(config["units"], dtype=str)
+    .set_index(["sample", "type", "run", "lane"], drop=False)
+    .sort_index()
+)
 validate(units, schema="../schemas/units.schema.yaml")
 
 ### Set wildcard constraints
@@ -47,7 +49,7 @@ wildcard_constraints:
 
 def compile_output_list(wildcards):
     return [
-        "pomfrey_hydra/dummy/%s_%s.dummy.txt" % (sample, t)
+        "alignment/merge_bam/%s_%s.bam" % (sample, type)
         for sample in get_samples(samples)
-        for t in get_unit_types(units, sample)
+        for type in get_unit_types(units, sample)
     ]

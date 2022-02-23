@@ -1,7 +1,30 @@
 ---
 
- resources: "resources.yaml"
- samples: "samples.tsv"
- units: "units.tsv"
+resources: "Bin/pomfrey_hydra/config/resources.yaml"
+samples: "Bin/pomfrey_hydra/config/samples.tsv"
+units: "Bin/pomfrey_hydra/config/units.tsv"
 
- default_container: "docker://hydragenetics/common:0.0.1"
+default_container: "docker://hydragenetics/common:0.0.1"
+
+reference:
+  background: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/Background/background_panel_26_normal.tsv"
+  artifacts: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/Artifact/artifact_panel_26_normal.tsv"
+  fasta: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"
+  dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
+  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
+  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
+  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
+  fai: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fai"
+  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
+  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
+  design_bed: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/bed/pool1_pool2_nochr_3c.sort.merged.padded20.cnv400.hg19.210311.met.annotated.bed"
+  design_intervals: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/bed/pool1_pool2_nochr_3c.sort.merged.padded20.cnv400.hg19.210311.met.annotated.interval_list"
+  design_intervals_gatk_cnv: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/bed/pool1_pool2_nochr_3c.sort.merged.padded20.hg19.210311.met.annotated.bed.preprocessed.interval_list"
+  hotspots: "/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/bed/Hotspots_combined.csv"
+  skip_chrs:
+    - "chrM"
+    
+fastp_pe:
+   container: "docker://hydragenetics/fastp:0.20.1"
+
+trimmer_software: "fastp"
