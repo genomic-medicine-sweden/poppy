@@ -18,7 +18,8 @@ min_version("6.8.0")
 
 ### Set and validate config file
 
-configfile: "Bin/pomfrey_hydra/config/config.yaml"
+###  Need to be moved out to snakemake command somehow..
+configfile: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/Workarea/220222_Test/config/config.yaml"
 
 
 validate(config, schema="../schemas/config.schema.yaml")
@@ -48,8 +49,19 @@ wildcard_constraints:
 
 
 def compile_output_list(wildcards):
-    return [
-        "alignment/merge_bam/%s_%s.bam" % (sample, type)
+    output_files = [
+        "Results/%s_%s/%s_%s.bam" % (sample, type, sample, type)
         for sample in get_samples(samples)
         for type in get_unit_types(units, sample)
+
     ]
+    output_files.append(
+        [
+            "Results/%s_%s/%s_%s.bam.bai" % (sample, type, sample, type)
+            for sample in get_samples(samples)
+            for type in get_unit_types(units, sample)
+        ]
+    )
+
+    output_files.append("Results/batchQC/MultiQC.html")
+    return output_files

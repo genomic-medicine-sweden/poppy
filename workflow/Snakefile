@@ -5,35 +5,13 @@ __author__ = "Arielle R Munters"
 __copyright__ = "Copyright 2022, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
+ruleorder: module_samtools_index  > copy_bai
 
 include: "rules/common.smk"
+include: "rules/result_files.smk"
 
 report: "report/workflow.rst"
 
-# rule dummy:
-#     output:
-#         "pomfrey_hydra/dummy/{sample}_{type}.dummy.txt"
-#     params:
-#         extra=config.get("dummy", {}).get("extra", ""),
-#     log:
-#         "pomfrey_hydra/dummy/{sample}_{type}.output.log"
-#     benchmark:
-#        repeat("module/dummy/{sample}_{type}.output.benchmark.tsv", config.get("dummy", {}).get("benchmark_repeats", 1),)
-#     threads: # optional
-#        threads=config.get("dummy", {}).get("threads", config["default_resources"]["threads"]),
-#     resources:
-#         threads=config.get("dummy", {}).get("threads", config["default_resources"]["threads"]),
-#         time=config.get("dummy", {}).get("time", config["default_resources"]["time"]),
-#     container:
-#        config.get("dummy", {}).get("container", config["default_container"])
-#     conda:
-#        "../envs/dummy.yaml"
-#     message:
-#        "{rule}: Do stuff on module/{rule}/{wildcards.sample}_{wildcards.type}.input"
-#     shell:
-#         """
-#         touch {output}
-#         """
 
 rule all:
     input:
@@ -53,3 +31,10 @@ module alignment:
 
 # Specify which rules that will be imported, in this case all rules
 use rule * from alignment as module_*
+
+module qc:
+    snakefile: github("hydra-genetics/qc", path="workflow/Snakefile", tag="multiqc_for_fastp")
+    config: config
+
+# Specify which rules that will be imported, in this case all rules
+use rule * from qc as module_*
