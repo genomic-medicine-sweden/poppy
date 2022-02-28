@@ -29,3 +29,11 @@ rule copy_multiqc:
         "Results/batchQC/MultiQC.html",
     shell:
         "cp {input} {output}"
+
+rule copy_merged_vcf:
+    input:
+        "snv_indels/ensemble_vcf/{sample}_{type}.ensembled.vcf.gz"
+    output:
+        "Results/{sample}_{type}/{sample}_{type}.ensembled.vcf.gz"
+    shell:
+        "cp {input} {output}"

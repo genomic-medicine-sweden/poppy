@@ -62,6 +62,12 @@ def compile_output_list(wildcards):
             for type in get_unit_types(units, sample)
         ]
     )
-
+    output_files.append(
+        [
+            "Results/%s_%s/%s_%s.ensembled.vcf.gz" % (sample, type, sample, type)
+            for sample in get_samples(samples)
+            for type in get_unit_types(units, sample)
+        ]
+    )
     output_files.append("Results/batchQC/MultiQC.html")
     return output_files

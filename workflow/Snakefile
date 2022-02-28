@@ -5,6 +5,7 @@ __author__ = "Arielle R Munters"
 __copyright__ = "Copyright 2022, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
+
 ruleorder: module_samtools_index  > copy_bai
 
 include: "rules/common.smk"
@@ -38,3 +39,11 @@ module qc:
 
 # Specify which rules that will be imported, in this case all rules
 use rule * from qc as module_*
+
+module snv_indels:
+    snakefile: github("hydra-genetics/snv_indels", path="workflow/Snakefile", tag="develop")
+    config: config
+
+##  Fix to save individual callers vcf as well!
+##  Filtrera mutect2 before ensemble? Why? Why not?
+use rule * from snv_indels as module_*
