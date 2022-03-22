@@ -79,7 +79,7 @@ multiqc:
     - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
     - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
     - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
-    - "prealignment/fastp_pe/{sample}_{run}_{lane}_{type}.json"
+    - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{type}.json"
 
 mutect2:
   container: "docker://hydragenetics/gatk4:4.1.9.0"

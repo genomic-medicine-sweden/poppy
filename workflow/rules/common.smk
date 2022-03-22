@@ -33,11 +33,7 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = (
-    pd.read_table(config["units"], dtype=str)
-    .set_index(["sample", "type", "run", "lane"], drop=False)
-    .sort_index()
-)
+units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 
 ### Set wildcard constraints

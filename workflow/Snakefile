@@ -19,11 +19,15 @@ rule all:
         unpack(compile_output_list),
 
 module prealignment:
-   snakefile: github("hydra-genetics/prealignment", path="workflow/Snakefile", tag="develop")
-   config: config
+    snakefile:
+        github(
+            "hydra-genetics/prealignment",
+            path="workflow/Snakefile",
+            tag="v0.1.0",
+        )
+    config: config
 
-# Specify which rules that will be imported, in this case all rules
-use rule * from prealignment as module_*
+use rule * from prealignment as prealignment_*
 
 
 module alignment:
