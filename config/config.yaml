@@ -74,8 +74,7 @@ multiqc:
   qc_files:
     - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
     - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-    - "qc/fastqc/{sample}_{type}_fastq1_fastqc.zip"
-    - "qc/fastqc/{sample}_{type}_fastq2_fastqc.zip"
+    - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{read}.zip"
     - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
     - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
     - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"

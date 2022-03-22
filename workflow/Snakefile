@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2022, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
-ruleorder: module_samtools_index  > copy_bai
+ruleorder: alignment_samtools_index  > copy_bai
 
 include: "rules/common.smk"
 include: "rules/result_files.smk"
@@ -34,15 +34,15 @@ module alignment:
    snakefile: github("hydra-genetics/alignment", path="workflow/Snakefile", tag="develop")
    config: config
 
-# Specify which rules that will be imported, in this case all rules
-use rule * from alignment as module_*
+use rule * from alignment as alignment_*
+
 
 module qc:
-    snakefile: github("hydra-genetics/qc", path="workflow/Snakefile", tag="multiqc_for_fastp")
+    snakefile: github("hydra-genetics/qc", path="workflow/Snakefile", tag="develop")
     config: config
 
-# Specify which rules that will be imported, in this case all rules
-use rule * from qc as module_*
+use rule * from qc as qc_*
+
 
 module snv_indels:
     snakefile: github("hydra-genetics/snv_indels", path="workflow/Snakefile", tag="develop")
@@ -50,4 +50,4 @@ module snv_indels:
 
 ##  Fix to save individual callers vcf as well!
 ##  Filtrera mutect2 before ensemble? Why? Why not?
-use rule * from snv_indels as module_*
+use rule * from snv_indels as snv_indels_*
