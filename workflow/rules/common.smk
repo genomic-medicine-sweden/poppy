@@ -65,5 +65,14 @@ def compile_output_list(wildcards):
             for type in get_unit_types(units, sample)
         ]
     )
+    output_files.append(
+        [
+            "variantCallers/%s/%s_%s.normalized.sorted.vcf.gz" % (caller, sample, type)
+            for caller in config["ensemble_vcf"]["callers"]
+            #caller=config.get("ensemble_vcf", {}).get("callers", [])
+            for sample in get_samples(samples)
+            for type in get_unit_types(units, sample)
+        ]
+    )
     output_files.append("Results/batchQC/MultiQC.html")
     return output_files

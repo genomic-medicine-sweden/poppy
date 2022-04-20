@@ -63,22 +63,23 @@ merge_gvcf:
 merge_vcf:
   container: "docker://hydragenetics/common:0.0.1"
 
-mosdepth:
-  by: ""
+mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
-  extra: ""
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
   config: "config/multiqc.yaml"
   qc_files:
+    - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}.zip"
+    - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
+    - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+    - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
     - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
     - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-    - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{read}.zip"
     - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
     - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
+    - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
     - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
-    - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{type}.json"
 
 mutect2:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -104,10 +105,8 @@ picard_collect_hs_metrics:
 picard_collect_insert_size_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
 
-picard_collect_multiple_metrics:
+picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
-  output_ext:
-    - "gc_bias.pdf"
 
 samtools_index:
   container: "docker://hydragenetics/common:0.0.1"
