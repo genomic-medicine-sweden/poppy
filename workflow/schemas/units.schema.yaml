@@ -1,0 +1,44 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+description: row represents one dataset
+properties:
+  sample:
+    type: string
+    description: sample id
+  type:
+    type: string
+    description: type of sample data Tumor, Normal, RNA (N|T|R)
+    pattern: "^(N|T|R)$"
+  platform:
+    type: string
+    description: sequence platform that have been used to generate data, e.g. NextSeq
+  machine:
+    type: string
+    description: machine id
+  flowcell:
+    type: string
+    description: flowcell id
+  barcode:
+    type: string
+    description: flowcell barcode
+  lane:
+    type: string
+    description: lane number
+  fastq1:
+    type: string
+    description: absolute path to R1 fastq file
+  fastq2:
+    type: string
+    description: absolute path to R2 fastq file
+  adapter:
+    type: string
+    description: one or more sequence, separated by ","
+required:
+  - sample
+  - type
+  - platform
+  - machine
+  - flowcell
+  - lane
+  - fastq1
+  - fastq2
+  - adapter

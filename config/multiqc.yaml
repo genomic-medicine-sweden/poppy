@@ -1,0 +1,6 @@
+sp:
+  fastp:
+    fn: "*.json"
+
+extra_fn_clean_exts:
+  - ".duplication_metrics"
