@@ -19,7 +19,7 @@ min_version("6.8.0")
 ### Set and validate config file
 
 ###  Need to be moved out to snakemake command somehow..
-configfile: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/Workarea/220222_Test/config/config.yaml"
+configfile: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/config.yaml"
 
 
 validate(config, schema="../schemas/config.schema.yaml")
@@ -67,7 +67,7 @@ def compile_output_list(wildcards):
     )
     output_files.append(
         [
-            "variantCallers/%s/%s_%s.normalized.sorted.vcf.gz" % (caller, sample, type)
+            "snv_indels/%s/{%s_%s.normalized.sorted.vcf.gz" % (caller, sample, type)
             for caller in config["ensemble_vcf"]["callers"]
             #caller=config.get("ensemble_vcf", {}).get("callers", [])
             for sample in get_samples(samples)
