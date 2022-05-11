@@ -42,3 +42,20 @@ rule copy_merged_vcf:
         "Results/{sample}_{type}/{sample}_{type}.ensembled.vcf.gz",
     shell:
         "cp {input} {output}"
+
+rule copy_pindel_vcf:
+    input:
+        "cnv_sv/pindel/{sample}.vcf",
+    output:
+        "Results/{sample}_{type}/{sample}_pindel.vcf",
+    shell:
+        "cp {input} {output}"
+
+
+rule copy_individual_vcf:
+    input:
+        "snv_indels/{caller}/{{sample}}_{{type}}.normalized.sorted.vcf.gz",
+    output:
+        "variantCallers/{caller}/{{sample}}_{{type}}.normalized.sorted.vcf.gz",
+    shell:
+        "cp {input} {output}"

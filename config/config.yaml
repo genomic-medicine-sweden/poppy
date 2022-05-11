@@ -1,8 +1,8 @@
 ---
 
-resources: "config/resources.yaml"
-samples: "config/samples.tsv"
-units: "config/units.tsv"
+resources: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/resources.yaml"
+samples: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/samples.tsv"
+units: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/units.tsv"
 
 default_container: "docker://hydragenetics/common:0.0.1"
 
@@ -107,6 +107,15 @@ picard_collect_insert_size_metrics:
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
+
+pindel_call:
+  bedfile: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+  extra: "-x 2 -B 60" #x och B?
+
+pindel2vcf:
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+  extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
 
 samtools_index:
   container: "docker://hydragenetics/common:0.0.1"
