@@ -1,8 +1,8 @@
 ---
 
-resources: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/resources.yaml"
-samples: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/samples.tsv"
-units: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/units.tsv"
+resources: "config/resources.yaml"
+samples: "samples.tsv"
+units: "units.tsv"
 
 default_container: "docker://hydragenetics/common:0.0.1"
 

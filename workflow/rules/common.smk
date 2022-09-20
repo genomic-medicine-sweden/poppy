@@ -21,9 +21,8 @@ min_version("7.13.0")
 
 ### Set and validate config file
 
-###  Need to be moved out to snakemake command somehow..
-configfile: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/config.yaml"
-
+if not workflow.overwrite_configfiles:
+    sys.exit("At least one config file must be passed using --configfile/--configfiles, by command line or a profile!")
 
 validate(config, schema="../schemas/config.schema.yaml")
 config = load_resources(config, config["resources"])
