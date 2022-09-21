@@ -26,6 +26,11 @@ bed_split:
   container: "docker://hydragenetics/common:0.0.1"
 
 bwa_mem:
+  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
+  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
+  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
+  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
+  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
 bgzip_vcf:
@@ -37,10 +42,10 @@ decompose:
 ensemble_vcf:
   container: "docker://gmsuppsala/somatic:develop"
   callers:
-    - mutect2
+    - gatk_mutect2
     - vardict
     - freebayes
-  sort_order: "mutect2,vardict,freebayes"
+  sort_order: "gatk_mutect2,vardict,freebayes"
 
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
@@ -69,17 +74,22 @@ mosdepth_bed:
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
   config: "config/multiqc.yaml"
-  qc_files:
-    - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}.zip"
-    - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
-    - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
-    - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
-    - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
-    - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-    - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
-    - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
-    - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
-    - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
+  reports:
+    DNA:
+      included_unit_types:
+        - T
+        - N
+      qc_files:
+        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}.zip"
+        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
+        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
+        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
+        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
+        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
+        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
+        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
 
 mutect2:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -104,6 +114,11 @@ picard_collect_hs_metrics:
 
 picard_collect_insert_size_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
+
+picard_collect_multiple_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+  output_ext:
+    - "insert_size_metrics"
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
