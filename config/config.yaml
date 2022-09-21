@@ -22,6 +22,13 @@ reference:
   skip_chrs:
     - "chrM"
 
+bcbio_variation_recall_ensemble:
+  container: "docker://hydragenetics/bcbio-vc:0.2.6"
+  callers:
+    - gatk_mutect2
+    - vardict
+    - freebayes
+
 bed_split:
   container: "docker://hydragenetics/common:0.0.1"
 
@@ -38,14 +45,6 @@ bgzip_vcf:
 
 decompose:
   container: "docker://gmsuppsala/somatic:develop"
-
-ensemble_vcf:
-  container: "docker://gmsuppsala/somatic:develop"
-  callers:
-    - gatk_mutect2
-    - vardict
-    - freebayes
-  sort_order: "gatk_mutect2,vardict,freebayes"
 
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
