@@ -46,35 +46,65 @@ wildcard_constraints:
     type="N|T|R",
 
 
-def compile_output_list(wildcards):
-    output_files = [
-        "Results/%s_%s/%s_%s.bam" % (sample, type, sample, type)
-        for sample in get_samples(samples)
-        for type in get_unit_types(units, sample)
-
+def compile_result_file_list():
+    files = [
+        {
+            "in": ("alignment/samtools_merge_bam", ".bam"),
+            "out": ("results/alignments", ".bam")
+        },
+        {
+            "in": ("alignment/samtools_merge_bam", ".bam.bai"),
+            "out": ("results/alignments", ".bam.bai")
+        },
+        {
+            "in": ("snv_indels/bcbio_variation_recall_ensemble", ".ensembled.vcf.gz"),
+            "out": ("results/vcf", ".ensembled.vcf.gz")
+        },
     ]
-    output_files.append(
-        [
-            "Results/%s_%s/%s_%s.bam.bai" % (sample, type, sample, type)
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append(
-        [
-            "Results/%s_%s/%s_%s.ensembled.vcf.gz" % (sample, type, sample, type)
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append(
-        [
-            "snv_indels/%s/{%s_%s.normalized.sorted.vcf.gz" % (caller, sample, type)
-            for caller in config["ensemble_vcf"]["callers"]
-            #caller=config.get("ensemble_vcf", {}).get("callers", [])
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append("Results/batchQC/MultiQC.html")
-    return output_files
+
+    output_files = [
+        "{0}/{1}_{2}{3}".format(file_info["out"][0], sample, unit_type, file_info["out"][1])
+        for file_info in files
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+    input_files = [
+        "{0}/{1}_{2}{3}".format(file_info["in"][0], sample, unit_type, file_info["in"][1])
+        for file_info in files
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+
+    output_files += [
+        "results/vcf/{0}_{1}_{2}.vcf.gz".format(caller, sample, unit_type)
+        for caller in config.get("ensemble_vcf", {}).get("callers", [])
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+    input_files += [
+        "snv_indels/{0}/{1}_{2}.merged.vcf.gz".format(caller, sample, unit_type)
+        for caller in config.get("ensemble_vcf", {}).get("callers", [])
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+
+    output_files += [
+        "results/cnv_sv/{0}.pindel.vcf".format(sample)
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+        if unit_type == "T"
+    ]
+    input_files += [
+        "cnv_sv/pindel/{0}.no_contig.vcf".format(sample)
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+        if unit_type == "T"
+    ]
+
+
+    output_files.append("results/batchQC/MultiQC.html")
+    input_files.append("qc/multiqc/multiqc_DNA.html")
+
+    return input_files, output_files
+
+input_files, output_files = compile_result_file_list()

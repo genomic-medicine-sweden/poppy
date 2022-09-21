@@ -6,9 +6,6 @@ __copyright__ = "Copyright 2022, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
-ruleorder: alignment_samtools_index  > copy_bai
-# ruleorder: alignment_samtools_sort > copy_bam
-
 include: "rules/common.smk"
 include: "rules/result_files.smk"
 
@@ -17,7 +14,7 @@ report: "report/workflow.rst"
 
 rule all:
     input:
-        unpack(compile_output_list),
+        output_files,
 
 module prealignment:
     snakefile:
