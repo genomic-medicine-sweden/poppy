@@ -22,7 +22,9 @@ min_version("7.13.0")
 ### Set and validate config file
 
 if not workflow.overwrite_configfiles:
-    sys.exit("At least one config file must be passed using --configfile/--configfiles, by command line or a profile!")
+    sys.exit(
+        "At least one config file must be passed using --configfile/--configfiles, by command line or a profile!"
+    )
 
 validate(config, schema="../schemas/config.schema.yaml")
 config = load_resources(config, config["resources"])
@@ -35,7 +37,11 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = (
+    pandas.read_table(config["units"], dtype=str)
+    .set_index(["sample", "type", "flowcell", "lane"], drop=False)
+    .sort_index()
+)
 validate(units, schema="../schemas/units.schema.yaml")
 
 ### Set wildcard constraints
@@ -54,26 +60,30 @@ def compile_result_file_list():
     files = [
         {
             "in": ("alignment/samtools_merge_bam", ".bam"),
-            "out": ("results/alignments", ".bam")
+            "out": ("results/alignments", ".bam"),
         },
         {
             "in": ("alignment/samtools_merge_bam", ".bam.bai"),
-            "out": ("results/alignments", ".bam.bai")
+            "out": ("results/alignments", ".bam.bai"),
         },
         {
             "in": ("snv_indels/bcbio_variation_recall_ensemble", ".ensembled.vcf.gz"),
-            "out": ("results/vcf", ".ensembled.vcf.gz")
+            "out": ("results/vcf", ".ensembled.vcf.gz"),
         },
     ]
 
     output_files = [
-        "{0}/{1}_{2}{3}".format(file_info["out"][0], sample, unit_type, file_info["out"][1])
+        "{0}/{1}_{2}{3}".format(
+            file_info["out"][0], sample, unit_type, file_info["out"][1]
+        )
         for file_info in files
         for sample in get_samples(samples)
         for unit_type in get_unit_types(units, sample)
     ]
     input_files = [
-        "{0}/{1}_{2}{3}".format(file_info["in"][0], sample, unit_type, file_info["in"][1])
+        "{0}/{1}_{2}{3}".format(
+            file_info["in"][0], sample, unit_type, file_info["in"][1]
+        )
         for file_info in files
         for sample in get_samples(samples)
         for unit_type in get_unit_types(units, sample)
@@ -105,10 +115,10 @@ def compile_result_file_list():
         if unit_type == "T"
     ]
 
-
     output_files.append("results/batchQC/MultiQC.html")
     input_files.append("qc/multiqc/multiqc_DNA.html")
 
     return input_files, output_files
+
 
 input_files, output_files = compile_result_file_list()
