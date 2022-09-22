@@ -8,10 +8,13 @@ __license__ = "GPL-3"
 
 
 rule copy_results_files:
-    input: input_files,
-    output: output_files,
-    run:
-        import subprocess
-
-        for infile, outfile in zip(input, output):
-            subprocess.run(["rsync", "--update", "-a", infile, outfile])
+    input:
+        input_files,
+    output:
+        output_files,
+    log:
+        "logs/copy_results_files.log",
+    conda:
+        "../envs/copy_results_files.yaml"
+    script:
+        "../scripts/copy_results_files.py"
