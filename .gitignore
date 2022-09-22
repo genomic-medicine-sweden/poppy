@@ -127,3 +127,21 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Integration test
+.tests/integration/alignment
+.tests/integration/cnv_sv
+.tests/integration/prealignment
+.tests/integration/qc
+.tests/integration/results
+.tests/integration/snv_indels
+
+# Editors
+*.swp
+.vscode
+
+# Snakemake
+.snakemake
+
+# Java
+.java
