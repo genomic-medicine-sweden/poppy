@@ -6,41 +6,55 @@ __copyright__ = "Copyright 2022, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
-ruleorder: alignment_samtools_index  > copy_bai
-# ruleorder: alignment_samtools_sort > copy_bam
 
 include: "rules/common.smk"
 include: "rules/result_files.smk"
+
 
 report: "report/workflow.rst"
 
 
 rule all:
     input:
-        unpack(compile_output_list),
+        output_files,
+
 
 module prealignment:
     snakefile:
         github(
             "hydra-genetics/prealignment",
             path="workflow/Snakefile",
-            tag="c903c9d",  #"v0.1.0",
+            tag="v0.3.1",
         )
-    config: config
+    config:
+        config
+
 
 use rule * from prealignment as prealignment_*
 
 
 module alignment:
-   snakefile:
+    snakefile:
         github(
             "hydra-genetics/alignment",
             path="workflow/Snakefile",
-            tag="e39197e",
+            tag="v0.2.0",
         )
-   config: config
+    config:
+        config
+
 
 use rule * from alignment as alignment_*
+
+
+module cnv_sv:
+    snakefile:
+        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="66de5e8")
+    config:
+        config
+
+
+use rule * from cnv_sv as cnv_sv_*
 
 
 module qc:
@@ -48,9 +62,11 @@ module qc:
         github(
             "hydra-genetics/qc",
             path="workflow/Snakefile",
-            tag="32c8b1f",
+            tag="cd029ff",
         )
-    config: config
+    config:
+        config
+
 
 use rule * from qc as qc_*
 
@@ -60,8 +76,10 @@ module snv_indels:
         github(
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag="d08edb3",
+            tag="v0.2.0",
         )
-    config: config
+    config:
+        config
+
 
 use rule * from snv_indels as snv_indels_*

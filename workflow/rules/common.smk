@@ -13,14 +13,18 @@ from snakemake.utils import min_version
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
+from hydra_genetics import min_version as hydra_min_version
 
-min_version("6.8.0")
+hydra_min_version("0.14.1")
+
+min_version("7.13.0")
 
 ### Set and validate config file
 
-###  Need to be moved out to snakemake command somehow..
-configfile: "/projects/wp4/nobackup/workspace/arielle_test/twist/hydra/bin/pomfrey_hydra/config/config.yaml"
-
+if not workflow.overwrite_configfiles:
+    sys.exit(
+        "At least one config file must be passed using --configfile/--configfiles, by command line or a profile!"
+    )
 
 validate(config, schema="../schemas/config.schema.yaml")
 config = load_resources(config, config["resources"])
@@ -33,46 +37,88 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = (
+    pandas.read_table(config["units"], dtype=str)
+    .set_index(["sample", "type", "flowcell", "lane"], drop=False)
+    .sort_index()
+)
 validate(units, schema="../schemas/units.schema.yaml")
 
 ### Set wildcard constraints
 
 
 wildcard_constraints:
-    sample="|".join(samples.index),
+    barcode="[A-Z+]+",
+    chr="[^_]+",
+    flowcell="[A-Z0-9]+",
+    lane="L[0-9]+",
+    sample="|".join(get_samples(samples)),
     type="N|T|R",
 
 
-def compile_output_list(wildcards):
-    output_files = [
-        "Results/%s_%s/%s_%s.bam" % (sample, type, sample, type)
-        for sample in get_samples(samples)
-        for type in get_unit_types(units, sample)
-
+def compile_result_file_list():
+    files = [
+        {
+            "in": ("alignment/samtools_merge_bam", ".bam"),
+            "out": ("results/alignments", ".bam"),
+        },
+        {
+            "in": ("alignment/samtools_merge_bam", ".bam.bai"),
+            "out": ("results/alignments", ".bam.bai"),
+        },
+        {
+            "in": ("snv_indels/bcbio_variation_recall_ensemble", ".ensembled.vcf.gz"),
+            "out": ("results/vcf", ".ensembled.vcf.gz"),
+        },
     ]
-    output_files.append(
-        [
-            "Results/%s_%s/%s_%s.bam.bai" % (sample, type, sample, type)
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append(
-        [
-            "Results/%s_%s/%s_%s.ensembled.vcf.gz" % (sample, type, sample, type)
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append(
-        [
-            "snv_indels/%s/{%s_%s.normalized.sorted.vcf.gz" % (caller, sample, type)
-            for caller in config["ensemble_vcf"]["callers"]
-            #caller=config.get("ensemble_vcf", {}).get("callers", [])
-            for sample in get_samples(samples)
-            for type in get_unit_types(units, sample)
-        ]
-    )
-    output_files.append("Results/batchQC/MultiQC.html")
-    return output_files
+
+    output_files = [
+        "{0}/{1}_{2}{3}".format(
+            file_info["out"][0], sample, unit_type, file_info["out"][1]
+        )
+        for file_info in files
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+    input_files = [
+        "{0}/{1}_{2}{3}".format(
+            file_info["in"][0], sample, unit_type, file_info["in"][1]
+        )
+        for file_info in files
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+
+    output_files += [
+        "results/vcf/{0}_{1}_{2}.vcf.gz".format(caller, sample, unit_type)
+        for caller in config.get("ensemble_vcf", {}).get("callers", [])
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+    input_files += [
+        "snv_indels/{0}/{1}_{2}.merged.vcf.gz".format(caller, sample, unit_type)
+        for caller in config.get("ensemble_vcf", {}).get("callers", [])
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+
+    output_files += [
+        "results/cnv_sv/{0}.pindel.vcf".format(sample)
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+        if unit_type == "T"
+    ]
+    input_files += [
+        "cnv_sv/pindel/{0}.no_contig.vcf".format(sample)
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+        if unit_type == "T"
+    ]
+
+    output_files.append("results/batchQC/MultiQC.html")
+    input_files.append("qc/multiqc/multiqc_DNA.html")
+
+    return input_files, output_files
+
+
+input_files, output_files = compile_result_file_list()
