@@ -108,10 +108,10 @@ pindel_call:
   extra: "-x 2 -B 60" #x och B?
 
 pindel2vcf:
-  refname: "'Genome Reference Consortium Human Build 37'"
-  refdate: "20xx"
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
+  refname: "hg19"
+  refdate: "2009"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
