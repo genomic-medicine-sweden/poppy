@@ -12,11 +12,6 @@ reference:
   fasta: "reference/FLT3.fasta"
   fai: "reference/FLT3.fasta.fai"
   dict: "reference/FLT3.dict"
-  amb: "reference/FLT3.fasta.amb"
-  ann: "reference/FLT3.fasta.ann"
-  bwt: "reference/FLT3.fasta.bwt"
-  pac: "reference/FLT3.fasta.pac"
-  sa: "reference/FLT3.fasta.sa"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
   skip_chrs:

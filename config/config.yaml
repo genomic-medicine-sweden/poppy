@@ -12,11 +12,6 @@ reference:
   fasta: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"
   fai: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fai"
   dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
-  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
-  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
-  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
-  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
-  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   skip_chrs:
