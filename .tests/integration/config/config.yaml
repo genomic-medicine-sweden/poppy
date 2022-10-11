@@ -43,9 +43,6 @@ bwa_mem:
 bgzip_vcf:
   container: "docker://hydragenetics/common:0.1.8"
 
-decompose:
-  container: "docker://gmsuppsala/somatic:develop"
-
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
 
