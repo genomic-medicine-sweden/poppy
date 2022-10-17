@@ -5,8 +5,8 @@ on:
    # Triggers the workflow on push or pull request events but only for the master and develop branch
   push:
     branches:
-     - develop
-     - master
+     - dev
+     - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
         working-directory: .tests/integration
         run: |
           mamba install -c conda-forge -c bioconda snakemake
-          snakemake -s ../../workflow/Snakefile -j 1 --use-conda
+          snakemake -s ../../workflow/Snakefile --configfile config/config.yaml -j 1 --use-conda
   integration-small-singularity:
     name: integration small data set singularity
     runs-on: ubuntu-latest
@@ -65,4 +65,4 @@ jobs:
       - name: Integration test - small dataset
         working-directory: .tests/integration
         run: |
-          snakemake -s ../../workflow/Snakefile -j 1 --show-failed-logs --use-singularity --singularity-args  " --cleanenv --bind /home/runner "
+          snakemake -s ../../workflow/Snakefile --configfile config/config.yaml -j 1 --show-failed-logs --use-singularity --singularity-args  " --cleanenv --bind /home/runner "
