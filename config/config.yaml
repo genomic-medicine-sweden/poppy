@@ -12,11 +12,6 @@ reference:
   fasta: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"
   fai: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fai"
   dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
-  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
-  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
-  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
-  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
-  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   skip_chrs:
@@ -29,9 +24,6 @@ bcbio_variation_recall_ensemble:
     - vardict
     - freebayes
 
-bed_split:
-  container: "docker://hydragenetics/common:0.1.8"
-
 bwa_mem:
   amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
   ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
@@ -40,32 +32,17 @@ bwa_mem:
   sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
-bgzip_vcf:
-  container: "docker://hydragenetics/common:0.1.8"
-
-decompose:
-  container: "docker://gmsuppsala/somatic:develop"
-
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
 
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
-fix_af:
-  container: "docker://hydragenetics/common:0.1.8"
-
 freebayes:
   container: "docker://hydragenetics/freebayes:1.3.1"
 
 mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
-
-merge_gvcf:
-  container: "docker://hydragenetics/common:0.1.8"
-
-merge_vcf:
-  container: "docker://hydragenetics/common:0.1.8"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
@@ -133,18 +110,11 @@ pindel_call:
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
-
-samtools_index:
-  container: "docker://hydragenetics/common:0.1.8"
-
-sort_vcf:
-  container: "docker://hydragenetics/common:0.1.8"
-
-tabix_vcf:
-  container: "docker://hydragenetics/common:0.1.8"
+  refname: "hg19"
+  refdate: "2009"
 
 vardict:
-  container: "docker://gmsuppsala/somatic:develop"
+  container: "docker://hydragenetics/vardict:1.8.3"
   bed_columns: "-c 1 -S 2 -E 3"
 
 vt_decompose:
