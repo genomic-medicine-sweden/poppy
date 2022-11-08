@@ -103,16 +103,14 @@ def compile_result_file_list():
     ]
 
     output_files += [
-        "results/cnv_sv/{0}.pindel.vcf".format(sample)
+        "results/cnv_sv/{0}_{1}.pindel.vcf".format(sample, unit_type)
         for sample in get_samples(samples)
         for unit_type in get_unit_types(units, sample)
-        if unit_type == "T"
     ]
     input_files += [
-        "cnv_sv/pindel/{0}.no_contig.vcf".format(sample)
+        "cnv_sv/pindel_vcf/{0}_{1}.no_contig.vcf".format(sample, unit_type)
         for sample in get_samples(samples)
         for unit_type in get_unit_types(units, sample)
-        if unit_type == "T"
     ]
 
     output_files.append("results/batchQC/MultiQC.html")

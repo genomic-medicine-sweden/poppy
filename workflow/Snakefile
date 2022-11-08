@@ -49,7 +49,7 @@ use rule * from alignment as alignment_*
 
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="66de5e8")
+        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="2daa54c")
     config:
         config
 
