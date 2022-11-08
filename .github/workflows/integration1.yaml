@@ -37,7 +37,11 @@ jobs:
         working-directory: .tests/integration
         run: |
           mamba install -c conda-forge -c bioconda snakemake
-          snakemake -s ../../workflow/Snakefile --configfile config/config.yaml -j 1 --use-conda
+          snakemake -s ../../workflow/Snakefile \
+            --configfile config/config.yaml \
+            -j 1 \
+            --use-conda \
+            --show-failed-logs
   integration-small-singularity:
     name: integration small data set singularity
     runs-on: ubuntu-latest
@@ -65,4 +69,9 @@ jobs:
       - name: Integration test - small dataset
         working-directory: .tests/integration
         run: |
-          snakemake -s ../../workflow/Snakefile --configfile config/config.yaml -j 1 --show-failed-logs --use-singularity --singularity-args  " --cleanenv --bind /home/runner "
+          snakemake -s ../../workflow/Snakefile \
+            --configfile config/config.yaml \
+            -j 1 \
+            --show-failed-logs \
+            --use-singularity \
+            --singularity-args "--cleanenv --bind /home/runner"
