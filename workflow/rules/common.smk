@@ -76,7 +76,7 @@ def compile_output_file_list(wildcards):
     wc_df = wc_df.assign(caller=[next(caller_gen) for i in range(wc_df.shape[0])])
 
     for f in output_spec["files"]:
-        outputpaths = set(expand(f["outputpath"], zip, **wc_df.to_dict("list")))
+        outputpaths = set(expand(f["output"], zip, **wc_df.to_dict("list")))
         for op in outputpaths:
             output_files.append(outdir / Path(op))
 
@@ -88,12 +88,12 @@ def generate_copy_rules(output_spec):
     rulestrings = []
 
     for f in output_spec["files"]:
-        if f["inputpath"] is None:
+        if f["input"] is None:
             continue
 
         rule_name = "copy_{}".format("_".join(re.split(r"\W+", f["name"].strip().lower())))
-        input_file = pathlib.Path(f["inputpath"])
-        output_file = output_directory / pathlib.Path(f["outputpath"])
+        input_file = pathlib.Path(f["input"])
+        output_file = output_directory / pathlib.Path(f["output"])
 
         mem_mb = config.get("_copy", {}).get("mem_mb", config["default_resources"]["mem_mb"])
         mem_per_cpu = config.get("_copy", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"])

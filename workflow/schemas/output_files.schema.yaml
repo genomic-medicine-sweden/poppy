@@ -17,18 +17,18 @@ properties:
         name:
           description: Descriptive name of the output file.
           type: string
-        inputpath:
+        input:
           description: >
             Path to the file that should be copied to the output directory.
             Snakemake wildcards referring to columns in `units` are allowed.
             An input path that is `null` means that snakemake will find a rule
-            that will generate the output file at `outputpath`, and not copy
+            that will generate the output file at `output`, and not copy
             an already generated file.
           type:
             - string
             - "null"
           format: uri
-        outputpath:
+        output:
           description: >
             Relative path within the output directory where `inputfile` should
             be copied to. Snakemake wildcards referring to columns in `units`
@@ -37,7 +37,7 @@ properties:
           format: uri
       required:
         - name
-        - inputpath
+        - input
 required:
   - directory
   - files

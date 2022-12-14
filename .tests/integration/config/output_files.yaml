@@ -1,25 +1,25 @@
 directory: ./results
 files:
   - name: Alignment BAM file
-    inputpath: alignment/samtools_merge_bam/{sample}_{type}.bam
-    outputpath: bam/{sample}_{type}.bam
+    input: alignment/samtools_merge_bam/{sample}_{type}.bam
+    output: bam/{sample}_{type}.bam
 
   - name: Alignment BAM file index
-    inputpath: null
-    outputpath: bam/{sample}_{type}.bam.bai
+    input: null
+    output: bam/{sample}_{type}.bam.bai
 
   - name: MultiQC
-    inputpath: qc/multiqc/multiqc_DNA.html
-    outputpath: qc/multiqc_DNA.html
+    input: qc/multiqc/multiqc_DNA.html
+    output: qc/multiqc_DNA.html
 
   - name: SNV ensemble VCF file
-    inputpath: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vcf.gz
-    outputpath: vcf/{sample}_{type}.ensembled.vcf.gz
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vcf.gz
+    output: vcf/{sample}_{type}.ensembled.vcf.gz
 
   - name: Caller-specific VCF file
-    inputpath: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
-    outputpath: vcf/{sample}_{type}.{caller}.vcf.gz
+    input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
+    output: vcf/{sample}_{type}.{caller}.vcf.gz
 
   - name: Pindel VCF file
-    inputpath: cnv_sv/pindel_vcf/{sample}_{type}.no_contig.vcf.gz
-    outputpath: vcf/{sample}_{type}.pindel.vcf.gz
+    input: cnv_sv/pindel_vcf/{sample}_{type}.no_contig.vcf.gz
+    output: vcf/{sample}_{type}.pindel.vcf.gz
