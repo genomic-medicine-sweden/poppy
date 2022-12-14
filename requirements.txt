@@ -4,3 +4,4 @@ snakemake>=7.13.0
 singularity==3.0.0
 jinja2==3.0.1
 networkx
+pyyaml
