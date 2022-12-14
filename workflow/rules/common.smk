@@ -77,10 +77,14 @@ def compile_output_file_list(wildcards):
 
     for f in output_spec["files"]:
         outputpaths = set(expand(f["output"], zip, **wc_df.to_dict("list")))
+        if len(outputpaths) == 0:
+            # Using expand with zip on a pattern without any wildcards results
+            # in an empty list. Then just add the output filename as it is.
+            outputpaths = [f["output"]]
         for op in outputpaths:
             output_files.append(outdir / Path(op))
 
-    return list(set(output_files))
+    return output_files
 
 
 def generate_copy_rules(output_spec):
