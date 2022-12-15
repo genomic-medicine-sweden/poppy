@@ -27,9 +27,7 @@ min_version("7.13.0")
 ### Set and validate config file
 
 if not workflow.overwrite_configfiles:
-    sys.exit(
-        "At least one config file must be passed using --configfile/--configfiles, by command line or a profile!"
-    )
+    sys.exit("At least one config file must be passed using --configfile/" "--configfiles, by command line or a profile!")
 
 validate(config, schema="../schemas/config.schema.yaml")
 config = load_resources(config, config["resources"])
@@ -42,11 +40,7 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = (
-    pandas.read_table(config["units"], dtype=str)
-    .set_index(["sample", "type", "flowcell", "lane"], drop=False)
-    .sort_index()
-)
+units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 
 with open(config["output_files"], "r") as f:
@@ -106,28 +100,31 @@ def generate_copy_rules(output_spec):
         time = config.get("_copy", {}).get("time", config["default_resources"]["time"])
         copy_container = config.get("_copy", {}).get("container", config["default_container"])
 
-        rule_code = "\n".join([
-            f'@workflow.rule(name="{rule_name}")',
-            f'@workflow.input("{input_file}")',
-            f'@workflow.output("{output_file}")',
-            f'@workflow.log("logs/{rule_name}_{output_file.name}.log")',
-            f'@workflow.container("{copy_container}")',
-            '@workflow.conda("../envs/copy_results_files.yaml")',
-            f'@workflow.resources(time="{time}", threads={threads}, mem_mb="{mem_mb}", '
+        rule_code = "\n".join(
+            [
+                f'@workflow.rule(name="{rule_name}")',
+                f'@workflow.input("{input_file}")',
+                f'@workflow.output("{output_file}")',
+                f'@workflow.log("logs/{rule_name}_{output_file.name}.log")',
+                f'@workflow.container("{copy_container}")',
+                '@workflow.conda("../envs/copy_results_files.yaml")',
+                f'@workflow.resources(time="{time}", threads={threads}, mem_mb="{mem_mb}", '
                 f'mem_per_cpu={mem_per_cpu}, partition="{partition}")',
-            f'@workflow.shellcmd("{copy_container}")',
-            "@workflow.run\n",
-            f"def __rule_{rule_name}(input, output, params, wildcards, threads, resources, "
+                f'@workflow.shellcmd("{copy_container}")',
+                "@workflow.run\n",
+                f"def __rule_{rule_name}(input, output, params, wildcards, threads, resources, "
                 "log, version, rule, conda_env, container_img, singularity_args, use_singularity, "
                 "env_modules, bench_record, jobid, is_shell, bench_iteration, cleanup_scripts, "
                 "shadow_dir, edit_notebook, conda_base_path, basedir, runtime_sourcecache_path, "
                 "__is_snakemake_rule_func=True):",
-            '\tshell("(cp {input[0]} {output[0]}) &> {log}", bench_record=bench_record, '
+                '\tshell("(cp {input[0]} {output[0]}) &> {log}", bench_record=bench_record, '
                 "bench_iteration=bench_iteration)\n\n",
-        ])
+            ]
+        )
 
         rulestrings.append(rule_code)
 
     exec(compile("\n".join(rulestrings), "copy_result_files", "exec"), workflow.globals)
+
 
 generate_copy_rules(output_spec)
