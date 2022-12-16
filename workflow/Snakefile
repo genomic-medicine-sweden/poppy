@@ -8,7 +8,6 @@ __license__ = "GPL-3"
 
 
 include: "rules/common.smk"
-include: "rules/result_files.smk"
 
 
 report: "report/workflow.rst"
@@ -16,7 +15,7 @@ report: "report/workflow.rst"
 
 rule all:
     input:
-        output_files,
+        compile_output_file_list,
 
 
 module prealignment:

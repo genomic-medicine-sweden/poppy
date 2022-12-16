@@ -6,6 +6,7 @@ units: "units.tsv"
 
 default_container: "docker://hydragenetics/common:0.1.8"
 
+output_files: "config/output_files.yaml"
 trimmer_software: "fastp_pe"
 
 reference:
