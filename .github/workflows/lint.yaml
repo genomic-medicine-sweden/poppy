@@ -5,12 +5,12 @@ on:
    # Triggers the workflow on push or pull request events but only for the master and develop branch
   push:
     branches:
-     - develop
-     - master
+     - dev
+     - main
   pull_request:
     branches:
-     - develop
-     - master
+     - dev
+     - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,11 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Linting
         uses: snakemake/snakemake-github-action@v1.22.0
         with:
           directory: ".tests/integration"
           snakefile: "workflow/Snakefile"
-          args: "--lint"
+          args: "--lint --configfile config/config.yaml"
           stagein: "pip install -r requirements.txt"
