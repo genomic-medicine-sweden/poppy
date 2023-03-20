@@ -42,6 +42,13 @@ validate(samples, schema="../schemas/samples.schema.yaml")
 ### Read and validate units file
 units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
+# Check that fastq files actually exist. If not, this might result in other
+# errors that can be hard to interpret
+for fq1, fq2 in zip(units["fastq1"].values, units["fastq2"].values):
+    if not pathlib.Path(fq1).exists():
+        sys.exit(f"fastq file not found: {fq1}\ncontrol the paths in {config['units']}")
+    if not pathlib.Path(fq2).exists():
+        sys.exit(f"fastq file not found: {fq2}\ncontrol the paths in {config['units']}")
 
 with open(config["output_files"], "r") as f:
     output_spec = yaml.safe_load(f.read())
