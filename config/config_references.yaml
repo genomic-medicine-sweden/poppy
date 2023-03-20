@@ -1,0 +1,19 @@
+samples: samples_references.tsv
+units: units_references.tsv
+resources: config_dev/resources_references.yaml
+
+default_container: docker://hydragenetics/common:0.1.9
+
+reference:
+  fasta: "/home/nima18/twist-hematology-reference-testenv/hg19/hg19.with.mt.fasta"
+  design_bed: "/storage/userdata/references/homo_sapiens/hg19/hydra-genetics/twist-hematology-dna/bed/all_targets_covered_twist_myeloid_v2_hg19_sorted_merge_padded10_annot.bed"
+  mappability: "/storage/userdata/references/homo_sapiens/hg19/hydra-genetics/twist-solid-dna/bed/access-5k-mappable.hg19.bed"
+
+cnvkit_build_normal_reference:
+  container: docker://hydragenetics/cnvkit:0.9.9
+
+cnvkit_create_targets:
+  container: docker://hydragenetics/cnvkit:0.9.9
+
+cnvkit_create_anti_targets:
+  container: docker://hydragenetics/cnvkit:0.9.9

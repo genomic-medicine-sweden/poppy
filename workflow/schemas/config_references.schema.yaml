@@ -1,0 +1,49 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+description: snakemake configuration file
+type: object
+properties:
+  resources:
+    type: string
+    description: >
+      path to yaml file containing compute resource configuration
+    format: uri-reference
+
+  default_container:
+    type: string
+    description: >
+      uri pointing to default docker/apptainer image that should be used
+    format: uri-reference
+
+  reference:
+    type: object
+    description: >
+      reference genome files
+    properties:
+      fasta:
+        type: string
+        description: >
+          genomic fasta file
+        format: uri-reference
+
+      design_bed:
+        type: string
+        description: >
+          bed file defining the panel design
+        format: uri-reference
+
+      mappability:
+        type: string
+        description: >
+          fasta mappability file
+        format: uri-reference
+
+    required:
+      - fasta
+      - design_bed
+      - mappability
+  # end reference
+
+required:
+  - resources
+  - default_container
+  - reference
