@@ -36,11 +36,11 @@ validate(config, schema="../schemas/resources.schema.yaml")
 
 ### Read and validate samples file
 
-samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=False)
+samples = pd.read_table(config["samples"], dtype=str, comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = pandas.read_table(config["units"], dtype=str, comment="#").set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
 # Check that fastq files actually exist. If not, this might result in other
 # errors that can be hard to interpret
