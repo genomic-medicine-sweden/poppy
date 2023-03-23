@@ -46,14 +46,49 @@ module alignment:
 use rule * from alignment as alignment_*
 
 
+module annotation:
+    snakefile:
+        github(
+            "hydra-genetics/annotation",
+            path="workflow/Snakefile",
+            tag="v0.3.0",
+        )
+    config:
+        config
+
+
+use rule * from annotation as annotation_*
+
+
+module filtering:
+    snakefile:
+        github(
+            "hydra-genetics/filtering",
+            path="workflow/Snakefile",
+            tag="v0.1.0",
+        )
+    config:
+        config
+
+
+use rule * from filtering as filtering_*
+
+
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="2daa54c")
+        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="v0.3.1")
     config:
         config
 
 
 use rule * from cnv_sv as cnv_sv_*
+
+
+use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
+    input:
+        segment="cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns",
+        vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz",
+        tc_file=cnv_sv.get_tc_file,
 
 
 module qc:
