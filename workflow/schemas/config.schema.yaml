@@ -338,260 +338,324 @@ properties:
       - container
       - reports
 
-    gatk_mutect2:
-      type: object
-      description: >
-        Configuration for the gatk_mutect2 rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the gatk executable
-          format: uri-reference
-      required:
-        - container
+  gatk_mutect2:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2 rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
 
-    gatk_mutect2_filter:
-      type: object
-      description: >
-        Configuration for the gatk_mutect2_filter rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the gatk executable
-          format: uri-reference
-      required:
-        - container
+  gatk_mutect2_filter:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_filter rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
 
-    gatk_mutect2_gvcf:
-      type: object
-      description: >
-        Configuration for the gatk_mutect2_gvcf rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the gatk executable
-          format: uri-reference
-      required:
-        - container
+  gatk_mutect2_gvcf:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_gvcf rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
 
-    gatk_mutect2_merge_stats:
-      type: object
-      description: >
-        Configuration for the gatk_mutect2_merge_stats rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the gatk executable
-          format: uri-reference
-      required:
-        - container
+  gatk_mutect2_merge_stats:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_merge_stats rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_alignment_summary_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_alignment_summary_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_collect_alignment_summary_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_alignment_summary_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_duplication_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_duplication_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_collect_duplication_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_duplication_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_gc_bias_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_gc_bias_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_collect_gc_bias_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_gc_bias_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_hs_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_hs_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_collect_hs_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_hs_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_insert_size_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_insert_size_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_collect_insert_size_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_insert_size_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    picard_collect_multiple_metrics:
-      type: object
-      description: >
-        Configuration for the picard_collect_multiple_metrics rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-        output_ext:
+  picard_collect_multiple_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_multiple_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+      output_ext:
+        type: array
+        items:
           type: string
           description: >
             Output extension
-      required:
-        - container
-        - output_ext
+    required:
+      - container
+      - output_ext
 
-    picard_mark_duplicates:
-      type: object
-      description: >
-        Configuration for the picard_mark_duplicates rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the picard executable
-          format: uri-reference
-      required:
-        - container
+  picard_mark_duplicates:
+    type: object
+    description: >
+      Configuration for the picard_mark_duplicates rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
 
-    pindel_call:
-      type: object
-      description: >
-        Configuration for the pindel_call rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the pindel executable
-          format: uri-reference
-      required:
-        - container
+  pindel_call:
+    type: object
+    description: >
+      Configuration for the pindel_call rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the pindel executable
+        format: uri-reference
+    required:
+      - container
 
-    pindel2vcf:
-      type: object
-      description: >
-        Configuration for the pindel2vcf rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the pindel executable
-          format: uri-reference
-        refname:
-          type: string
-          description: >
-            Name of the reference genome
-        refdate:
-          type: string
-          description: >
-            Release date of the reference genome
-      required:
-        - container
+  pindel2vcf:
+    type: object
+    description: >
+      Configuration for the pindel2vcf rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the pindel executable
+        format: uri-reference
+      refname:
+        type: string
+        description: >
+          Name of the reference genome
+      refdate:
+        type: string
+        description: >
+          Release date of the reference genome
+    required:
+      - container
 
-    vardict:
-      type: object
-      description: >
-        Configuration for the vardict rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the vardict executable
-          format: uri-reference
-        bed_columns:
-          type: string
-          description: >
-            Command line options defining what columns in bed file to use
-      required:
-        - container
-        - bed_columns
+  svdb_merge:
+    type: object
+    description: >
+      Configuration for the svdb_merge rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the svdb executable
+        format: uri-reference
+      tc_method:
+        type: array
+        description: >
+          Tumor cell content estimation methods
+        minItems: 1
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: >
+                Name of the tumor estimation method
+              example:
+                - pathology
+                - purecn
+            cnv_caller:
+              type: array
+              description: >
+                List of callers to be used for the method
+              items:
+                type: string
+                description: >
+                  Name of the caller to use
+              minItems: 1
+          required:
+            - name
+            - cnv_caller
+      overlap:
+        type: number
+        description: >
+          Minimum overlap between regions for merging
+      extra:
+        type: string
+        description: >
+          Additional arguments to pass to svdb
+    required:
+      - container
+      - tc_method
 
-    vep:
-      type: object
-      description: >
-        Configuration for the vep rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name of path to container containing the vep executable
-          format:
-            uri-reference
-        vep_cache:
-          type: string
-          description: >
-            Path to offline VEP cache
-          format: uri-reference
-        mode:
-          type: string
-          description: >
-            VEP arguments for run mode
-          examples:
-            - "--offline --cache"
-        extra:
-          type: string
-          description: >
-            Additional command line arguments for VEP
-      required:
-        - container
+  svdb_query:
+    type: object
+    description: >
+      Configuration for the svdb_query rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the svdb executable
+        format: uri-reference
+    required:
+      - container
 
-    vt_decompose:
-      type: object
-      description: >
-        Configuration for the vt_decompose rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the vt executable
-          format: uri-reference
-      required:
-        - container
+  vardict:
+    type: object
+    description: >
+      Configuration for the vardict rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vardict executable
+        format: uri-reference
+      bed_columns:
+        type: string
+        description: >
+          Command line options defining what columns in bed file to use
+    required:
+      - container
+      - bed_columns
 
-    vt_normalize:
-      type: object
-      description: >
-        Configuration for the vt_normalize rule
-      properties:
-        container:
-          type: string
-          description: >
-            Name or path to container containing the vt executable
-          format: uri-reference
-      required:
-        - container
+  vep:
+    type: object
+    description: >
+      Configuration for the vep rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name of path to container containing the vep executable
+        format:
+          uri-reference
+      vep_cache:
+        type: string
+        description: >
+          Path to offline VEP cache
+        format: uri-reference
+      mode:
+        type: string
+        description: >
+          VEP arguments for run mode
+        examples:
+          - "--offline --cache"
+      extra:
+        type: string
+        description: >
+          Additional command line arguments for VEP
+    required:
+      - container
+
+  vt_decompose:
+    type: object
+    description: >
+      Configuration for the vt_decompose rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vt executable
+        format: uri-reference
+    required:
+      - container
+
+  vt_normalize:
+    type: object
+    description: >
+      Configuration for the vt_normalize rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vt executable
+        format: uri-reference
+    required:
+      - container
 
 required:
   - samples
@@ -626,6 +690,8 @@ required:
   - picard_mark_duplicates
   - pindel_call
   - pindel2vcf
+  - svdb_merge
+  - svdb_query
   - vardict
   - vep
   - vt_decompose

@@ -76,7 +76,11 @@ use rule * from filtering as filtering_*
 
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="v0.3.1")
+        github(
+            "hydra-genetics/cnv_sv",
+            path="workflow/Snakefile",
+            tag="v0.3.1",
+        )
     config:
         config
 
@@ -110,7 +114,7 @@ module snv_indels:
         github(
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag="v0.2.0",
+            tag="v0.3.0",
         )
     config:
         config

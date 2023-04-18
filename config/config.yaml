@@ -128,6 +128,16 @@ pindel2vcf:
   refname: "hg19"
   refdate: "2009"
 
+svdb_merge:
+  container: docker://hydragenetics/svdb:2.6.0
+  tc_method:
+    - name: pathology
+      cnv_caller:
+        - cnvkit
+
+svdb_query:
+  container: docker://hydragenetics/svdb:2.6.0
+
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
   bed_columns: "-c 1 -S 2 -E 3"
