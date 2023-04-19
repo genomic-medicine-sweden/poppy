@@ -137,6 +137,7 @@ svdb_merge:
 
 svdb_query:
   container: docker://hydragenetics/svdb:2.6.0
+  db_string: ""
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"

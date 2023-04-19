@@ -581,8 +581,18 @@ properties:
         description: >
           Name or path to container containing the svdb executable
         format: uri-reference
+      db_string:
+        type: string
+        description: >
+          SVDB database parameters
+        minLength: 1
+      extra:
+        type: string
+        description: >
+          Other command line options to pass to SVDB query
     required:
       - container
+      - db_string
 
   vardict:
     type: object
