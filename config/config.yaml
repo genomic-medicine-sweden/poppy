@@ -33,11 +33,25 @@ bwa_mem:
   sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
+cnvkit_batch:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+  normal_reference: ""
+  method: hybrid
+
+cnvkit_call:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+
+cnvkit_vcf:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
 
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
+
+filter_vcf:
+  germline: config/config_hard_filter_germline.yaml
 
 freebayes:
   container: "docker://hydragenetics/freebayes:1.3.1"
@@ -117,6 +131,12 @@ pindel2vcf:
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
   bed_columns: "-c 1 -S 2 -E 3"
+
+vep:
+  container: docker://hydragenetics/vep:105
+  vep_cache: ""
+  mode: --offline --cache
+  extra: " --assembly GRCh37 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class "
 
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"

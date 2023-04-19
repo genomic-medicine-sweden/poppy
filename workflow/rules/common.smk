@@ -29,19 +29,40 @@ min_version("7.13.0")
 if not workflow.overwrite_configfiles:
     sys.exit("At least one config file must be passed using --configfile/" "--configfiles, by command line or a profile!")
 
-validate(config, schema="../schemas/config.schema.yaml")
+try:
+    validate(config, schema="../schemas/config.schema.yaml")
+except WorkflowError as we:
+    # Probably a validation error, but the original exception in lost in
+    # snakemake. Pull out the most relevant information instead of a potentially
+    # *very* long error message.
+    if not we.args[0].lower().startswith("error validating config file"):
+        raise
+    error_msg = '\n'.join(we.args[0].splitlines()[:2])
+    parent_rule = we.args[0].splitlines()[3].split()[-1]
+    if parent_rule == "schema:":
+        sys.exit(error_msg)
+    else:
+        schema_hiearachy = parent_rule.split()[-1]
+        schema_section = ".".join(re.findall(r"\['([^']+)'\]", schema_hiearachy)[1::2])
+        sys.exit(f"{error_msg} in {schema_section}")
 config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
-
 ### Read and validate samples file
 
-samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=False)
+samples = pd.read_table(config["samples"], dtype=str, comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str).set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = pandas.read_table(config["units"], dtype=str, comment="#").set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
 validate(units, schema="../schemas/units.schema.yaml")
+# Check that fastq files actually exist. If not, this might result in other
+# errors that can be hard to interpret
+for fq1, fq2 in zip(units["fastq1"].values, units["fastq2"].values):
+    if not pathlib.Path(fq1).exists():
+        sys.exit(f"fastq file not found: {fq1}\ncontrol the paths in {config['units']}")
+    if not pathlib.Path(fq2).exists():
+        sys.exit(f"fastq file not found: {fq2}\ncontrol the paths in {config['units']}")
 
 with open(config["output_files"], "r") as f:
     output_spec = yaml.safe_load(f.read())

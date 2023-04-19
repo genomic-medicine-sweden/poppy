@@ -40,5 +40,5 @@ jobs:
         working-directory: .tests/integration
         run: |
           snakemake -s ../../workflow/Snakefile \
-            --configfile config/config.yaml \
+            --configfile ../../config/config.yaml config/config.yaml \
             --lint

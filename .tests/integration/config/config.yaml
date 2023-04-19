@@ -1,29 +1,11 @@
 ---
 
-resources: "config/resources.yaml"
-samples: "samples.tsv"
-units: "units.tsv"
-
-default_container: "docker://hydragenetics/common:0.1.8"
-
-output_files: "config/output_files.yaml"
-trimmer_software: "fastp_pe"
-
 reference:
   fasta: "reference/FLT3.fasta"
   fai: "reference/FLT3.fasta.fai"
   dict: "reference/FLT3.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
-  skip_chrs:
-    - "chrM"
-
-bcbio_variation_recall_ensemble:
-  container: "docker://hydragenetics/bcbio-vc:0.2.6"
-  callers:
-    - gatk_mutect2
-    - vardict
-    - freebayes
 
 bwa_mem:
   amb: "reference/FLT3.fasta.amb"
@@ -31,95 +13,9 @@ bwa_mem:
   bwt: "reference/FLT3.fasta.bwt"
   pac: "reference/FLT3.fasta.pac"
   sa: "reference/FLT3.fasta.sa"
-  container: "docker://hydragenetics/bwa_mem:0.7.17"
 
-fastp_pe:
-   container: "docker://hydragenetics/fastp:0.20.1"
-
-fastqc:
-  container: "docker://hydragenetics/fastqc:0.11.9"
-
-freebayes:
-  container: "docker://hydragenetics/freebayes:1.3.1"
-
-mark_duplicates:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-mosdepth_bed:
-  container: "docker://hydragenetics/mosdepth:0.3.2"
-
-multiqc:
-  container: "docker://hydragenetics/multiqc:1.11"
-  config: "config/multiqc.yaml"
-  reports:
-    DNA:
-      included_unit_types:
-        - T
-        - N
-      qc_files:
-        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
-        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
-        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
-        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
-        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
-        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
-        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
-        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
-
-gatk_mutect2:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_filter:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_gvcf:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_merge_stats:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-picard_collect_alignment_summary_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_duplication_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_gc_bias_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_hs_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_insert_size_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_multiple_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-  output_ext:
-    - "insert_size_metrics"
-
-picard_mark_duplicates:
-  container: "docker://hydragenetics/picard:2.25.0"
+cnvkit_batch:
+  normal_reference: data/cnvkit/cnvkit_pon.cnn
 
 pindel_call:
-  container: "docker://hydragenetics/pindel:0.2.5b9"
-  extra: "-x 2 -B 60" #x och B?
   include_bed: "data/bed/pindel_regions.bed"
-
-pindel2vcf:
-  container: "docker://hydragenetics/pindel:0.2.5b9"
-  extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
-  refname: "hg19"
-  refdate: "2009"
-
-vardict:
-  container: "docker://hydragenetics/vardict:1.8.3"
-  bed_columns: "-c 1 -S 2 -E 3"
-
-vt_decompose:
-  container: "docker://hydragenetics/vt:2015.11.10"
-
-vt_normalize:
-  container: "docker://hydragenetics/vt:2015.11.10"

@@ -2,18 +2,634 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
+  # General config
   samples:
     type: string
+    description: >
+      Path to sample file
+    format: uri-reference
+
   units:
     type: string
+    description: >
+      Path to units file
+    format: uri-reference
+
   resources:
     type: string
-    description: Path to resources.yaml file
+    description: >
+      Path to resources.yaml file
+    format: uri-reference
+
+  output_files:
+    type: string
+    description: >
+      Path to file defining workflow output files
+    format: uri-reference
+
   default_container:
     type: string
-    description: name or path to a default docker/singularity container
-  required:
-    - samples
-    - units
-    - resources
-    - default_container
+    description: >
+      Name or path to a default docker/singularity container
+    format: uri-reference
+
+  trimmer_software:
+    type: string
+    description: >
+      Trimmer software to use
+
+  # General genome reference files
+  reference:
+    type: object
+    description: >
+      Reference genome files
+    properties:
+      fasta:
+        type: string
+        description: >
+          Path to genome fasta file
+        format: uri-reference
+
+      fai:
+        type: string
+        description: >
+          Path to genome fasta file index
+        format: uri-reference
+
+      dict:
+        type: string
+        description: >
+          Path to genome sequence dict file
+        format: uri-reference
+
+      design_bed:
+        type: string
+        description: >
+          Path to bed file containing panel design
+        format: uri-reference
+
+      design_intervals:
+        type: string
+        description: >
+          Path to panel design interval file
+        format: uri-reference
+
+      skip_chrs:
+        type: array
+        description: >
+          Reference sequences that should be excluded from analysis
+        items:
+          type: string
+
+    required:
+      - fasta
+      - fai
+      - dict
+      - design_bed
+      - design_intervals
+
+  # Rule-specific configs
+  bwa_mem:
+    type: object
+    description: >
+      Configuration for the bwa_mem rule
+    properties:
+      amb:
+        type: string
+        description: bwa amb file
+        format: uri-reference
+        pattern: "\\.amb$"
+      ann:
+        type: string
+        description: bwa ann file
+        format: uri-reference
+        pattern: "\\.ann$"
+      bwt:
+        type: string
+        description: bwa bwt file
+        format: uri-reference
+        pattern: "\\.bwt$"
+      pac:
+        type: string
+        description: bwa bwt file
+        format: uri-reference
+        pattern: "\\.pac$"
+      sa:
+        type: string
+        description: bwa bwt file
+        format: uri-reference
+        pattern: "\\.sa$"
+      container:
+        type: string
+        description: >
+          Name or path to container containing bwa executable
+        format: uri-reference
+    required:
+      - amb
+      - ann
+      - bwt
+      - pac
+      - sa
+      - container
+
+  cnvkit_batch:
+    type: object
+    description: >
+      Configuration for the cnvkit_batch rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing cnvkit executable
+        format: uri-reference
+      normal_reference:
+        type: string
+        description: >
+          Path to cnvkit normal reference file (.cnn)
+        format: uri-reference
+        pattern: "\\.cnn$"
+      method:
+        type: string
+        description: >
+          Sequencing protocol used
+        enum:
+          - hybrid
+          - wgs
+          - amplicon
+    required:
+      - container
+      - normal_reference
+      - method
+
+  cnvkit_call:
+    type: object
+    description: >
+      Configuration for the cnvkit_call rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing cnvkit executable
+        format: uri-reference
+
+  cnvkit_vcf:
+    type: object
+    description: >
+      Configuration for the cnvkit_vcf rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing cnvkit executable
+        format: uri-reference
+
+  bcbio_variation_recall_ensemble:
+    type: object
+    description: >
+      Configuration for the bcbio_variation_recall_ensemble rule
+    properties:
+      callers:
+        type: array
+        description: >
+          Callers from which results should be ensembled
+        items:
+          type: string
+          description: >
+            Name of the caller to use
+          enum:
+            - gatk_mutect2
+            - vardict
+            - freebayes
+        minItems: 1
+      container:
+        type: string
+        description: >
+          Name or path to container containing the bcbio_variation_recall executable
+        format: uri-reference
+    required:
+      - callers
+      - container
+
+  fastp_pe:
+    type: object
+    description: >
+      Config for the fastp_pe rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the fastp executable
+        format: uri-reference
+    required:
+      - container
+
+  fastqc:
+    type: object
+    description: >
+      Config for the fastqc rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the fastqc executable
+        format: uri-reference
+    required:
+      - container
+
+  filter_vcf:
+    type: object
+    description: >
+      Filter definitions for VCF files
+    properties:
+      germline:
+        type: string
+        description: >
+          Path to germline filter definition
+        format: uri-reference
+    required:
+      - germline
+
+  freebayes:
+    type: object
+    description: >
+      Config for the freebayes rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the freebayes executable
+        format: uri-reference
+    required:
+      - container
+
+  mark_duplicates:
+    type: object
+    description: >
+      Config for the mark_duplicates rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  mosdepth_bed:
+    type: object
+    description: >
+      Config for the mosdepth_bed rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the mosdepth executable
+        format: uri-reference
+    required:
+      - container
+
+  multiqc:
+    type: object
+    description: >
+      Config for the multiqc rule
+    properties:
+      config:
+        type: string
+        description: > 
+          Path to multiqc config file
+        format: uri-reference
+      container:
+        type: string
+        description: >
+          Name or path to container containing the multiqc executable
+        format: uri-reference
+      reports:
+        type: object
+        description: >
+          Logs that should be included in the multiqc report
+        properties:
+          DNA:
+            type: object
+            properties:
+              included_unit_types:
+                type: array
+                description: >
+                  Unit types that should be included
+                items:
+                  type: string
+                  enum:
+                    - T
+                    - N
+              qc_files:
+                type: array
+                description: >
+                  Log files to include. Variables from the samples and units
+                  files can be used in the file names.
+                items:
+                  type: string
+                  format: uri-reference
+            required:
+              - included_unit_types
+              - qc_files
+        required:
+          - DNA
+    required:
+      - config
+      - container
+      - reports
+
+  gatk_mutect2:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2 rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
+
+  gatk_mutect2_filter:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_filter rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
+
+  gatk_mutect2_gvcf:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_gvcf rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
+
+  gatk_mutect2_merge_stats:
+    type: object
+    description: >
+      Configuration for the gatk_mutect2_merge_stats rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_alignment_summary_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_alignment_summary_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_duplication_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_duplication_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_gc_bias_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_gc_bias_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_hs_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_hs_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_insert_size_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_insert_size_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  picard_collect_multiple_metrics:
+    type: object
+    description: >
+      Configuration for the picard_collect_multiple_metrics rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+      output_ext:
+        type: array
+        items:
+          type: string
+          description: >
+            Output extension
+    required:
+      - container
+      - output_ext
+
+  picard_mark_duplicates:
+    type: object
+    description: >
+      Configuration for the picard_mark_duplicates rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  pindel_call:
+    type: object
+    description: >
+      Configuration for the pindel_call rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the pindel executable
+        format: uri-reference
+    required:
+      - container
+
+  pindel2vcf:
+    type: object
+    description: >
+      Configuration for the pindel2vcf rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the pindel executable
+        format: uri-reference
+      refname:
+        type: string
+        description: >
+          Name of the reference genome
+      refdate:
+        type: string
+        description: >
+          Release date of the reference genome
+    required:
+      - container
+
+  vardict:
+    type: object
+    description: >
+      Configuration for the vardict rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vardict executable
+        format: uri-reference
+      bed_columns:
+        type: string
+        description: >
+          Command line options defining what columns in bed file to use
+    required:
+      - container
+      - bed_columns
+
+  vep:
+    type: object
+    description: >
+      Configuration for the vep rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name of path to container containing the vep executable
+        format:
+          uri-reference
+      vep_cache:
+        type: string
+        description: >
+          Path to offline VEP cache
+        format: uri-reference
+      mode:
+        type: string
+        description: >
+          VEP arguments for run mode
+        examples:
+          - "--offline --cache"
+      extra:
+        type: string
+        description: >
+          Additional command line arguments for VEP
+    required:
+      - container
+
+  vt_decompose:
+    type: object
+    description: >
+      Configuration for the vt_decompose rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vt executable
+        format: uri-reference
+    required:
+      - container
+
+  vt_normalize:
+    type: object
+    description: >
+      Configuration for the vt_normalize rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the vt executable
+        format: uri-reference
+    required:
+      - container
+
+required:
+  - samples
+  - units
+  - resources
+  - output_files
+  - default_container
+  - trimmer_software
+  - reference
+  - bcbio_variation_recall_ensemble
+  - bwa_mem
+  - cnvkit_batch
+  - cnvkit_call
+  - cnvkit_vcf
+  - fastp_pe
+  - fastqc
+  - filter_vcf
+  - freebayes
+  - mark_duplicates
+  - mosdepth_bed
+  - multiqc
+  - gatk_mutect2
+  - gatk_mutect2_filter
+  - gatk_mutect2_gvcf
+  - gatk_mutect2_merge_stats
+  - picard_collect_alignment_summary_metrics
+  - picard_collect_duplication_metrics
+  - picard_collect_gc_bias_metrics
+  - picard_collect_hs_metrics
+  - picard_collect_insert_size_metrics
+  - picard_collect_multiple_metrics
+  - picard_mark_duplicates
+  - pindel_call
+  - pindel2vcf
+  - vardict
+  - vep
+  - vt_decompose
+  - vt_normalize
+
