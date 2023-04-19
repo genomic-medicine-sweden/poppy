@@ -23,3 +23,7 @@ files:
   - name: Pindel VCF file
     input: cnv_sv/pindel_vcf/{sample}_{type}.no_contig.vcf.gz
     output: vcf/{sample}_{type}.pindel.vcf.gz
+
+  - name: cnvkit vcf file
+    input: cnv_sv/cnvkit_vcf/{sample}_{type}.pathology.vcf
+    output: cnv/{sample}_{type}.pathology.cnvkit.vcf
