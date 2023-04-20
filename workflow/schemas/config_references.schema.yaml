@@ -43,7 +43,31 @@ properties:
       - mappability
   # end reference
 
+  cnvkit_build_normal_reference:
+    type: object
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  cnvkit_create_targets:
+    type: object
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
 required:
   - resources
   - default_container
   - reference
+  - cnvkit_build_normal_reference
+  - cnvkit_create_targets
