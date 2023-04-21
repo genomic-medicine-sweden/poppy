@@ -27,7 +27,7 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         # "reference_files/Msisensor_pro_reference.list_baseline",
         # "reference_files/background_panel.tsv",
         # "reference_files/artifact_panel.tsv",
-        # "reference_files/svdb_cnv.vcf",
+        "reference_files/svdb_cnv.vcf",
         # "reference_files/normalDB_hg19.rds",
         # "reference_files/mapping_bias_nextseq_27_hg19.rds",
     ]

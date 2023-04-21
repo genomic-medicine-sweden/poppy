@@ -17,3 +17,9 @@ cnvkit_create_targets:
 
 cnvkit_create_anti_targets:
   container: docker://hydragenetics/cnvkit:0.9.9
+
+svdb_build:
+  container: docker://hydragenetics/svdb:2.6.0
+
+svdb_export:
+  container: docker://hydragenetics/svdb:2.6.0

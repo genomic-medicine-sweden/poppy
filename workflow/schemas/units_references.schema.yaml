@@ -5,15 +5,23 @@ properties:
     type: string
     description: sample id
     pattern: "^[a-zA-Z0-9-]+$"
+
   type:
     type: string
     description: >
       type of sample data Tumor, Normal, RNA (N|T|R)
     pattern: "^(N|T|R)$"
+
   bam:
     type: string
     description: >
       path to bam file
+    format: uri-reference
+
+  cnv_vcf:
+    type: string
+    description: >
+      path to cnv vcf file
     format: uri-reference
       # platform:
       #   type: string
@@ -43,6 +51,7 @@ required:
   - sample
   - type
   - bam
+  - cnv_vcf
     # - platform
     # - machine
     # - flowcell

@@ -45,6 +45,8 @@ properties:
 
   cnvkit_build_normal_reference:
     type: object
+    description: >
+      config for the cnvkit_build_normal_reference rule
     properties:
       container:
         type: string
@@ -56,6 +58,34 @@ properties:
 
   cnvkit_create_targets:
     type: object
+    description: >
+      config for the cnvkit_create_targets rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  svdb_build:
+    type: object
+    description: >
+      config for the svdb_build rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  svdb_export:
+    type: object
+    description: >
+      config for the svdb_export rule
     properties:
       container:
         type: string
@@ -71,3 +101,5 @@ required:
   - reference
   - cnvkit_build_normal_reference
   - cnvkit_create_targets
+  - svdb_build
+  - svdb_export
