@@ -8,6 +8,16 @@ rule copy_cnvkit_references:
         cp {input} {output}
         """
 
+rule copy_gatk_references:
+    input:
+        "references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5",
+    output:
+        "reference_files/gatk.PoN.hdf5",
+    shell:
+        """
+        cp {input} {output}
+        """
+
 rule copy_svbd_references:
     input:
         "references/svdb_export/svdb_cnv.vcf",

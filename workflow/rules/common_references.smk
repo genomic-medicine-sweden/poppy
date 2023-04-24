@@ -23,7 +23,7 @@ validate(units, schema="../schemas/units_references.schema.yaml")
 def compile_output_list(wildcards: snakemake.io.Wildcards):
     return [
         "reference_files/cnvkit.PoN.cnn",
-        # "reference_files/gatk_cnv_panel_of_normal.hdf5",
+        "reference_files/gatk.PoN.hdf5",
         # "reference_files/Msisensor_pro_reference.list_baseline",
         # "reference_files/background_panel.tsv",
         # "reference_files/artifact_panel.tsv",
