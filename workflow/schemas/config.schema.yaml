@@ -522,6 +522,78 @@ properties:
     required:
       - container
 
+  svdb_merge:
+    type: object
+    description: >
+      Configuration for the svdb_merge rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the svdb executable
+        format: uri-reference
+      tc_method:
+        type: array
+        description: >
+          Tumor cell content estimation methods
+        minItems: 1
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: >
+                Name of the tumor estimation method
+              example:
+                - pathology
+                - purecn
+            cnv_caller:
+              type: array
+              description: >
+                List of callers to be used for the method
+              items:
+                type: string
+                description: >
+                  Name of the caller to use
+              minItems: 1
+          required:
+            - name
+            - cnv_caller
+      overlap:
+        type: number
+        description: >
+          Minimum overlap between regions for merging
+      extra:
+        type: string
+        description: >
+          Additional arguments to pass to svdb
+    required:
+      - container
+      - tc_method
+
+  svdb_query:
+    type: object
+    description: >
+      Configuration for the svdb_query rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the svdb executable
+        format: uri-reference
+      db_string:
+        type: string
+        description: >
+          SVDB database parameters
+        minLength: 1
+      extra:
+        type: string
+        description: >
+          Other command line options to pass to SVDB query
+    required:
+      - container
+      - db_string
+
   vardict:
     type: object
     description: >
@@ -628,6 +700,8 @@ required:
   - picard_mark_duplicates
   - pindel_call
   - pindel2vcf
+  - svdb_merge
+  - svdb_query
   - vardict
   - vep
   - vt_decompose

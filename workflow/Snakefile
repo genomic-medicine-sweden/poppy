@@ -110,7 +110,7 @@ module snv_indels:
         github(
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag="v0.2.0",
+            tag="v0.3.0",
         )
     config:
         config
