@@ -1,4 +1,5 @@
 import pandas as pd
+from pathlib import Path
 from snakemake.utils import validate
 from snakemake.utils import min_version
 import sys
@@ -28,6 +29,7 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         # "reference_files/background_panel.tsv",
         # "reference_files/artifact_panel.tsv",
         "reference_files/svdb_cnv.vcf",
+        "reference_files/{}.preprocessed.interval_list".format(Path(config.get("reference", {}).get("design_bed")).name),
         # "reference_files/normalDB_hg19.rds",
         # "reference_files/mapping_bias_nextseq_27_hg19.rds",
     ]
