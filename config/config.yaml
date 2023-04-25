@@ -36,7 +36,7 @@ bwa_mem:
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
-  normal_reference: ""
+  normal_reference: "FILL_ME_IN.cnn"
   method: hybrid
 
 cnvkit_call:
@@ -92,7 +92,7 @@ gatk_collect_read_counts:
 
 gatk_denoise_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: ""
+  normal_reference: "FILL_ME_IN.hdf5"
 
 gatk_model_segments:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -153,7 +153,7 @@ svdb_merge:
 
 svdb_query:
   container: docker://hydragenetics/svdb:2.6.0
-  db_string: ""
+  db_string: "FILL_ME_IN"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
