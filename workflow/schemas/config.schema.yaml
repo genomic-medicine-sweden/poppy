@@ -74,6 +74,12 @@ properties:
           Path to panel design interval file
         format: uri-reference
 
+      design_intervals_gatk_cnv:
+        type: string
+        description: >
+          Path to panel design interval file for GATK CNV calling
+        format: uri-reference
+
       skip_chrs:
         type: array
         description: >
@@ -87,6 +93,7 @@ properties:
       - dict
       - design_bed
       - design_intervals
+      - design_intervals_gatk_cnv
 
   # Rule-specific configs
   bwa_mem:
@@ -337,6 +344,71 @@ properties:
       - config
       - container
       - reports
+
+  gatk_collect_allelic_counts:
+    type: object
+    description: >
+      Configuration for the gatk_collect_allelic_counts rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+      SNP_interval:
+        type: string
+        description: >
+          Path to file containing an interval list with backbone germline SNPs
+        format: uri-reference
+    required:
+      - container
+      - SNP_interval
+
+  gatk_collect_read_counts:
+    type: object
+    description: >
+      Configuration for the gatk_collect_allelic_counts rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
+
+  gatk_denoise_read_counts:
+    type: object
+    description: >
+      Configuration for the gatk_denoise_read_counts rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+      normal_reference:
+        type: string
+        description: >
+          Path to GATK normal reference file (.hdf5)
+        format: uri-reference
+        pattern: "\\.hdf5$"
+    required:
+      - container
+      - normal_reference
+
+  gatk_model_segments:
+    type: object
+    description: >
+      Configuration for the gatk_model_segments rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the gatk executable
+        format: uri-reference
+    required:
+      - container
 
   gatk_mutect2:
     type: object
@@ -687,6 +759,10 @@ required:
   - mark_duplicates
   - mosdepth_bed
   - multiqc
+  - gatk_collect_allelic_counts
+  - gatk_collect_read_counts
+  - gatk_denoise_read_counts
+  - gatk_model_segments
   - gatk_mutect2
   - gatk_mutect2_filter
   - gatk_mutect2_gvcf
