@@ -1,0 +1,31 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+description: representation of an input dataset
+properties:
+  sample:
+    type: string
+    description: sample id
+    pattern: "^[a-zA-Z0-9-]+$"
+
+  type:
+    type: string
+    description: >
+      type of sample data Tumor, Normal, RNA (N|T|R)
+    pattern: "^(N|T|R)$"
+
+  bam:
+    type: string
+    description: >
+      path to bam file
+    format: uri-reference
+
+  cnv_vcf:
+    type: string
+    description: >
+      path to cnv vcf file
+    format: uri-reference
+
+required:
+  - sample
+  - type
+  - bam
+  - cnv_vcf

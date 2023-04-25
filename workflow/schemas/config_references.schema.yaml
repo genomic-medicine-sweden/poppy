@@ -1,0 +1,168 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+description: snakemake configuration file
+type: object
+properties:
+  resources:
+    type: string
+    description: >
+      path to yaml file containing compute resource configuration
+    format: uri-reference
+
+  default_container:
+    type: string
+    description: >
+      uri pointing to default docker/apptainer image that should be used
+    format: uri-reference
+
+  reference:
+    type: object
+    description: >
+      reference genome files
+    properties:
+      fasta:
+        type: string
+        description: >
+          genomic fasta file
+        format: uri-reference
+
+      design_bed:
+        type: string
+        description: >
+          bed file defining the panel design
+        format: uri-reference
+
+      dict:
+        type: string
+        description: >
+          genome sequence dictionary file
+        format: uri-reference
+
+      mappability:
+        type: string
+        description: >
+          fasta mappability file
+        format: uri-reference
+
+    required:
+      - fasta
+      - design_bed
+      - dict
+      - mappability
+  # end reference
+  
+  bed_to_interval_list:
+    type: object
+    description: >
+      config for the bed_to_interval_list rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  cnvkit_build_normal_reference:
+    type: object
+    description: >
+      config for the cnvkit_build_normal_reference rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  cnvkit_create_targets:
+    type: object
+    description: >
+      config for the cnvkit_create_targets rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  collect_read_counts:
+    type: object
+    description: >
+      config for the collect_read_counts rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  create_read_count_panel_of_normals:
+    type: object
+    description: >
+      config for the create_read_count_panel_of_normals rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  preprocess_intervals:
+    type: object
+    description: >
+      config for the preprocess_intervals rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  svdb_build:
+    type: object
+    description: >
+      config for the svdb_build rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+  svdb_export:
+    type: object
+    description: >
+      config for the svdb_export rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+    required:
+      - container
+
+required:
+  - resources
+  - default_container
+  - reference
+  - bed_to_interval_list
+  - cnvkit_build_normal_reference
+  - cnvkit_create_targets
+  - collect_read_counts
+  - create_read_count_panel_of_normals
+  - preprocess_intervals
+  - svdb_build
+  - svdb_export
