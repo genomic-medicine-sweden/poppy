@@ -1,0 +1,9 @@
+jinja2<3.1.0
+mkdocs==1.4.2
+pymdown-extensions==9.10
+mkdocs-schema-reader==0.11.1
+mkdocs-simple-hooks==0.1.5
+mdx_spanner==0.0.5
+mkdocs-yaml-schema-plugin==0.2.3
+mkdocs-snakemake-rule-plugin==0.3.0
+mkdocs-material==9.1.7
