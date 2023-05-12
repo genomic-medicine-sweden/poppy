@@ -1,4 +1,8 @@
 ---
+resources: "config/resources.yaml"
+samples: "samples.tsv"
+units: "units.tsv"
+output_files: "../../config/output_files.yaml"
 
 reference:
   fasta: "reference/FLT3.fasta"
@@ -6,6 +10,7 @@ reference:
   dict: "reference/FLT3.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
+  design_intervals_gatk_cnv: "data/bed/design.bed"
 
 bwa_mem:
   amb: "reference/FLT3.fasta.amb"
