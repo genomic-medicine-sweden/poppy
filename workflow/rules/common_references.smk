@@ -6,6 +6,7 @@ import sys
 
 from hydra_genetics.utils.resources import load_resources
 
+
 if not workflow.overwrite_configfiles:
     sys.exit("config file has to be specified with --configfile")
 
@@ -20,6 +21,7 @@ validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "type"], drop=False)
 validate(units, schema="../schemas/units_references.schema.yaml")
+
 
 def compile_output_list(wildcards: snakemake.io.Wildcards):
     return [

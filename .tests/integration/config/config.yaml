@@ -24,3 +24,7 @@ cnvkit_batch:
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
+
+
+vep:
+ vep_cache: "reference/vep_cache/"
