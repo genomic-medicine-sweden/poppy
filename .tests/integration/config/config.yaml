@@ -21,6 +21,12 @@ bwa_mem:
 cnvkit_batch:
   normal_reference: data/cnvkit/cnvkit_pon.cnn
 
+gatk_collect_allelic_counts:
+  SNP_interval: data/gatk/gnomad_SNP_0.001_target.annotated.interval_list
+
+gatk_denoise_read_counts:
+  normal_reference: "data/gatk/pon.hdf5"
+
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
 
