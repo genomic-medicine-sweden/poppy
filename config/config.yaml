@@ -3,10 +3,10 @@
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
+output_files: "config/output_files.yaml"
 
 default_container: "docker://hydragenetics/common:0.1.8"
 
-output_files: "config/output_files.yaml"
 trimmer_software: "fastp_pe"
 
 reference:

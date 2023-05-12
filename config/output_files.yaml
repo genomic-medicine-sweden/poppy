@@ -13,16 +13,16 @@ files:
     output: qc/multiqc_DNA.html
 
   - name: SNV ensemble VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vcf.gz
-    output: vcf/{sample}_{type}.ensembled.vcf.gz
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.vcf.gz
+    output: vcf/{sample}_{type}.ensembled.vep_annotated.vcf.gz
 
   - name: Caller-specific VCF file
     input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
     output: vcf/{sample}_{type}.{caller}.vcf.gz
 
   - name: Pindel VCF file
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_contig.vcf.gz
-    output: vcf/{sample}_{type}.pindel.vcf.gz
+    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz
+    output: vcf/{sample}_{type}.pindel.vep_annotated.vcf.gz
 
   - name: SVDB CNV VCF file
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz

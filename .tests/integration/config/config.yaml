@@ -1,11 +1,15 @@
 ---
 
+
+output_files: "../../config/output_files.yaml"
+
 reference:
   fasta: "reference/FLT3.fasta"
   fai: "reference/FLT3.fasta.fai"
   dict: "reference/FLT3.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
+  design_intervals_gatk_cnv: "data/bed/design.bed"
 
 bwa_mem:
   amb: "reference/FLT3.fasta.amb"
@@ -17,5 +21,14 @@ bwa_mem:
 cnvkit_batch:
   normal_reference: data/cnvkit/cnvkit_pon.cnn
 
+gatk_collect_allelic_counts:
+  SNP_interval: data/gatk/gnomad_SNP_0.001_target.annotated.interval_list
+
+gatk_denoise_read_counts:
+  normal_reference: "data/gatk/pon.hdf5"
+
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
+
+vep:
+  vep_cache: "data/vep_cache"
