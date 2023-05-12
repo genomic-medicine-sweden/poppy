@@ -1,7 +1,7 @@
 site_name: Twist DNA Hematology
 nav:
   - Introduction: intro.md
-  - Softwares: softwares.md
+  - Software: software.md
 
 theme: readthedocs
 extra_css: [extra.css]
