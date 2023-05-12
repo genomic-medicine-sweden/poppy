@@ -1,11 +1,15 @@
 ---
 
+
+output_files: "../../config/output_files.yaml"
+
 reference:
   fasta: "reference/FLT3.fasta"
   fai: "reference/FLT3.fasta.fai"
   dict: "reference/FLT3.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
+  design_intervals_gatk_cnv: "data/bed/design.bed"
 
 bwa_mem:
   amb: "reference/FLT3.fasta.amb"
@@ -19,3 +23,6 @@ cnvkit_batch:
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
+
+vep:
+  vep_cache: "data/vep_cache"

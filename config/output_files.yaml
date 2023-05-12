@@ -13,8 +13,8 @@ files:
     output: qc/multiqc_DNA.html
 
   - name: SNV ensemble VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vcf.gz
-    output: vcf/{sample}_{type}.ensembled.vcf.gz
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.vcf.gz
+    output: vcf/{sample}_{type}.ensembled.vep_annotated.vcf.gz
 
   - name: Caller-specific VCF file
     input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
