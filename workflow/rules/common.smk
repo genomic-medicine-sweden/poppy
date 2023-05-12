@@ -114,7 +114,7 @@ def generate_copy_rules(output_spec):
         if f["input"] is None:
             continue
 
-        rule_name = "copy_{}".format("_".join(re.split(r"\W+", f["name"].strip().lower())))
+        rule_name = "copy_{}".format("_".join(re.sub(r"[\"'-.,]", "", f["name"].strip().lower()).split()))
         input_file = pathlib.Path(f["input"])
         output_file = output_directory / pathlib.Path(f["output"])
 

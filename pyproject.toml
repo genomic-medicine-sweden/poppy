@@ -1,0 +1,5 @@
+[tool.snakefmt]
+line_length = 130
+
+[tool.black]
+line-length = 130
