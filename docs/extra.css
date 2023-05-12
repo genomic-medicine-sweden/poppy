@@ -1,0 +1,50 @@
+.wy-nav-content {
+    max-width: 1600px !important;
+}
+h1,h2 {
+  margin-top: 50px;
+  margin-bottom: 10px !important;
+}
+h3 {
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 10px !important;
+}
+h4 {
+  font-size: 17px;
+  font-style: italic;
+  margin-top: 30px;
+  margin-bottom: 10px !important;
+
+}
+h5 {
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 30px;
+  margin-bottom: 10px !important;
+
+}
+p {
+  margin-top: 5px  !important;
+}
+* {
+  margin-bottom: 0px  !important;
+}
+
+table td {
+  min-width: 10px;
+  max-width: 800px;
+}
+table td:last-child {
+  width: 100%;
+}
+
+hr {
+  margin-top: 50px;
+  border: 1px solid black;
+}
+
+.twemoji {
+  width: 20px;
+  color: black;
+}
