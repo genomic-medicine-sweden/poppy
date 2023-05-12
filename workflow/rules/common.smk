@@ -38,11 +38,11 @@ except WorkflowError as we:
     if not we.args[0].lower().startswith("error validating config file"):
         raise
     error_msg = "\n".join(we.args[0].splitlines()[:2])
-    parent_rule = we.args[0].splitlines()[3].split()[-1]
-    if parent_rule == "schema:":
+    parent_rule_ = we.args[0].splitlines()[3].split()[-1]
+    if parent_rule_ == "schema:":
         sys.exit(error_msg)
     else:
-        schema_hiearachy = parent_rule.split()[-1]
+        schema_hiearachy = parent_rule_.split()[-1]
         schema_section = ".".join(re.findall(r"\['([^']+)'\]", schema_hiearachy)[1::2])
         sys.exit(f"{error_msg} in {schema_section}")
 config = load_resources(config, config["resources"])
@@ -114,7 +114,7 @@ def generate_copy_rules(output_spec):
         if f["input"] is None:
             continue
 
-        rule_name = "copy_{}".format("_".join(re.split(r"\W+", f["name"].strip().lower())))
+        rule_name = "copy_{}".format("_".join(re.sub(r"[\"'-.,]", "", f["name"].strip().lower()).split()))
         input_file = pathlib.Path(f["input"])
         output_file = output_directory / pathlib.Path(f["output"])
 
