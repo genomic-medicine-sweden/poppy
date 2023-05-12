@@ -37,7 +37,7 @@ except WorkflowError as we:
     # *very* long error message.
     if not we.args[0].lower().startswith("error validating config file"):
         raise
-    error_msg = '\n'.join(we.args[0].splitlines()[:2])
+    error_msg = "\n".join(we.args[0].splitlines()[:2])
     parent_rule = we.args[0].splitlines()[3].split()[-1]
     if parent_rule == "schema:":
         sys.exit(error_msg)
@@ -54,7 +54,11 @@ samples = pd.read_table(config["samples"], dtype=str, comment="#").set_index("sa
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str, comment="#").set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = (
+    pandas.read_table(config["units"], dtype=str, comment="#")
+    .set_index(["sample", "type", "flowcell", "lane"], drop=False)
+    .sort_index()
+)
 validate(units, schema="../schemas/units.schema.yaml")
 # Check that fastq files actually exist. If not, this might result in other
 # errors that can be hard to interpret
