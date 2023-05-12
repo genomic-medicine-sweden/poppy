@@ -1,6 +1,6 @@
 # Welcome to Twist DNA Hematology
 
-A short introduction to our awesome pipeline Twist DNA Hematology pipeline
+Twist DNA Hematology is a Snakemake pipeline used for analysing hybrid capture short-read sequencing data from the [Genomic Medicine Sweden](https://genomicmedicine.se/en/) myeloid gene panels.
 
 # Hydra-genetics
 
