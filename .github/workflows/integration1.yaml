@@ -38,7 +38,7 @@ jobs:
         working-directory: .tests/integration
         run: |
           snakemake -s ../../workflow/Snakefile \
-            --configfile config/config.yaml \
+            --configfiles ../../config/config.yaml config/config.yaml \
             -j 1 \
             --use-conda \
             --show-failed-logs
@@ -71,7 +71,7 @@ jobs:
         shell: bash -l {0}
         run: |
           snakemake -s ../../workflow/Snakefile \
-            --configfile config/config.yaml \
+            --configfiles ../../config/config.yaml config/config.yaml \
             -j 1 \
             --show-failed-logs \
             --use-singularity \
