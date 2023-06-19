@@ -16,6 +16,6 @@ filters:
     expression: "(exist[intron_variant, VEP:Consequence] and !exist[splice, VEP:Consequence] and VEP:SYMBOL != TERT and VEP:SYMBOL != GATA2 and !exist[COSV[0-9]+, VEP:Existing_variation])"
     soft_filter: "True"
   germline:
-    description: "Soft filter germline if >2% in gnomad"
-    expression: "(VEP:gnomAD_AF > 0.02)"
+    description: "Soft filter germline if >2% in any population from 1000 genomes, ESP or gnomADe"
+    expression: "(VEP:MAX_AF > 0.02)"
     soft_filter: "True"
