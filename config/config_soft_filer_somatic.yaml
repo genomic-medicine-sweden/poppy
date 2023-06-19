@@ -4,8 +4,12 @@ filters:
     expression: "FORMAT:DP:200"
     soft_filter: "True"
   ad:
-    description: "Soft filter variants with few observations (AD lower than 20)"
-    expression: "(FORMAT:AD:1 < 20)"
+    description: "Soft filter variants with few observations (AD lower than 20), except MYD88 and CXCR4"
+    expression: "(FORMAT:AD:1 < 20 and VEP:SYMBOL != MYD88 and VEP:SYMBOL != CXCR4)"
+    soft_filter: "True"
+  ad-myd88-cxcr4:
+    description: "Soft filter variants with few observations (AD lower than 5) for MYD88 and CXCR4"
+    expression: "(FORMAT:AD:1 < 5 and (VEP:SYMBOL == MYD88 or VEP:SYMBOL == CXCR4))"
     soft_filter: "True"
   vaf:
     description: "Soft filter variants with low vaf (AF lower than 0.01)"
