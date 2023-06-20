@@ -68,7 +68,7 @@ module filtering:
         github(
             "hydra-genetics/filtering",
             path="workflow/Snakefile",
-            tag="v0.1.0",
+            tag="v0.2.0",
         )
     config:
         config
@@ -110,7 +110,7 @@ module qc:
         github(
             "hydra-genetics/qc",
             path="workflow/Snakefile",
-            tag="cd029ff",
+            tag="v0.4.1",
         )
     config:
         config
