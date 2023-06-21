@@ -1,7 +1,7 @@
 filters:
   depth:
-    description: "Soft filter on depth"
-    expression: "FORMAT:DP:200"
+    description: "Soft filter on depth < 200"
+    expression: "FORMAT:DP<200"
     soft_filter_flag: "DP<200"
     soft_filter: "True"
   ad:
