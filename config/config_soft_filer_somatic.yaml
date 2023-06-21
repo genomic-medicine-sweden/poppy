@@ -2,24 +2,30 @@ filters:
   depth:
     description: "Soft filter on depth"
     expression: "FORMAT:DP:200"
+    soft_filter_flag: "DP<200"
     soft_filter: "True"
   ad:
     description: "Soft filter variants with few observations (AD lower than 20), except MYD88 and CXCR4"
     expression: "(FORMAT:AD:1 < 20 and VEP:SYMBOL != MYD88 and VEP:SYMBOL != CXCR4)"
+    soft_filter_flag: "AD<20"
     soft_filter: "True"
   ad-myd88-cxcr4:
     description: "Soft filter variants with few observations (AD lower than 5) for MYD88 and CXCR4"
     expression: "(FORMAT:AD:1 < 5 and (VEP:SYMBOL == MYD88 or VEP:SYMBOL == CXCR4))"
+    soft_filter_flag: "AD-special<5"
     soft_filter: "True"
   vaf:
     description: "Soft filter variants with low vaf (AF lower than 0.01)"
     expression: "(INFO:AF:0 < 0.01)"
+    soft_filter_flag: "AF<0.01"
     soft_filter: "True"
   intron:
     description: "Soft filter intronic variants except if also splice, in cosmic, or in gata2 or tert genes"
     expression: "(exist[intron_variant, VEP:Consequence] and !exist[splice, VEP:Consequence] and VEP:SYMBOL != TERT and VEP:SYMBOL != GATA2 and !exist[COSV[0-9]+, VEP:Existing_variation])"
+    soft_filter_flag: "Intron"
     soft_filter: "True"
   germline:
     description: "Soft filter germline if >2% in any population from 1000 genomes, ESP or gnomADe"
     expression: "(VEP:MAX_AF > 0.02)"
+    soft_filter_flag: "PopAF>0.02"
     soft_filter: "True"
