@@ -21,8 +21,12 @@ bwa_mem:
 cnvkit_batch:
   normal_reference: data/cnvkit/cnvkit_pon.cnn
 
+filter_vcf:
+  germline: "../../config/config_hard_filter_germline.yaml"
+  somatic: "../../config/config_soft_filter_somatic.yaml"
+
 gatk_collect_allelic_counts:
-  SNP_interval: data/gatk/gnomad_SNP_0.001_target.annotated.interval_list
+  SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 
 gatk_denoise_read_counts:
   normal_reference: "data/gatk/pon.hdf5"
