@@ -1,6 +1,6 @@
 filters:
   depth:
-    description: "Soft filter on depth"
+    description: "Soft filter on depth lower than 200"
     expression: "FORMAT:DP < 200"
     soft_filter_flag: "DP_200"
     soft_filter: "True"
@@ -29,3 +29,8 @@ filters:
     expression: "(VEP:MAX_AF > 0.02)"
     soft_filter_flag: "PopAF_0.02"
     soft_filter: "True"
+  freebayes:
+    description: "Soft filter variant if only detected by freebayes and QUAL lower than 1"
+    expression: "(INFO:CALLERS:0 = freebayes and QUAL < 1)"
+    soft_filter: "True"
+    soft_filter_flag: "freebayes"
