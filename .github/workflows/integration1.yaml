@@ -12,48 +12,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  integration-small-conda:
-    name: integration small data set conda
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: 3.8
-          auto-update-conda: true
-          mamba-version: "*"
-          channels: conda-forge,defaults
-          channel-priority: true
-      - name: Install requirements
-        shell: bash -l {0}
-        run: |
-          pip install -r requirements.txt
-          mamba install -c conda-forge -c bioconda snakemake
-      - name: Install test requirements
-        shell: bash -l {0}
-        run: |
-          pip install -r requirements.test.txt
-      - name: Integration test - small dataset
-        shell: bash -l {0}
-        working-directory: .tests/integration
-        run: |
-          snakemake -s ../../workflow/Snakefile \
-            --configfile config/config.yaml \
-            -j 1 \
-            --use-conda \
-            --show-failed-logs
   integration-small-singularity:
     name: integration small data set singularity
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: 3.8
-          auto-update-conda: true
-          mamba-version: "*"
-          channels: conda-forge,defaults
-          channel-priority: true
       - name: Install singularity
         shell: bash -l {0}
         run: |
