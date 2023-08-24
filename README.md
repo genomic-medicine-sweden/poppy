@@ -18,8 +18,8 @@ Converting Pomfrey to Hydra based pipeline
 
 To run this workflow, the following tools need to be available:
 
-![python](https://img.shields.io/badge/python-3.9-blue)
-[![snakemake](https://img.shields.io/badge/snakemake-6.8.0-blue)](https://snakemake.readthedocs.io/en/stable/)
+![python](https://img.shields.io/badge/python-3.8-blue)
+[![snakemake](https://img.shields.io/badge/snakemake-7.13.0-blue)](https://snakemake.readthedocs.io/en/stable/)
 [![singularity](https://img.shields.io/badge/singularity-3.7-blue)](https://sylabs.io/docs/)
 
 ## :school_satchel: Preparations
@@ -36,16 +36,7 @@ corresponding forward and reverse reads. Also indicate the sample id, run id and
 
 ## :white_check_mark: Testing
 
-The workflow repository contains a small test dataset `.tests/integration` which can be run like so:
-
-```bash
-cd .tests/integration
-snakemake \
-    -s ../../workflow/Snakefile \
-    --configfile config/config.yaml \
-    --use-singularity \
-    -c 1
-```
+Coming soon...
 
 ## :rocket: Usage
 
