@@ -12,17 +12,6 @@ rule copy_cnvkit_references:
         """
 
 
-rule copy_gatk_pon:
-    input:
-        "references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5",
-    output:
-        "reference_files/gatk.PoN.hdf5",
-    shell:
-        """
-        cp {input} {output}
-        """
-
-
 rule copy_gatk_interval_list:
     input:
         "references/preprocess_intervals/{}.preprocessed.interval_list".format(
@@ -30,6 +19,17 @@ rule copy_gatk_interval_list:
         ),
     output:
         "reference_files/{}.preprocessed.interval_list".format(Path(config.get("reference", {}).get("design_bed")).name),
+    shell:
+        """
+        cp {input} {output}
+        """
+
+
+rule copy_gatk_pon:
+    input:
+        "references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5",
+    output:
+        "reference_files/gatk.PoN.hdf5",
     shell:
         """
         cp {input} {output}
