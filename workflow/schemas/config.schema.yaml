@@ -2,23 +2,12 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
+
   # General config
-  samples:
+  default_container:
     type: string
     description: >
-      Path to sample file
-    format: uri-reference
-
-  units:
-    type: string
-    description: >
-      Path to units file
-    format: uri-reference
-
-  resources:
-    type: string
-    description: >
-      Path to resources.yaml file
+      Name or path to a default docker/singularity container
     format: uri-reference
 
   output_files:
@@ -27,18 +16,12 @@ properties:
       Path to file defining workflow output files
     format: uri-reference
 
-  default_container:
+  resources:
     type: string
     description: >
-      Name or path to a default docker/singularity container
+      Path to resources.yaml file
     format: uri-reference
 
-  trimmer_software:
-    type: string
-    description: >
-      Trimmer software to use
-
-  # General genome reference files
   reference:
     type: object
     description: >
@@ -95,7 +78,51 @@ properties:
       - design_intervals
       - design_intervals_gatk_cnv
 
+  samples:
+    type: string
+    description: >
+      Path to sample file
+    format: uri-reference
+
+  trimmer_software:
+    type: string
+    description: >
+      Trimmer software to use
+
+  units:
+    type: string
+    description: >
+      Path to units file
+    format: uri-reference
+
   # Rule-specific configs
+  bcbio_variation_recall_ensemble:
+    type: object
+    description: >
+      Configuration for the bcbio_variation_recall_ensemble rule
+    properties:
+      callers:
+        type: array
+        description: >
+          Callers from which results should be ensembled
+        items:
+          type: string
+          description: >
+            Name of the caller to use
+          enum:
+            - gatk_mutect2
+            - vardict
+            - freebayes
+        minItems: 1
+      container:
+        type: string
+        description: >
+          Name or path to container containing the bcbio_variation_recall executable
+        format: uri-reference
+    required:
+      - callers
+      - container
+
   bwa_mem:
     type: object
     description: >
@@ -190,33 +217,6 @@ properties:
           Name or path to container containing cnvkit executable
         format: uri-reference
 
-  bcbio_variation_recall_ensemble:
-    type: object
-    description: >
-      Configuration for the bcbio_variation_recall_ensemble rule
-    properties:
-      callers:
-        type: array
-        description: >
-          Callers from which results should be ensembled
-        items:
-          type: string
-          description: >
-            Name of the caller to use
-          enum:
-            - gatk_mutect2
-            - vardict
-            - freebayes
-        minItems: 1
-      container:
-        type: string
-        description: >
-          Name or path to container containing the bcbio_variation_recall executable
-        format: uri-reference
-    required:
-      - callers
-      - container
-
   fastp_pe:
     type: object
     description: >
@@ -268,82 +268,6 @@ properties:
         format: uri-reference
     required:
       - container
-
-  mark_duplicates:
-    type: object
-    description: >
-      Config for the mark_duplicates rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  mosdepth_bed:
-    type: object
-    description: >
-      Config for the mosdepth_bed rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the mosdepth executable
-        format: uri-reference
-    required:
-      - container
-
-  multiqc:
-    type: object
-    description: >
-      Config for the multiqc rule
-    properties:
-      config:
-        type: string
-        description: > 
-          Path to multiqc config file
-        format: uri-reference
-      container:
-        type: string
-        description: >
-          Name or path to container containing the multiqc executable
-        format: uri-reference
-      reports:
-        type: object
-        description: >
-          Logs that should be included in the multiqc report
-        properties:
-          DNA:
-            type: object
-            properties:
-              included_unit_types:
-                type: array
-                description: >
-                  Unit types that should be included
-                items:
-                  type: string
-                  enum:
-                    - T
-                    - N
-              qc_files:
-                type: array
-                description: >
-                  Log files to include. Variables from the samples and units
-                  files can be used in the file names.
-                items:
-                  type: string
-                  format: uri-reference
-            required:
-              - included_unit_types
-              - qc_files
-        required:
-          - DNA
-    required:
-      - config
-      - container
-      - reports
 
   gatk_collect_allelic_counts:
     type: object
@@ -462,6 +386,82 @@ properties:
     required:
       - container
 
+  mark_duplicates:
+    type: object
+    description: >
+      Config for the mark_duplicates rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the picard executable
+        format: uri-reference
+    required:
+      - container
+
+  mosdepth_bed:
+    type: object
+    description: >
+      Config for the mosdepth_bed rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the mosdepth executable
+        format: uri-reference
+    required:
+      - container
+
+  multiqc:
+    type: object
+    description: >
+      Config for the multiqc rule
+    properties:
+      config:
+        type: string
+        description: > 
+          Path to multiqc config file
+        format: uri-reference
+      container:
+        type: string
+        description: >
+          Name or path to container containing the multiqc executable
+        format: uri-reference
+      reports:
+        type: object
+        description: >
+          Logs that should be included in the multiqc report
+        properties:
+          DNA:
+            type: object
+            properties:
+              included_unit_types:
+                type: array
+                description: >
+                  Unit types that should be included
+                items:
+                  type: string
+                  enum:
+                    - T
+                    - N
+              qc_files:
+                type: array
+                description: >
+                  Log files to include. Variables from the samples and units
+                  files can be used in the file names.
+                items:
+                  type: string
+                  format: uri-reference
+            required:
+              - included_unit_types
+              - qc_files
+        required:
+          - DNA
+    required:
+      - config
+      - container
+      - reports
+
   picard_collect_alignment_summary_metrics:
     type: object
     description: >
@@ -560,19 +560,6 @@ properties:
     required:
       - container
 
-  pindel_call:
-    type: object
-    description: >
-      Configuration for the pindel_call rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the pindel executable
-        format: uri-reference
-    required:
-      - container
-
   pindel2vcf:
     type: object
     description: >
@@ -591,6 +578,19 @@ properties:
         type: string
         description: >
           Release date of the reference genome
+    required:
+      - container
+
+  pindel_call:
+    type: object
+    description: >
+      Configuration for the pindel_call rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing the pindel executable
+        format: uri-reference
     required:
       - container
 
@@ -740,25 +740,16 @@ properties:
       - container
 
 required:
-  - samples
-  - units
-  - resources
-  - output_files
-  - default_container
-  - trimmer_software
-  - reference
   - bcbio_variation_recall_ensemble
   - bwa_mem
   - cnvkit_batch
   - cnvkit_call
   - cnvkit_vcf
+  - default_container
   - fastp_pe
   - fastqc
   - filter_vcf
   - freebayes
-  - mark_duplicates
-  - mosdepth_bed
-  - multiqc
   - gatk_collect_allelic_counts
   - gatk_collect_read_counts
   - gatk_denoise_read_counts
@@ -767,6 +758,10 @@ required:
   - gatk_mutect2_filter
   - gatk_mutect2_gvcf
   - gatk_mutect2_merge_stats
+  - mark_duplicates
+  - mosdepth_bed
+  - multiqc
+  - output_files
   - picard_collect_alignment_summary_metrics
   - picard_collect_duplication_metrics
   - picard_collect_gc_bias_metrics
@@ -774,10 +769,15 @@ required:
   - picard_collect_insert_size_metrics
   - picard_collect_multiple_metrics
   - picard_mark_duplicates
-  - pindel_call
   - pindel2vcf
+  - pindel_call
+  - reference
+  - resources
+  - samples
   - svdb_merge
   - svdb_query
+  - trimmer_software
+  - units
   - vardict
   - vep
   - vt_decompose

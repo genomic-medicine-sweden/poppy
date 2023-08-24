@@ -2,15 +2,10 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
+
   default_resources:
     type: object
     properties:
-      threads:
-        type: integer
-        description: default number of threads that will be used by a rule
-      time:
-        type: string
-        description: default max execution time for a rule
       mem_mb:
         type: integer
         description: default memory used for a rule
@@ -20,6 +15,12 @@ properties:
       partition:
         type: string
         description: default partition to use on the cluser for a rule
+      threads:
+        type: integer
+        description: default number of threads that will be used by a rule
+      time:
+        type: string
+        description: default max execution time for a rule
 
   required:
     - default_resources
