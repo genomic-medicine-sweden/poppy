@@ -1,25 +1,25 @@
 ---
 
-
 output_files: "../../config/output_files.yaml"
+resources: "../../config/resources.yaml"
 
 reference:
-  fasta: "reference/FLT3.fasta"
-  fai: "reference/FLT3.fasta.fai"
-  dict: "reference/FLT3.dict"
+  fasta: "reference/hg19.fasta"
+  fai: "reference/hg19.fasta.fai"
+  dict: "reference/hg19.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
 
 bwa_mem:
-  amb: "reference/FLT3.fasta.amb"
-  ann: "reference/FLT3.fasta.ann"
-  bwt: "reference/FLT3.fasta.bwt"
-  pac: "reference/FLT3.fasta.pac"
-  sa: "reference/FLT3.fasta.sa"
+  amb: "reference/hg19.fasta.amb"
+  ann: "reference/hg19.fasta.ann"
+  bwt: "reference/hg19.fasta.bwt"
+  pac: "reference/hg19.fasta.pac"
+  sa: "reference/hg19.fasta.sa"
 
 cnvkit_batch:
-  normal_reference: data/cnvkit/cnvkit_pon.cnn
+  normal_reference: "data/cnvkit/cnvkit_pon.cnn"
 
 filter_vcf:
   germline: "../../config/config_hard_filter_germline.yaml"
@@ -30,6 +30,9 @@ gatk_collect_allelic_counts:
 
 gatk_denoise_read_counts:
   normal_reference: "data/gatk/pon.hdf5"
+
+multiqc:
+  config: "../../config/multiqc.yaml"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
