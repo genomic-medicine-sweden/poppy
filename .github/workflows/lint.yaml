@@ -22,21 +22,14 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
-      - name: Miniconda setup
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
-          auto-update-conda: true
-          mamba-version: "*"
-          channels: conda-forge,defaults
-          channel-priority: true
       - name: Install requirements
-        shell: bash -l {0}
         run: |
           pip install -r requirements.txt
-          mamba install -c conda-forge -c bioconda snakemake
       - name: Linting
-        shell: bash -l {0}
         working-directory: .tests/integration
         run: |
           snakemake -s ../../workflow/Snakefile \
