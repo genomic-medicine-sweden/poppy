@@ -54,6 +54,8 @@ fastqc:
 filter_vcf:
   germline: "config/config_hard_filter_germline.yaml"
   somatic: "config/config_soft_filter_somatic.yaml"
+  cnv_hard_filter_amp: "config/config_hard_filter_cnv_amp.yaml"
+  cnv_hard_filter_loh: "config/config_hard_filter_cnv_loh.yaml"
 
 freebayes:
   container: "docker://hydragenetics/freebayes:1.3.1"
