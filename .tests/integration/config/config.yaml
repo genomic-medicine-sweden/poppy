@@ -1,6 +1,6 @@
 ---
 
-output_files: "../../config/output_files.yaml"
+output: "../../config/output_files.yaml"
 resources: "../../config/resources.yaml"
 
 reference:

@@ -10,7 +10,7 @@ properties:
       Name or path to a default docker/singularity container
     format: uri-reference
 
-  output_files:
+  output:
     type: string
     description: >
       Path to file defining workflow output files
@@ -419,7 +419,7 @@ properties:
     properties:
       config:
         type: string
-        description: > 
+        description: >
           Path to multiqc config file
         format: uri-reference
       container:
@@ -761,7 +761,7 @@ required:
   - mark_duplicates
   - mosdepth_bed
   - multiqc
-  - output_files
+  - output
   - picard_collect_alignment_summary_metrics
   - picard_collect_duplication_metrics
   - picard_collect_gc_bias_metrics
@@ -782,4 +782,3 @@ required:
   - vep
   - vt_decompose
   - vt_normalize
-

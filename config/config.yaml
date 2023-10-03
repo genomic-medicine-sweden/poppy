@@ -3,7 +3,7 @@
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output_files: "config/output_files.yaml"
+output: "config/output_files.yaml"
 
 default_container: "docker://hydragenetics/common:0.4.0"
 
@@ -137,7 +137,7 @@ pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60" #x och B?
   include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
-  
+
 pindel_update_vcf_sequence_dictionary:
   container: "docker://hydragenetics/picard:2.25.0"
 
