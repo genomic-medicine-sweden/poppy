@@ -39,6 +39,10 @@ gatk_collect_allelic_counts:
 gatk_denoise_read_counts:
   normal_reference: "data/gatk/pon.hdf5"
 
+merge_cnv_json:
+  annotations:
+    - ../../config/cnv_genes.hg19.bed
+
 multiqc:
   config: "../../config/multiqc.yaml"
 
