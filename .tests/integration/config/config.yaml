@@ -18,6 +18,9 @@ bwa_mem:
   pac: "reference/hg19.fasta.pac"
   sa: "reference/hg19.fasta.sa"
 
+cnv_html_report:
+  template_dir: ../../config/cnv_report_template
+
 cnvkit_batch:
   normal_reference: "data/cnvkit/cnvkit_pon.cnn"
 

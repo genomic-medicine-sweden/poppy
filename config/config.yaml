@@ -34,6 +34,11 @@ bwa_mem:
   sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
+cnv_html_report:
+  cytobands: false
+  template_dir: config/cnv_report_template
+  show_table: false
+
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   normal_reference: "FILL_ME_IN.cnn"
@@ -62,6 +67,9 @@ freebayes:
 
 mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
+
+merge_cnv_json:
+  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"

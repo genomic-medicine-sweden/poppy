@@ -91,6 +91,20 @@ module prealignment:
 use rule * from prealignment as prealignment_*
 
 
+module reports:
+    snakefile:
+        github(
+            "hydra-genetics/reports",
+            path="workflow/Snakefile",
+            tag="v0.2.0",
+        )
+    config:
+        config
+
+
+use rule * from reports as reports_*
+
+
 module snv_indels:
     snakefile:
         github(
