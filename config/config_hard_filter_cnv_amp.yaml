@@ -1,13 +1,13 @@
 filters:
-  artifacts:
-    description: Hard filter variants found in more than 15% of the normal samples
-    expression: "(INFO:Twist_AF > 0.15)"
-    soft_filter: false
+  # artifacts:
+  #   description: Hard filter variants found in more than 15% of the normal samples
+  #   expression: "(INFO:Twist_AF > 0.15)"
+  #   soft_filter: "False"
   copy_number:
     description: Hard filter CNVs with fewer than six copies
     expression: "(INFO:CORR_CN < 6)"
-    soft_filter: false
+    soft_filter: "False"
   amp_gene:
     description: Only keep variants with gene annotations
     expression: "(!exist[[A-Za-z0-9_,-]+, INFO:Genes])"
-    soft_filter: false
+    soft_filter: "False"
