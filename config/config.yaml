@@ -19,6 +19,9 @@ reference:
   skip_chrs:
     - "chrM"
 
+annotate_cnv:
+  cnv_genes: config/cnv_genes.hg19.bed
+
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
   callers:
@@ -37,7 +40,7 @@ bwa_mem:
 cnv_html_report:
   cytobands: false
   template_dir: config/cnv_report_template
-  show_table: false
+  show_table: true
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -70,6 +73,10 @@ mark_duplicates:
 
 merge_cnv_json:
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  filtered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
+  unfiltered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
