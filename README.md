@@ -4,13 +4,10 @@
 
 ---
 
-![Lint](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/lint.yaml/badge.svg?branch=develop)
-![Snakefmt](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/snakefmt.yaml/badge.svg?branch=develop)
-
-![pycodestyle](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/pycodestyl.yaml/badge.svg?branch=develop)
-![pytest](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/pytest.yaml/badge.svg?branch=develop)
-
-![integration test](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/integration1.yaml/badge.svg?branch=develop)
+![Lint](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/lint.yaml/badge.svg?branch=dev)
+![Snakefmt](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/snakefmt.yaml/badge.svg?branch=dev)
+![pycodestyle](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pycodestyle.yaml/badge.svg?branch=dev)
+![pytest](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pytest.yaml/badge.svg?branch=dev)
 
 [![License: GPL-3](https://img.shields.io/badge/License-GPL3-yellow.svg)](https://opensource.org/licenses/gpl-3.0.html)
 
