@@ -1,6 +1,8 @@
-# pomfrey_hydra
+# Poppy
 
-Converting Pomfrey to Hydra based pipeline
+<img src="docs/static/poppy_logo.svg" style="height: 150px;" alt="Poppy logo" />
+
+---
 
 ![Lint](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/lint.yaml/badge.svg?branch=develop)
 ![Snakefmt](https://github.com/hydra-genetics/pomfrey_hydra/actions/workflows/snakefmt.yaml/badge.svg?branch=develop)
