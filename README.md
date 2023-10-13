@@ -1,6 +1,10 @@
 # Poppy
 
-<img src="docs/static/poppy_logo.svg" style="height: 150px;" alt="Poppy logo" />
+<picture style="height: 150px">
+   <source media="(prefers-color-scheme: dark)" srcset="docs/static/poppy_dark.svg"/>
+   <source media="(prefers-color-scheme: dark)" srcset="docs/static/poppy_light.svg"/>
+   <img alt="Poppy logo" src="docs/static/poppy_light.svg">
+</picture>
 
 ---
 
