@@ -1,7 +1,20 @@
 site_name: Poppy
 nav:
-  - Introduction: intro.md
-  - Software: software.md
+  - Overview:
+    - Introduction: intro.md
+    - Overview: overview.md
+    - Results files: results_file.md
+  - Pipeline:
+    - Prealignment: prealignment.md 
+    - Alignment: alignment.md
+    - SNV_indels: snv_indels.md
+    - CNV_SV: cnv_sv.md
+    - QC: qc.md
+  - Pipeline specific rules:
+    - Software: software.md
+  - Reference Pipeline:
+    - Overview: reference_overview.md
+    - Set up and running: reference_setup.md
 
 theme: readthedocs
 extra_css: [extra.css]
