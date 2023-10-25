@@ -1,4 +1,5 @@
-# Softwares used in the Twist DNA Hematology
+# Software used in Poppy
+
 ### :snake: Rule
 
 #### :left_right_arrow: input / output files
@@ -8,4 +9,3 @@
 #### Software settings (`config.yaml`)
 
 #### Resources settings (`resources.yaml`)
-

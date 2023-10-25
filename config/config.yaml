@@ -3,10 +3,10 @@
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-
-default_container: "docker://hydragenetics/common:0.1.8"
-
 output_files: "config/output_files.yaml"
+
+default_container: "docker://hydragenetics/common:0.4.0"
+
 trimmer_software: "fastp_pe"
 
 reference:
@@ -52,7 +52,8 @@ fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
 filter_vcf:
-  germline: config/config_hard_filter_germline.yaml
+  germline: "config/config_hard_filter_germline.yaml"
+  somatic: "config/config_soft_filter_somatic.yaml"
 
 freebayes:
   container: "docker://hydragenetics/freebayes:1.3.1"
@@ -136,6 +137,9 @@ pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60" #x och B?
   include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
+  
+pindel_update_vcf_sequence_dictionary:
+  container: "docker://hydragenetics/picard:2.25.0"
 
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
@@ -160,10 +164,12 @@ vardict:
   bed_columns: "-c 1 -S 2 -E 3"
 
 vep:
-  container: docker://hydragenetics/vep:105
+  container: docker://hydragenetics/vep:109
   vep_cache: ""
   mode: --offline --cache
-  extra: " --assembly GRCh37 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class "
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything"
+  # vep109: VEP:gnomAD_${pop}e or g for exome/genome. Both --af_gnomade and --af_gnomadg included in everything
+  #extra: " --assembly GRCh37 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class "
 
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"

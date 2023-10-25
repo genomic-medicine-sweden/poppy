@@ -37,12 +37,12 @@ except WorkflowError as we:
     # *very* long error message.
     if not we.args[0].lower().startswith("error validating config file"):
         raise
-    error_msg = '\n'.join(we.args[0].splitlines()[:2])
-    parent_rule = we.args[0].splitlines()[3].split()[-1]
-    if parent_rule == "schema:":
+    error_msg = "\n".join(we.args[0].splitlines()[:2])
+    parent_rule_ = we.args[0].splitlines()[3].split()[-1]
+    if parent_rule_ == "schema:":
         sys.exit(error_msg)
     else:
-        schema_hiearachy = parent_rule.split()[-1]
+        schema_hiearachy = parent_rule_.split()[-1]
         schema_section = ".".join(re.findall(r"\['([^']+)'\]", schema_hiearachy)[1::2])
         sys.exit(f"{error_msg} in {schema_section}")
 config = load_resources(config, config["resources"])
@@ -54,7 +54,11 @@ samples = pd.read_table(config["samples"], dtype=str, comment="#").set_index("sa
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 ### Read and validate units file
-units = pandas.read_table(config["units"], dtype=str, comment="#").set_index(["sample", "type", "flowcell", "lane"], drop=False).sort_index()
+units = (
+    pandas.read_table(config["units"], dtype=str, comment="#")
+    .set_index(["sample", "type", "flowcell", "lane"], drop=False)
+    .sort_index()
+)
 validate(units, schema="../schemas/units.schema.yaml")
 # Check that fastq files actually exist. If not, this might result in other
 # errors that can be hard to interpret
@@ -110,7 +114,7 @@ def generate_copy_rules(output_spec):
         if f["input"] is None:
             continue
 
-        rule_name = "copy_{}".format("_".join(re.split(r"\W+", f["name"].strip().lower())))
+        rule_name = "copy_{}".format("_".join(re.sub(r"[\"'-.,]", "", f["name"].strip().lower()).split()))
         input_file = pathlib.Path(f["input"])
         output_file = output_directory / pathlib.Path(f["output"])
 
@@ -128,7 +132,6 @@ def generate_copy_rules(output_spec):
                 f'@workflow.output("{output_file}")',
                 f'@workflow.log("logs/{rule_name}_{output_file.name}.log")',
                 f'@workflow.container("{copy_container}")',
-                '@workflow.conda("../envs/copy_results_files.yaml")',
                 f'@workflow.resources(time="{time}", threads={threads}, mem_mb="{mem_mb}", '
                 f'mem_per_cpu={mem_per_cpu}, partition="{partition}")',
                 f'@workflow.shellcmd("{copy_container}")',

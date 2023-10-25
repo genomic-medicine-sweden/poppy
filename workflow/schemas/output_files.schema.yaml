@@ -2,21 +2,20 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: Output file specification
 type: object
 properties:
+
   directory:
     description: >
       Path to a directory where output files should be copied
     type: string
     format: uri
     default: ./results
+
   files:
     description: Defines a single output file
     type: array
     items:
       type: object
       properties:
-        name:
-          description: Descriptive name of the output file.
-          type: string
         input:
           description: >
             Path to the file that should be copied to the output directory.
@@ -28,6 +27,9 @@ properties:
             - string
             - "null"
           format: uri
+        name:
+          description: Descriptive name of the output file.
+          type: string
         output:
           description: >
             Relative path within the output directory where `inputfile` should
@@ -36,8 +38,9 @@ properties:
           type: string
           format: uri
       required:
-        - name
         - input
+        - name
+
 required:
   - directory
   - files

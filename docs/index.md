@@ -1,6 +1,6 @@
-# Welcome to Twist DNA Hematology
+<img src="static/poppy_light.svg" style="height: 200px;" />
 
-[Twist DNA Hematology](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology) is a Snakemake pipeline used for analysing hybrid capture short-read sequencing data from the [Genomic Medicine Sweden](https://genomicmedicine.se/en/) myeloid gene panels.
+[Poppy](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology) is a Snakemake pipeline used for analysing hybrid capture short-read sequencing data from the [Genomic Medicine Sweden](https://genomicmedicine.se/en/) myeloid gene panels.
 
 # Hydra-genetics
 

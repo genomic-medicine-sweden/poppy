@@ -2,54 +2,7 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-  resources:
-    type: string
-    description: >
-      path to yaml file containing compute resource configuration
-    format: uri-reference
 
-  default_container:
-    type: string
-    description: >
-      uri pointing to default docker/apptainer image that should be used
-    format: uri-reference
-
-  reference:
-    type: object
-    description: >
-      reference genome files
-    properties:
-      fasta:
-        type: string
-        description: >
-          genomic fasta file
-        format: uri-reference
-
-      design_bed:
-        type: string
-        description: >
-          bed file defining the panel design
-        format: uri-reference
-
-      dict:
-        type: string
-        description: >
-          genome sequence dictionary file
-        format: uri-reference
-
-      mappability:
-        type: string
-        description: >
-          fasta mappability file
-        format: uri-reference
-
-    required:
-      - fasta
-      - design_bed
-      - dict
-      - mappability
-  # end reference
-  
   bed_to_interval_list:
     type: object
     description: >
@@ -115,6 +68,12 @@ properties:
     required:
       - container
 
+  default_container:
+    type: string
+    description: >
+      uri pointing to default docker/apptainer image that should be used
+    format: uri-reference
+
   preprocess_intervals:
     type: object
     description: >
@@ -127,6 +86,48 @@ properties:
         format: uri-reference
     required:
       - container
+
+  reference:
+    type: object
+    description: >
+      reference genome files
+    properties:
+      design_bed:
+        type: string
+        description: >
+          bed file defining the panel design
+        format: uri-reference
+
+      dict:
+        type: string
+        description: >
+          genome sequence dictionary file
+        format: uri-reference
+
+      fasta:
+        type: string
+        description: >
+          genomic fasta file
+        format: uri-reference
+
+      mappability:
+        type: string
+        description: >
+          fasta mappability file
+        format: uri-reference
+
+    required:
+      - fasta
+      - design_bed
+      - dict
+      - mappability
+  # end reference
+  
+  resources:
+    type: string
+    description: >
+      path to yaml file containing compute resource configuration
+    format: uri-reference
 
   svdb_build:
     type: object
@@ -155,14 +156,14 @@ properties:
       - container
 
 required:
-  - resources
-  - default_container
-  - reference
   - bed_to_interval_list
   - cnvkit_build_normal_reference
   - cnvkit_create_targets
   - collect_read_counts
   - create_read_count_panel_of_normals
+  - default_container
   - preprocess_intervals
+  - reference
+  - resources
   - svdb_build
   - svdb_export
