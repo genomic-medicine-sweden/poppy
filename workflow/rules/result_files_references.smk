@@ -14,11 +14,9 @@ rule copy_cnvkit_references:
 
 rule copy_gatk_interval_list:
     input:
-        "references/preprocess_intervals/{}.preprocessed.interval_list".format(
-            Path(config.get("reference", {}).get("design_bed")).name
-        ),
+        "references/preprocess_intervals/design.preprocessed.interval_list",
     output:
-        "reference_files/{}.preprocessed.interval_list".format(Path(config.get("reference", {}).get("design_bed")).name),
+        "reference_files/design.preprocessed.interval_list",
     shell:
         """
         cp {input} {output}

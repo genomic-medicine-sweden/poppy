@@ -87,43 +87,7 @@ properties:
     required:
       - container
 
-  reference:
-    type: object
-    description: >
-      reference genome files
-    properties:
-      design_bed:
-        type: string
-        description: >
-          bed file defining the panel design
-        format: uri-reference
-
-      dict:
-        type: string
-        description: >
-          genome sequence dictionary file
-        format: uri-reference
-
-      fasta:
-        type: string
-        description: >
-          genomic fasta file
-        format: uri-reference
-
-      mappability:
-        type: string
-        description: >
-          fasta mappability file
-        format: uri-reference
-
-    required:
-      - fasta
-      - design_bed
-      - dict
-      - mappability
-  # end reference
-  
-  resources:
+  resources_references:
     type: string
     description: >
       path to yaml file containing compute resource configuration
@@ -163,7 +127,6 @@ required:
   - create_read_count_panel_of_normals
   - default_container
   - preprocess_intervals
-  - reference
-  - resources
+  - resources_references
   - svdb_build
   - svdb_export

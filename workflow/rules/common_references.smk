@@ -12,6 +12,7 @@ if not workflow.overwrite_configfiles:
 # Validate config
 validate(config, schema="../schemas/config_references.schema.yaml")
 config = load_resources(config, config["resources"])
+config = load_resources(config, config["resources_references"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 # Sample information
@@ -19,7 +20,7 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "type"], drop=False)
-validate(units, schema="../schemas/units_references.schema.yaml")
+validate(units, schema="../schemas/units.schema.yaml")
 
 
 def compile_output_list(wildcards: snakemake.io.Wildcards):
@@ -27,5 +28,5 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         "reference_files/cnvkit.PoN.cnn",
         "reference_files/gatk.PoN.hdf5",
         "reference_files/svdb_cnv.vcf",
-        "reference_files/{}.preprocessed.interval_list".format(Path(config.get("reference", {}).get("design_bed")).name),
+        "reference_files/design.preprocessed.interval_list"
     ]
