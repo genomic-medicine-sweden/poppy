@@ -30,3 +30,17 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         "reference_files/svdb_cnv.vcf",
         "reference_files/design.preprocessed.interval_list"
     ]
+
+
+def get_bams():
+    return [
+        f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam"
+        for t in units.itertuples()
+    ]
+
+
+def get_cnv_vcfs():
+    return [
+        f"cnv_sv/svdb_query/{t.sample}_{t.type}.pathology.svdb_query.vcf"
+        for t in units.itertuples()
+    ]
