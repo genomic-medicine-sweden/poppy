@@ -5,6 +5,10 @@ from snakemake.utils import min_version
 import sys
 
 from hydra_genetics.utils.resources import load_resources
+from hydra_genetics import min_version as hydra_min_version
+
+hydra_min_version("1.8.1")
+min_version("7.32.0")
 
 if not workflow.overwrite_configfiles:
     sys.exit("config file has to be specified with --configfile")
