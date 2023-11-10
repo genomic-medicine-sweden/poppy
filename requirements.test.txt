@@ -1,4 +1,4 @@
-snakefmt==0.4.3
+snakefmt>=0.8
 pre-commit>=3.3
 pycodestyle==2.6.0
 pytest==6.2.5
