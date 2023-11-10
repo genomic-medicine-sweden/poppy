@@ -87,6 +87,17 @@ properties:
     required:
       - container
 
+  reference:
+    type: object
+    properties:
+      mappability:
+        type: string
+        description: >
+          path to mappability file
+        format: uri-reference
+    required:
+      - mappability
+
   resources_references:
     type: string
     description: >
@@ -127,6 +138,7 @@ required:
   - create_read_count_panel_of_normals
   - default_container
   - preprocess_intervals
+  - reference
   - resources_references
   - svdb_build
   - svdb_export

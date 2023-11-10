@@ -2,6 +2,9 @@ samples: samples_references.tsv
 units: units_references.tsv
 resources_references: config/resources_references.yaml
 
+reference:
+  mappability: ""
+
 bed_to_interval_list:
   container: docker://hydragenetics/gatk4:4.2.2.0
 
