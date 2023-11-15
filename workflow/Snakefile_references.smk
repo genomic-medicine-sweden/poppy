@@ -15,6 +15,34 @@ module pipeline:
 use rule * from pipeline exclude all
 
 
+use rule gatk_collect_allelic_counts from cnv_sv as cnv_sv_gatk_collect_allelic_counts with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
+        interval="references/preprocess_intervals/design.preprocessed.interval_list",
+        ref=config["reference"]["fasta"],
+
+
+use rule gatk_collect_read_counts from cnv_sv as cnv_sv_gatk_collect_read_counts with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
+        interval="references/preprocess_intervals/design.preprocessed.interval_list",
+
+
+use rule gatk_denoise_read_counts from cnv_sv as cnv_sv_gatk_denoise_read_counts with:
+    input:
+        hdf5PoN="references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5",
+        hdf5Tumor="cnv_sv/gatk_collect_read_counts/{sample}_{type}.counts.hdf5",
+
+
+use rule cnvkit_batch from cnv_sv as cnv_sv_cnvkit_batch with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
+        cnv_reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
+
+
 module references:
     snakefile:
         github(
