@@ -1,7 +1,9 @@
 site_name: Poppy
 nav:
-  - Introduction: intro.md
-  - Software: software.md
+  - Overview:
+    - Introduction: intro.md
+    - Reference files: reference_files.md
+    - Software: software.md
 
 theme: readthedocs
 extra_css: [extra.css]

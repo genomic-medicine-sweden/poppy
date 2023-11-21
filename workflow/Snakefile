@@ -68,7 +68,7 @@ module filtering:
         github(
             "hydra-genetics/filtering",
             path="workflow/Snakefile",
-            tag="8dbf481",
+            tag="v0.3.0",
         )
     config:
         config

@@ -5,6 +5,10 @@ from snakemake.utils import min_version
 import sys
 
 from hydra_genetics.utils.resources import load_resources
+from hydra_genetics import min_version as hydra_min_version
+
+hydra_min_version("1.8.1")
+min_version("7.32.0")
 
 if not workflow.overwrite_configfiles:
     sys.exit("config file has to be specified with --configfile")
@@ -12,6 +16,7 @@ if not workflow.overwrite_configfiles:
 # Validate config
 validate(config, schema="../schemas/config_references.schema.yaml")
 config = load_resources(config, config["resources"])
+config = load_resources(config, config["resources_references"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 # Sample information
@@ -19,7 +24,7 @@ samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=F
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "type"], drop=False)
-validate(units, schema="../schemas/units_references.schema.yaml")
+validate(units, schema="../schemas/units.schema.yaml")
 
 
 def compile_output_list(wildcards: snakemake.io.Wildcards):
@@ -27,5 +32,13 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         "reference_files/cnvkit.PoN.cnn",
         "reference_files/gatk.PoN.hdf5",
         "reference_files/svdb_cnv.vcf",
-        "reference_files/{}.preprocessed.interval_list".format(Path(config.get("reference", {}).get("design_bed")).name),
+        "reference_files/design.preprocessed.interval_list",
     ]
+
+
+def get_bams():
+    return [f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam" for t in units.itertuples()]
+
+
+def get_cnv_vcfs():
+    return [f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]
