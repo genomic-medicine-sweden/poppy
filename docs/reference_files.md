@@ -4,7 +4,7 @@
 
 A pipeline for generating panels of normals for various software is included in Poppy. This leverages the main pipeline when it comes to generating input files for the reference-specific rules, which in turn means that the configuration for the main pipeline in addition to the reference pipeline has to be applied when running it.
 
-As an example, consider the following Snakemake profile (`reference_profile/config.yaml`):
+If we consider an example Snakemake profile called `reference_profile`, its `config.yaml` could contain the following:
 
 ```yaml
 config-files:
