@@ -45,6 +45,6 @@ def get_bams():
 
 def get_cnv_vcfs():
     return [
-        f"cnv_sv/svdb_query/{t.sample}_{t.type}.pathology.svdb_query.vcf"
+        f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf"
         for t in units.itertuples()
     ]
