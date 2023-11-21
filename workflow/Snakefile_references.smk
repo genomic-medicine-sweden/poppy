@@ -8,8 +8,10 @@ rule all:
 
 
 module pipeline:
-    snakefile: "Snakefile"
-    config: config
+    snakefile:
+        "Snakefile"
+    config:
+        config
 
 
 use rule * from pipeline exclude all
@@ -69,10 +71,12 @@ use rule preprocess_intervals from references as references_preprocess_intervals
     output:
         temp("references/preprocess_intervals/design.preprocessed.interval_list"),
 
+
 # SVDB
 use rule svdb_build from references as references_svdb_build with:
     input:
-        cnv_vcfs=get_cnv_vcfs()
+        cnv_vcfs=get_cnv_vcfs(),
+
 
 # CNVkit PoN
 use rule cnvkit_build_normal_reference from references as references_cnvkit_build_normal_reference with:

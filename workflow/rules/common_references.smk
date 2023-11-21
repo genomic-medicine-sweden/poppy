@@ -32,19 +32,13 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
         "reference_files/cnvkit.PoN.cnn",
         "reference_files/gatk.PoN.hdf5",
         "reference_files/svdb_cnv.vcf",
-        "reference_files/design.preprocessed.interval_list"
+        "reference_files/design.preprocessed.interval_list",
     ]
 
 
 def get_bams():
-    return [
-        f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam"
-        for t in units.itertuples()
-    ]
+    return [f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam" for t in units.itertuples()]
 
 
 def get_cnv_vcfs():
-    return [
-        f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf"
-        for t in units.itertuples()
-    ]
+    return [f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]
