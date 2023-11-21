@@ -35,9 +35,16 @@ config-files:
    - local_config.yaml
 ```
 
-## Troubleshooting
+### Output files
 
-### Unable to write FASTA index file
+- `reference_files/design.preprocessed.interval_list`
+- `reference_files/cnvkit.PoN.cnn`
+- `reference_files/gatk.PoN.hdf5`
+- `reference_files/svdb_cnv.vcf`
+
+### Troubleshooting
+
+#### Unable to write FASTA index file
 
 If the building the panel of normals with CNVkit fails with the message along the lines of "OSError: reference.fasta.fai may not be writable", it could mean a couple of things
 
