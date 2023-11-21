@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=1080, initial-scale=1.0" />
+    <title>CNV report</title>
+
+    <style>
+      {{ css | indent(width=8) }}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>CNV report</h1>
+        <ul>
+          <li>Sample: {{ metadata.sample }}</li>
+          <li>Date: <time>{{ metadata.date }}</time></li>
+          <li>
+            Tumor cell content: {{ metadata.tc if metadata.tc is not none else
+            "N/A" }} ({{ metadata.tc_method }})
+          </li>
+        </ul>
+      </header>
+
+      <div class="app-container">
+        <div class="plot-container">
+          <fieldset id="dataset-picker">
+            <legend>CNV dataset</legend>
+          </fieldset>
+
+          <section class="genome-view plot-section">
+            <h2>Genome view</h2>
+            <p class="no-print">Click a chromosome to visualise it below.</p>
+            <svg id="genome-view"></svg>
+          </section>
+
+          <section class="chromosome-view plot-section">
+            <h2>Chromosome view</h2>
+            <p class="no-print">
+              Click and drag to zoom along x-axis. Click the plot to reset zoom.
+            </p>
+            <div class="no-print">
+              <input type="checkbox" id="chromosome-fit-to-data" />
+              <label for="chromosome-fit-to-data">Zoom to data extent</label>
+              <i
+                class="data-range-warning fa-solid fa-triangle-exclamation"
+                title="There are data points outside the current range"
+              ></i>
+            </div>
+            <svg id="chromosome-view"></svg>
+            <dialog id="chromosome-view-dialog">
+              <button class="close"><i class="fa-solid fa-x"></i></button>
+            </dialog>
+          </section>
+        </div>
+
+        {% if metadata.show_table %}
+        <div class="table-container">
+          <section>
+            <h2>Results table</h2>
+            <p class="no-print">
+              Click the magnifying glass to zoom in on the region in question.
+              Hover over the copy number to see what results other callers got
+              for this gene.
+            </p>
+            <p>
+              BAF values outside the range 0&ndash;1 might indicate that the
+              tumor cell content is underestimated.
+            </p>
+            <p>
+              Note that variants labelled as COPY_NORMAL can be present in the
+              filtered table. This indicates that there is a variant covering
+              the same gene that has been called by a different caller.
+            </p>
+            <input type="checkbox" id="table-filter-toggle" checked />
+            <label
+              for="table-filter-toggle"
+              title="Apply predefined filters to the table"
+              >Filter table</label
+            >
+            <table id="cnv-table"></table>
+          </section>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/0a9e116953.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+      let cnvData = {{ json | trim | indent(width=8) }};
+    </script>
+    <!-- prettier-ignore -->
+    <script>
+      {{ js | indent(width = 8) }}
+    </script>
+  </body>
+</html>

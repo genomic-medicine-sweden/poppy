@@ -30,4 +30,8 @@ files:
 
   - name: SVDB CNV VCF file
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
-    output: cnv/{sample}_{type}/{sample}_{type}.pathology.svdb_query.vcf.gz
+    output: cnv/{sample}/{sample}_{type}.pathology.svdb_query.vcf.gz
+
+  - name: CNV HTML report
+    input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
+    output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html

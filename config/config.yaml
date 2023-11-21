@@ -3,7 +3,7 @@
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output_files: "config/output_files.yaml"
+output: "config/output_files.yaml"
 
 default_container: "docker://hydragenetics/common:1.8.1"
 
@@ -19,6 +19,9 @@ reference:
   skip_chrs:
     - "chrM"
 
+annotate_cnv:
+  cnv_genes: config/cnv_genes.hg19.bed
+
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
   callers:
@@ -33,6 +36,11 @@ bwa_mem:
   pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
   sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
+
+cnv_html_report:
+  cytobands: false
+  template_dir: config/cnv_report_template
+  show_table: true
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -54,12 +62,23 @@ fastqc:
 filter_vcf:
   germline: "config/config_hard_filter_germline.yaml"
   somatic: "config/config_soft_filter_somatic.yaml"
+  cnv_hard_filter_amp: "config/config_hard_filter_cnv_amp.yaml"
+  cnv_hard_filter_loh: "config/config_hard_filter_cnv_loh.yaml"
 
 freebayes:
   container: "docker://hydragenetics/freebayes:1.3.1"
 
 mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
+
+merge_cnv_json:
+  annotations:
+    - config/cnv_genes.hg19.bed
+  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  filtered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
+  unfiltered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
@@ -137,7 +156,7 @@ pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60" #x och B?
   include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
-  
+
 pindel_update_vcf_sequence_dictionary:
   container: "docker://hydragenetics/picard:2.25.0"
 

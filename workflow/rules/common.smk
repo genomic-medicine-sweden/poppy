@@ -67,7 +67,7 @@ for fq1, fq2 in zip(units["fastq1"].values, units["fastq2"].values):
     if not pathlib.Path(fq2).exists():
         sys.exit(f"fastq file not found: {fq2}\ncontrol the paths in {config['units']}")
 
-with open(config["output_files"], "r") as f:
+with open(config["output"], "r") as f:
     output_spec = yaml.safe_load(f.read())
     validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
 

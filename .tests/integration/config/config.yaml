@@ -1,6 +1,6 @@
 ---
 
-output_files: "../../config/output_files.yaml"
+output: "../../config/output_files.yaml"
 resources: "../../config/resources.yaml"
 
 reference:
@@ -11,6 +11,9 @@ reference:
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
 
+annotate_cnv:
+  cnv_genes: ../../config/cnv_genes.hg19.bed
+
 bwa_mem:
   amb: "reference/hg19.fasta.amb"
   ann: "reference/hg19.fasta.ann"
@@ -18,18 +21,27 @@ bwa_mem:
   pac: "reference/hg19.fasta.pac"
   sa: "reference/hg19.fasta.sa"
 
+cnv_html_report:
+  template_dir: ../../config/cnv_report_template
+
 cnvkit_batch:
   normal_reference: "data/cnvkit/cnvkit_pon.cnn"
 
 filter_vcf:
   germline: "../../config/config_hard_filter_germline.yaml"
   somatic: "../../config/config_soft_filter_somatic.yaml"
+  cnv_hard_filter_amp: "../../config/config_hard_filter_cnv_amp.yaml"
+  cnv_hard_filter_loh: "../../config/config_hard_filter_cnv_loh.yaml"
 
 gatk_collect_allelic_counts:
   SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 
 gatk_denoise_read_counts:
   normal_reference: "data/gatk/pon.hdf5"
+
+merge_cnv_json:
+  annotations:
+    - ../../config/cnv_genes.hg19.bed
 
 multiqc:
   config: "../../config/multiqc.yaml"
