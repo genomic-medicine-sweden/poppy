@@ -1,6 +1,6 @@
 # Reference files
 
-## Panel of normals
+## Panel of normals for CNV analysis
 
 A pipeline for generating panels of normals for various software is included in Poppy. This leverages the main pipeline when it comes to generating input files for the reference-specific rules, which in turn means that the configuration for the main pipeline in addition to the reference pipeline has to be applied when running it.
 
