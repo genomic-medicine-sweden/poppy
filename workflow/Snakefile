@@ -37,7 +37,7 @@ module annotation:
         github(
             "hydra-genetics/annotation",
             path="workflow/Snakefile",
-            tag="v0.3.0",
+            tag="v0.3.1",
         )
     config:
         config
