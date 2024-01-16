@@ -39,7 +39,6 @@ bwa_mem:
 
 cnv_html_report:
   cytobands: false
-  template_dir: config/cnv_report_template
   show_table: true
 
 cnvkit_batch:
