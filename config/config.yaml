@@ -92,7 +92,7 @@ multiqc:
         - N
       qc_files:
         - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
+        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
         - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
         - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
@@ -142,11 +142,6 @@ picard_collect_hs_metrics:
 
 picard_collect_insert_size_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_multiple_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-  output_ext:
-    - "insert_size_metrics"
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"

@@ -73,7 +73,6 @@ properties:
     required:
       - fasta
       - fai
-      - dict
       - design_bed
       - design_intervals
       - design_intervals_gatk_cnv
@@ -767,7 +766,6 @@ required:
   - picard_collect_gc_bias_metrics
   - picard_collect_hs_metrics
   - picard_collect_insert_size_metrics
-  - picard_collect_multiple_metrics
   - picard_mark_duplicates
   - pindel2vcf
   - pindel_call
