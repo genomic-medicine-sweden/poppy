@@ -1,0 +1,17 @@
+directory: ./reference_files
+files:
+  - name: CNVkit panel of normals
+    input: references/cnvkit_build_normal_reference/cnvkit.PoN.cnn
+    output: cnvkit.PoN.cnn
+
+  - name: GATK interval list
+    input: references/preprocess_intervals/design.preprocessed.interval_list
+    output: design.preprocessed.interval_list
+
+  - name: GATK panel of normals
+    input: references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5
+    output: gatk.PoN.hdf5
+
+  - name: SVDB database
+    input: references/svdb_export/svdb_cnv.vcf
+    output: svdb_cnv.vcf
