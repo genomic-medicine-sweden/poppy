@@ -165,9 +165,22 @@ pindel2vcf:
   refname: "hg19"
   refdate: "2009"
 
+purecn:
+  container: docker://hydragenetics/purecn:2.2.0
+  genome: hg19
+  interval_padding: 100
+  segmentation_method: internal
+  fun_segmentation: PSCBS
+  normaldb: FILL_ME_IN
+  intervals: FILL_ME_IN
+
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
   tc_method:
+    - name: purecn
+      cnv_caller:
+        - cnvkit
+        - gatk
     - name: pathology
       cnv_caller:
         - cnvkit
