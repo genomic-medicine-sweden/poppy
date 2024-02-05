@@ -37,10 +37,15 @@ config-files:
 
 ### Output files
 
-- `reference_files/design.preprocessed.interval_list`
+The output files of the reference pipelie are defined in `config/output_files_references.yaml`. By default, this includes:
+
 - `reference_files/cnvkit.PoN.cnn`
+- `reference_files/design.preprocessed.interval_list`
 - `reference_files/gatk.PoN.hdf5`
 - `reference_files/svdb_cnv.vcf`
+- `reference_files/purecn_normal_db.rds`
+- `reference_files/purecn_mapping_bias.rds`
+- `reference_files/purecn_targets_intervals.txt`
 
 ### Troubleshooting
 
