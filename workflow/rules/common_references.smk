@@ -37,8 +37,8 @@ def compile_output_list(wildcards: snakemake.io.Wildcards):
 
 
 def get_bams():
-    return [f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam" for t in units.itertuples()]
+    return list(set([f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam" for t in units.itertuples()]))
 
 
 def get_cnv_vcfs():
-    return [f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]
+    return list(set([f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]))
