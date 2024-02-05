@@ -9,4 +9,5 @@ __license__ = "GPL-3"
 
 def test_dummy():
     from dummy import dummy
+
     assert dummy() == 1
