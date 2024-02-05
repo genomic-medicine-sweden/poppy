@@ -1,10 +1,9 @@
 include: "rules/common_references.smk"
-include: "rules/result_files_references.smk"
 
 
 rule all:
     input:
-        compile_output_list,
+        compile_output_file_list,
 
 
 module pipeline:

@@ -2,6 +2,9 @@ samples: samples_references.tsv
 units: units_references.tsv
 resources_references: config/resources_references.yaml
 
+default_container: docker://hydragenetics/common:1.10.2
+output: config/output_files_references.yaml
+
 reference:
   mappability: ""
 
