@@ -8,7 +8,9 @@ import yaml
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics import min_version as hydra_min_version
 
+
 include: "results.smk"
+
 
 hydra_min_version("1.8.1")
 min_version("7.32.0")
@@ -43,3 +45,10 @@ def get_bams():
 
 def get_cnv_vcfs():
     return [f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]
+
+
+def get_vcfs():
+    return [
+        f"snv_indels/bcbio_variation_recall_ensemble/{t.sample}_{t.type}.ensembled.vep_annotated.vcf.gz"
+        for t in units.itertuples()
+    ]

@@ -15,3 +15,15 @@ files:
   - name: SVDB database
     input: references/svdb_export/svdb_cnv.vcf
     output: svdb_cnv.vcf
+
+  - name: purecn normaldb
+    input: references/purecn_normal_db/output/normalDB.rds
+    output: purecn_normal_db.rds
+
+  - name: purecn mapping bias
+    input: references/purecn_normal_db/output/mapping_bias.rds
+    output: purecn_mapping_bias.rds
+
+  - name: purecn intervals
+    input: references/purecn_interval_file/targets_intervals.txt
+    output: purecn_targets_intervals.txt

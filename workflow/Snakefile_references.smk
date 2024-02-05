@@ -49,7 +49,7 @@ module references:
         github(
             repo="hydra-genetics/references",
             path="workflow/Snakefile",
-            tag="develop",
+            tag="7e0a806dd6fbf4689aeea7e8624cc310a962cf5b",
         )
     config:
         config
@@ -85,3 +85,24 @@ use rule cnvkit_build_normal_reference from references as references_cnvkit_buil
         antitarget="references/cnvkit_create_anti_targets/cnvkit_manifest.antitarget.bed",
         ref=config.get("reference", {}).get("fasta"),
         mappability=config.get("reference", {}).get("mappability"),
+
+
+# purecn normal db
+use rule purecn_bam_list from references as references_purecn_bam_list with:
+    input:
+        bam_list=get_bams(),
+
+
+use rule bcftools_merge from references as references_bcftools_merge with:
+    input:
+        vcfs=get_vcfs(),
+        vcfs_tabix=[f"{vcf}.tbi" for vcf in get_vcfs()],
+
+
+use rule purecn_coverage from references as references_purecn_coverage with:
+    input:
+        bam_list_file="references/purecn_bam_list/bam_files.list",
+        intervals="references/purecn_interval_file/targets_intervals.txt",
+    params:
+        intervals="references/purecn_interval_file/targets_intervals.txt",
+        extra=config.get("purecn_coverage", {}).get("extra", ""),

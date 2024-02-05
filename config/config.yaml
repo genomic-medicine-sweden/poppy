@@ -29,6 +29,9 @@ bcbio_variation_recall_ensemble:
     - vardict
     - freebayes
 
+bcftools_annotate:
+  annotation_db: /storage/userdata/references/homo_sapiens/hg19/hydra-genetics/poppy/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
+
 bwa_mem:
   amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
   ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
@@ -165,9 +168,25 @@ pindel2vcf:
   refname: "hg19"
   refdate: "2009"
 
+purecn:
+  container: docker://hydragenetics/purecn:2.2.0
+  genome: hg19
+  interval_padding: 100
+  segmentation_method: internal
+  fun_segmentation: PSCBS
+  normaldb: FILL_ME_IN
+  intervals: FILL_ME_IN
+
+purecn_coverage:
+  container: docker://hydragenetics/purecn:2.2.0
+
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
   tc_method:
+    - name: purecn
+      cnv_caller:
+        - cnvkit
+        - gatk
     - name: pathology
       cnv_caller:
         - cnvkit

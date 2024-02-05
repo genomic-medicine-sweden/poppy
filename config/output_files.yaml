@@ -32,6 +32,10 @@ files:
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
     output: cnv/{sample}/{sample}_{type}.pathology.svdb_query.vcf.gz
 
-  - name: CNV HTML report
+  - name: CNV HTML report, pathology TC
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
+
+  - name: CNV HTML report, purecn TC
+    input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
+    output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html

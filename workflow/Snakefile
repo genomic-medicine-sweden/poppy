@@ -48,7 +48,7 @@ use rule * from annotation as annotation_*
 
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="549ff36")
+        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="v0.4.1")
     config:
         config
 

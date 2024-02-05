@@ -69,4 +69,3 @@ def generate_copy_rules(output_spec):
         rulestrings.append(rule_code)
 
     exec(compile("\n".join(rulestrings), "copy_result_files", "exec"), workflow.globals)
-
