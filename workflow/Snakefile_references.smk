@@ -49,7 +49,7 @@ module references:
         github(
             repo="hydra-genetics/references",
             path="workflow/Snakefile",
-            tag="develop",
+            tag="1fcd3f7ed8b97707a38e",
         )
     config:
         config
