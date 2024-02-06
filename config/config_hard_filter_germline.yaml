@@ -1,7 +1,7 @@
 filters:
   germline:
     description: "Hard filter germline"
-    expression: "(VEP:gnomAD_AF < 0.001)"
+    expression: "(VEP:gnomADe_AF < 0.001)"
     soft_filter: "False"
   ad:
     description: "Hard filter variants with few observations (AD lower than 50)"
