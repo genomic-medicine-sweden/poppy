@@ -12,15 +12,22 @@ jobs:
   snakefmt:
     name: Snakefmt
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: super-linter/super-linter@v6.0.0
         env:
+          DEFAULT_BRANCH: dev
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_SNAKEMAKE_SNAKEFMT: true
-          OUTPUT_FOLDER: .github/linters/report
