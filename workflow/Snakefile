@@ -63,6 +63,12 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
         tc_file=cnv_sv.get_tc_file,
 
 
+use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        metrics="qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt",
+
+
 module filtering:
     snakefile:
         github(

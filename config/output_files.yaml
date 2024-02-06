@@ -25,8 +25,8 @@ files:
     output: vcf/{sample}_{type}.{caller}.vcf.gz
 
   - name: Pindel VCF file
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz
-    output: vcf/{sample}_{type}.pindel.vep_annotated.vcf.gz
+    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.filter.pindel.vcf.gz
+    output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz
 
   - name: SVDB CNV VCF file
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
