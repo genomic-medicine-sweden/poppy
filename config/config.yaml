@@ -54,6 +54,9 @@ cnvkit_call:
 
 cnvkit_vcf:
   container: "docker://hydragenetics/cnvkit:0.9.9"
+  hom_del_limit: 0.47
+  het_del_limit: 1.68
+  dup_limit: 2.3
 
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
