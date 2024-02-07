@@ -86,3 +86,11 @@ use rule cnvkit_build_normal_reference from references as references_cnvkit_buil
         antitarget="references/cnvkit_create_anti_targets/cnvkit_manifest.antitarget.bed",
         ref=config.get("reference", {}).get("fasta"),
         mappability=config.get("reference", {}).get("mappability"),
+
+
+# Artifact
+use rule create_artifact_file from references as references_create_artifact_file with:
+    input:
+        vcfs=get_vcfs(),
+    params:
+        callers=config.get("bcbio_variation_recall_ensemble", {}).get("callers", ["gatk_mutect2", "vardict", "freebayes"]),

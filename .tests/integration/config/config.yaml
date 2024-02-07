@@ -10,6 +10,7 @@ reference:
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
+  artifacts: "reference/artifact_panel.tsv"
 
 annotate_cnv:
   cnv_genes: ../../config/cnv_genes.hg19.bed

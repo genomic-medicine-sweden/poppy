@@ -43,3 +43,14 @@ rule copy_svbd_references:
         """
         cp {input} {output}
         """
+
+
+rule copy_artefact:
+    input:
+        "references/create_artifact_file/artifact_panel.tsv",
+    output:
+        "reference_files/artifact_panel.tsv",
+    shell:
+        """
+        cp {input} {output}
+        """

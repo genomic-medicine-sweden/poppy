@@ -16,6 +16,7 @@ reference:
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
   design_intervals_gatk_cnv: ""
+  artifacts: "FILL_ME_IN.tsv"
   skip_chrs:
     - "chrM"
 

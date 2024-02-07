@@ -12,12 +12,8 @@ files:
     input: qc/multiqc/multiqc_DNA.html
     output: qc/multiqc_DNA.html
 
-  - name: SNV ensemble VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.vcf.gz
-    output: vcf/{sample}_{type}.ensembled.vep_annotated.vcf.gz
-
   - name: SNV ensemble soft filtered VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.somatic.vcf.gz
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.filter.somatic.vcf.gz
     output: vcf/{sample}_{type}.filter.somatic.vcf.gz
 
   - name: Caller-specific VCF file
