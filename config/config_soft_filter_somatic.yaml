@@ -13,7 +13,7 @@ filters:
     description: "Soft filter variants with low vaf (AF lower than 0.01)"
     expression: "(INFO:AF:0 < 0.01)"
     soft_filter_flag: "AF_0.01"
-    soft_filter: "True"
+    soft_filter: "False"
   intron:
     description: "Soft filter intronic variants except if also splice, in cosmic, or in gata2 or tert genes"
     expression: "(exist[intron_variant, VEP:Consequence] and !exist[splice, VEP:Consequence] and VEP:SYMBOL != TERT and VEP:SYMBOL != GATA2 and !exist[COSV[0-9]+, VEP:Existing_variation])"
@@ -24,8 +24,4 @@ filters:
     expression: "(VEP:MAX_AF > 0.02)"
     soft_filter_flag: "PopAF_0.02"
     soft_filter: "True"
-  freebayes:
-    description: "Soft filter variant if only detected by freebayes and QUAL lower than 1"
-    expression: "(INFO:CALLERS:0 = freebayes and QUAL < 1)"
-    soft_filter: "True"
-    soft_filter_flag: "Freebayes"
+  #artifact
