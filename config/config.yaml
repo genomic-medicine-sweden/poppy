@@ -5,7 +5,7 @@ samples: "samples.tsv"
 units: "units.tsv"
 output: "config/output_files.yaml"
 
-default_container: "docker://hydragenetics/common:1.8.1"
+default_container: "docker://hydragenetics/common:1.10.2"
 
 trimmer_software: "fastp_pe"
 
