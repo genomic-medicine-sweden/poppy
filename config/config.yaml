@@ -162,8 +162,8 @@ pindel_call:
   extra: "-x 2 -B 60" #x och B?
   include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
 
-pindel_update_vcf_sequence_dictionary:
-  container: "docker://hydragenetics/picard:2.25.0"
+pindel_update_vcf:
+  container: "docker://hydragenetics/picard:2.25.4"
 
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
