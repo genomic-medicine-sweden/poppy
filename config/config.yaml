@@ -29,6 +29,9 @@ bcbio_variation_recall_ensemble:
     - gatk_mutect2
     - vardict
 
+bcftools_annotate:
+  annotation_db: /storage/userdata/references/homo_sapiens/hg19/hydra-genetics/poppy/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
+
 bwa_mem:
   amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
   ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
@@ -51,6 +54,9 @@ cnvkit_call:
 
 cnvkit_vcf:
   container: "docker://hydragenetics/cnvkit:0.9.9"
+  hom_del_limit: 0.47
+  het_del_limit: 1.68
+  dup_limit: 2.3
 
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
@@ -149,8 +155,8 @@ pindel_call:
   extra: "-x 2 -B 60" #x och B?
   include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
 
-pindel_update_vcf_sequence_dictionary:
-  container: "docker://hydragenetics/picard:2.25.0"
+pindel_update_vcf:
+  container: "docker://hydragenetics/picard:2.25.4"
 
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
@@ -158,9 +164,26 @@ pindel2vcf:
   refname: "hg19"
   refdate: "2009"
 
+purecn:
+  container: docker://hydragenetics/purecn:2.2.0
+  genome: hg19
+  interval_padding: 100
+  segmentation_method: internal
+  fun_segmentation: PSCBS
+  normaldb: FILL_ME_IN
+  intervals: FILL_ME_IN
+
+purecn_coverage:
+  container: docker://hydragenetics/purecn:2.2.0
+  intervals: FILL_ME_IN
+
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
   tc_method:
+    - name: purecn
+      cnv_caller:
+        - cnvkit
+        - gatk
     - name: pathology
       cnv_caller:
         - cnvkit

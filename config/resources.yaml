@@ -20,7 +20,7 @@ fastqc:
   threads: 10
   mem_mb: 61440
   time: "02:00:00"
-  
+
 picard_collect_gc_bias_metrics:
   mem_mb: 30720
   threads: 5

@@ -51,5 +51,12 @@ multiqc:
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
 
+purecn:
+  normaldb: reference/purecn_normal_db.rds
+  intervals: reference/purecn_target_intervals.txt
+
+purecn_coverage:
+  intervals: reference/purecn_target_intervals.txt
+
 vep:
   vep_cache: "data/vep_cache"

@@ -3,9 +3,14 @@ from pathlib import Path
 from snakemake.utils import validate
 from snakemake.utils import min_version
 import sys
+import yaml
 
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics import min_version as hydra_min_version
+
+
+include: "results.smk"
+
 
 hydra_min_version("1.8.1")
 min_version("7.32.0")
@@ -26,15 +31,12 @@ validate(samples, schema="../schemas/samples.schema.yaml")
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "type"], drop=False)
 validate(units, schema="../schemas/units.schema.yaml")
 
+# Ouput file specification
+with open(config["output"]) as f:
+    output_spec = yaml.safe_load(f)
+    validate(output_spec, schema="../schemas/output_files.schema.yaml")
 
-def compile_output_list(wildcards: snakemake.io.Wildcards):
-    return [
-        "reference_files/cnvkit.PoN.cnn",
-        "reference_files/gatk.PoN.hdf5",
-        "reference_files/svdb_cnv.vcf",
-        "reference_files/design.preprocessed.interval_list",
-        "reference_files/artifact_panel.tsv",
-    ]
+generate_copy_rules(output_spec)
 
 
 def get_bams():
@@ -46,4 +48,11 @@ def get_cnv_vcfs():
 
 
 def get_vcfs():
-    return list(set([f"snv_indels/bcbio_variation_recall_ensemble/{t.sample}_{t.type}.ensembled.vcf.gz" for t in units.itertuples()]))
+    return list(
+        set(
+            [
+                f"snv_indels/bcbio_variation_recall_ensemble/{t.sample}_{t.type}.ensembled.vep_annotated.vcf.gz"
+                for t in units.itertuples()
+            ]
+        )
+    )

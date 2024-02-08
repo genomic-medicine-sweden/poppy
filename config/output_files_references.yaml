@@ -1,0 +1,33 @@
+directory: ./reference_files
+files:
+  - name: CNVkit panel of normals
+    input: references/cnvkit_build_normal_reference/cnvkit.PoN.cnn
+    output: cnvkit.PoN.cnn
+
+  - name: GATK interval list
+    input: references/preprocess_intervals/design.preprocessed.interval_list
+    output: design.preprocessed.interval_list
+
+  - name: GATK panel of normals
+    input: references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5
+    output: gatk.PoN.hdf5
+
+  - name: SVDB database
+    input: references/svdb_export/svdb_cnv.vcf
+    output: svdb_cnv.vcf
+
+  - name: purecn normaldb
+    input: references/purecn_normal_db/output/normalDB.rds
+    output: purecn_normal_db.rds
+
+  - name: purecn mapping bias
+    input: references/purecn_normal_db/output/mapping_bias.rds
+    output: purecn_mapping_bias.rds
+
+  - name: purecn intervals
+    input: references/purecn_interval_file/targets_intervals.txt
+    output: purecn_targets_intervals.txt
+
+  - name: artifacts tsv-file
+    input: references/create_artifact_file/artifact_panel.tsv
+    output: artifact_panel.tsv

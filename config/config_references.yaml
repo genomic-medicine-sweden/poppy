@@ -2,6 +2,9 @@ samples: samples_references.tsv
 units: units_references.tsv
 resources_references: config/resources_references.yaml
 
+default_container: docker://hydragenetics/common:1.10.2
+output: config/output_files_references.yaml
+
 reference:
   mappability: ""
 
@@ -25,6 +28,16 @@ create_read_count_panel_of_normals:
 
 preprocess_intervals:
   container: docker://hydragenetics/gatk4:4.2.2.0
+
+purecn_interval_file:
+  container: docker://hydragenetics/purecn:2.2.0
+
+purecn_coverage:
+  container: docker://hydragenetics/purecn:2.2.0
+  intervals: references/purecn_interval_file/targets_intervals.txt
+
+purecn_normal_db:
+  container: docker://hydragenetics/purecn:2.2.0
 
 svdb_build:
   container: docker://hydragenetics/svdb:2.6.0
