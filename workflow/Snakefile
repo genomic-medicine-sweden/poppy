@@ -7,7 +7,11 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
+ruleorder: annotation_vep_pindel > annotation_vep
+
+
 include: "rules/common.smk"
+include: "rules/annotation_vep_pindel.smk"
 
 
 report: "report/workflow.rst"
@@ -125,7 +129,6 @@ module snv_indels:
 use rule * from snv_indels as snv_indels_*
 
 
-
 module qc:
     snakefile:
         github(
@@ -139,4 +142,5 @@ module qc:
 
 use rule * from qc as qc_*
 
-#mosdepth thersholds
+
+# mosdepth thersholds

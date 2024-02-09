@@ -24,3 +24,26 @@ properties:
 
   required:
     - default_resources
+
+
+# Entry added using Hydra-Genetics CLI - please move it into alphabetically sorted order
+  annotation_vep_pindel:
+    type: object
+    description: resource definitions for annotation_vep_pindel
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
