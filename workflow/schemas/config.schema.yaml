@@ -755,6 +755,32 @@ properties:
     required:
       - container
 
+
+
+# Entry added using Hydra-Genetics CLI - please move it into alphabetically sorted order
+  annotation_vep_pindel:
+    type: object
+    description: parameters for vep
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      extra:
+        type: string
+        description: parameters that should be forwarded
+      mode:
+        type: string
+        description: use online queries (--database) or offline queries (e.g. --offline --cache --refseq)
+      vep_cache:
+        type: string
+        description: path to vep cache directory
+    required:
+      - extra
+      - vep_cache
+
 required:
   - bcbio_variation_recall_ensemble
   - bwa_mem

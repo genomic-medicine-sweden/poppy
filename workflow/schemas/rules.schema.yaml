@@ -2,3 +2,31 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
+
+  annotation_vep_pindel:
+    type: object
+    description: input and output parameters for vep
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          cache:
+            type: string
+            description: path to vep cache directory
+          fasta:
+            type: string
+            description: path to fasta reference genome
+          tabix:
+            type: string
+            description: vcf index file
+          vcf:
+            type: string
+            description: gzipped vcf file to be annotated
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: annotated vcf file
