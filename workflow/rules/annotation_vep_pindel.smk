@@ -8,13 +8,13 @@ rule annotation_vep_pindel:
     input:
         cache=config.get("vep", {}).get("vep_cache", ""),
         fasta=config["reference"]["fasta"],
-        tabix="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vcf.gz.tbi",
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vcf.gz",
+        tabix="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz.tbi",
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz",
     output:
         vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf"),
     params:
         extra=config.get("vep", {}).get("extra", "--pick"),
-        mode=config.get("vep", {}).get("mode", "--offline --cache --refseq "),
+        mode=config.get("vep", {}).get("mode", "--offline --cache --merged "),
     log:
         "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.log",
     benchmark:
@@ -34,7 +34,7 @@ rule annotation_vep_pindel:
     message:
         "{rule}: vep annotate {input.vcf}"
     shell:
-        " if grep -q -v '^#' {input.vcf} "
+        " if ( zcat {input.vcf} | grep -q -v '^#' ); "
         "then "
         " (vep "
         " --vcf "
@@ -45,7 +45,8 @@ rule annotation_vep_pindel:
         " --fork {threads} "
         " {params.mode} "
         " --fasta {input.fasta} "
-        " {params.extra} ) &> {log}"
+        " {params.extra} ) &> {log};"
         "else "
-        " gzip -dk {input.vcf}"
+        " cp {input.vcf} {output.vcf}.gz ;"
+        " gzip -d {output.vcf}.gz ;"
         "fi"
