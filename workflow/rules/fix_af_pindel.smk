@@ -16,7 +16,7 @@ rule fix_af_pindel:
     benchmark:
         repeat(
             "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.benchmark.tsv",
-            config.get("fix_af_pindel", {}).get("benchmark_repeats", 1)
+            config.get("fix_af_pindel", {}).get("benchmark_repeats", 1),
         )
     threads: config.get("fix_af_pindel", {}).get("threads", config["default_resources"]["threads"])
     resources:
@@ -31,3 +31,4 @@ rule fix_af_pindel:
         "{rule}: add af and dp to info field in {input.vcf}"
     script:
         "../scripts/fix_af_pindel.py"
+
