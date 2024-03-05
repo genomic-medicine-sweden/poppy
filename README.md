@@ -8,10 +8,10 @@
 
 ---
 
-![Lint](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/lint.yaml/badge.svg?branch=dev)
-![Snakefmt](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/snakefmt.yaml/badge.svg?branch=dev)
-![pycodestyle](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pycodestyle.yaml/badge.svg?branch=dev)
-![pytest](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pytest.yaml/badge.svg?branch=dev)
+![Lint](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/lint.yaml/badge.svg?branch=main)
+![Snakefmt](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/snakefmt.yaml/badge.svg?branch=main)
+![pycodestyle](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pycodestyle.yaml/badge.svg?branch=main)
+![pytest](https://github.com/genomic-medicine-sweden/Twist_DNA_Hematology/actions/workflows/pytest.yaml/badge.svg?branch=main)
 
 [![License: GPL-3](https://img.shields.io/badge/License-GPL3-yellow.svg)](https://opensource.org/licenses/gpl-3.0.html)
 

@@ -3,11 +3,9 @@ name: Snakefmt
 on:
   push:
     branches:
-      - dev
       - main
   pull_request:
     branches:
-      - dev
       - main
 
   workflow_dispatch:
@@ -31,7 +29,7 @@ jobs:
       - name: Lint Code Base
         uses: super-linter/super-linter@v6.0.0
         env:
-          DEFAULT_BRANCH: dev
+          DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_SNAKEMAKE_SNAKEFMT: true
