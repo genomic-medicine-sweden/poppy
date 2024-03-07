@@ -29,4 +29,4 @@ properties:
         properties:
           vcf:
             type: string
-            description: annotated vcf file
+            description: annotated (or incase of empty just copied) vcf file 

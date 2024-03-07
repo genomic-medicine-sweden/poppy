@@ -756,30 +756,34 @@ properties:
       - container
 
 
-
-# Entry added using Hydra-Genetics CLI - please move it into alphabetically sorted order
   annotation_vep_pindel:
     type: object
-    description: parameters for vep
+    description: parameters for annotation with vep on pindel vcf, most taken from vep rule to ensure that pindel result is processed identical to snvs
     properties:
-      benchmark_repeats:
-        type: integer
-        description: set number of times benchmark should be repeated
       container:
         type: string
-        description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
-      mode:
-        type: string
-        description: use online queries (--database) or offline queries (e.g. --offline --cache --refseq)
+        description: >
+          From config["vep"]: Name of path to container containing the vep executable
+        format:
+          uri-reference
       vep_cache:
         type: string
-        description: path to vep cache directory
-    required:
-      - extra
-      - vep_cache
+        description: >
+          From config["vep"]: Path to offline VEP cache
+        format: uri-reference
+      mode:
+        type: string
+        description: >
+          From config["vep"]: VEP arguments for run mode
+        examples:
+          - "--offline --cache"
+      extra:
+        type: string
+        description: >
+          From config["vep"]: Additional command line arguments for VEP
+      benchmark_repeats:
+        type: integer
+        description: 'From config["vep"]: set number of times benchmark should be repeated'
 
 required:
   - bcbio_variation_recall_ensemble
