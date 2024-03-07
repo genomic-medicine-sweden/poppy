@@ -41,7 +41,7 @@ use rule cnvkit_batch from cnv_sv as cnv_sv_cnvkit_batch with:
     input:
         bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
         bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
-        cnv_reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
+        reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
 
 
 module references:
