@@ -46,7 +46,9 @@ merge_cnv_json:
     - ../../config/cnv_genes.hg19.bed
 
 multiqc:
-  config: "../../config/multiqc.yaml"
+  reports:
+    DNA:
+      config: "../../config/multiqc.yaml"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
@@ -54,6 +56,7 @@ pindel_call:
 purecn:
   normaldb: reference/purecn_normal_db.rds
   intervals: reference/purecn_target_intervals.txt
+  mapping_bias_file: reference/purecn_mapping_bias.rds
 
 purecn_coverage:
   intervals: reference/purecn_target_intervals.txt
