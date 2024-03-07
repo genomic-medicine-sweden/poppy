@@ -31,4 +31,3 @@ rule fix_af_pindel:
         "{rule}: add af and dp to info field in {input.vcf}"
     script:
         "../scripts/fix_af_pindel.py"
-

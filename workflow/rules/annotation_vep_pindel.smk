@@ -33,20 +33,5 @@ rule annotation_vep_pindel:
         config.get("vep", {}).get("container", config["default_container"])
     message:
         "{rule}: vep annotate {input.vcf}"
-    shell:
-        " if ( zcat {input.vcf} | grep -q -v '^#' ); "
-        "then "
-        " (vep "
-        " --vcf "
-        " --no_stats "
-        " -o {output.vcf} "
-        " -i {input.vcf} "
-        " --dir_cache {input.cache} "
-        " --fork {threads} "
-        " {params.mode} "
-        " --fasta {input.fasta} "
-        " {params.extra} ) &> {log};"
-        "else "
-        " cp {input.vcf} {output.vcf}.gz ;"
-        " gzip -d {output.vcf}.gz ;"
-        "fi"
+    script:
+        "../scripts/annotation_vep_pindel.sh"
