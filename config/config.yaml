@@ -114,9 +114,9 @@ mosdepth_bed:
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.21"
-  config: "config/multiqc.yaml"
   reports:
     DNA:
+      config: "config/multiqc.yaml"
       included_unit_types:
         - T
         - N

@@ -453,11 +453,6 @@ properties:
     description: >
       Config for the multiqc rule
     properties:
-      config:
-        type: string
-        description: >
-          Path to multiqc config file
-        format: uri-reference
       container:
         type: string
         description: >
@@ -471,6 +466,11 @@ properties:
           DNA:
             type: object
             properties:
+              config:
+                type: string
+                description: >
+                  Path to multiqc config file
+                format: uri-reference
               included_unit_types:
                 type: array
                 description: >
@@ -494,7 +494,6 @@ properties:
         required:
           - DNA
     required:
-      - config
       - container
       - reports
 
