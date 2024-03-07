@@ -113,7 +113,7 @@ mosdepth_bed:
   thresholds: "100,200,1000"
 
 multiqc:
-  container: "docker://hydragenetics/multiqc:1.11"
+  container: "docker://hydragenetics/multiqc:1.21"
   config: "config/multiqc.yaml"
   reports:
     DNA:

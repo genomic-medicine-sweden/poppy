@@ -65,7 +65,7 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
     input:
         segment="cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns",
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz",
-        tc_file=cnv_sv.get_tc_file,
+        purity=cnv_sv.get_tc_file,
 
 
 use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
@@ -185,3 +185,19 @@ use rule mosdepth_bed from qc as qc_mosdepth_bed with:
         summary=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"),
     params:
         thresholds=config["mosdepth_bed"]["thresholds"],
+
+
+use rule multiqc from qc as qc_multiqc with:
+    input:
+        files=lambda wildcards: set(
+            [
+                file.format(sample=sample, type=u.type, lane=u.lane, flowcell=u.flowcell, barcode=u.barcode, read=read, ext=ext)
+                for file in config["multiqc"]["reports"][wildcards.report]["qc_files"]
+                for sample in get_samples(samples)
+                for u in units.loc[sample].dropna().itertuples()
+                if u.type in config["multiqc"]["reports"][wildcards.report]["included_unit_types"]
+                for read in ["fastq1", "fastq2"]
+                for ext in config.get("picard_collect_multiple_metrics", {}).get("output_ext", [""])
+            ]
+        ),
+        config=lambda wildcards: config["multiqc"]["reports"][wildcards.report]["config"],
