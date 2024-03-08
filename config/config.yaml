@@ -1,11 +1,10 @@
 ---
-
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
 output: "config/output_files.yaml"
 
-default_container: "docker://hydragenetics/common:1.8.1"
+default_container: "docker://hydragenetics/common:1.10.2"
 
 trimmer_software: "fastp_pe"
 
@@ -16,6 +15,7 @@ reference:
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
   design_intervals_gatk_cnv: ""
+  artifacts: "FILL_ME_IN.tsv"
   skip_chrs:
     - "chrM"
 
@@ -27,7 +27,6 @@ bcbio_variation_recall_ensemble:
   callers:
     - gatk_mutect2
     - vardict
-    - freebayes
 
 bcftools_annotate:
   annotation_db: /storage/userdata/references/homo_sapiens/hg19/hydra-genetics/poppy/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
@@ -59,7 +58,7 @@ cnvkit_vcf:
   dup_limit: 2.3
 
 fastp_pe:
-   container: "docker://hydragenetics/fastp:0.20.1"
+  container: "docker://hydragenetics/fastp:0.20.1"
 
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
@@ -67,46 +66,9 @@ fastqc:
 filter_vcf:
   germline: "config/config_hard_filter_germline.yaml"
   somatic: "config/config_soft_filter_somatic.yaml"
+  pindel: "config/config_soft_filter_pindel.yaml"
   cnv_hard_filter_amp: "config/config_hard_filter_cnv_amp.yaml"
   cnv_hard_filter_loh: "config/config_hard_filter_cnv_loh.yaml"
-
-freebayes:
-  container: "docker://hydragenetics/freebayes:1.3.1"
-
-mark_duplicates:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-merge_cnv_json:
-  annotations:
-    - config/cnv_genes.hg19.bed
-  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
-  filtered_cnv_vcfs:
-    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
-  unfiltered_cnv_vcfs:
-    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
-
-mosdepth_bed:
-  container: "docker://hydragenetics/mosdepth:0.3.2"
-
-multiqc:
-  container: "docker://hydragenetics/multiqc:1.11"
-  config: "config/multiqc.yaml"
-  reports:
-    DNA:
-      included_unit_types:
-        - T
-        - N
-      qc_files:
-        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
-        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
-        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
-        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
-        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
-        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
-        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
-        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -133,6 +95,44 @@ gatk_mutect2_gvcf:
 
 gatk_mutect2_merge_stats:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
+mark_duplicates:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+merge_cnv_json:
+  annotations:
+    - config/cnv_genes.hg19.bed
+  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  filtered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
+  unfiltered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
+
+mosdepth_bed:
+  container: "docker://hydragenetics/mosdepth:0.3.2"
+  thresholds: "100,200,1000"
+
+multiqc:
+  container: "docker://hydragenetics/multiqc:1.21"
+  reports:
+    DNA:
+      config: "config/multiqc.yaml"
+      included_unit_types:
+        - T
+        - N
+      qc_files:
+        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
+        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"
+        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
+        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
+        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
+        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
+        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
+        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
 
 picard_collect_alignment_summary_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
@@ -148,11 +148,6 @@ picard_collect_hs_metrics:
 
 picard_collect_insert_size_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_multiple_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-  output_ext:
-    - "insert_size_metrics"
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
@@ -179,6 +174,7 @@ purecn:
   fun_segmentation: PSCBS
   normaldb: FILL_ME_IN
   intervals: FILL_ME_IN
+  mapping_bias_file: FILL_ME_IN
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
@@ -202,13 +198,14 @@ svdb_query:
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
+  extra: " -Q 1 --nosv "
   bed_columns: "-c 1 -S 2 -E 3"
 
 vep:
-  container: docker://hydragenetics/vep:109
+  container: docker://ensemblorg/ensembl-vep:release_110.1
   vep_cache: ""
-  mode: --offline --cache
-  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything"
+  mode: "--offline --cache --merged "
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything "
   # vep109: VEP:gnomAD_${pop}e or g for exome/genome. Both --af_gnomade and --af_gnomadg included in everything
   #extra: " --assembly GRCh37 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class "
 

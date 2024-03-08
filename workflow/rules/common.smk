@@ -27,6 +27,41 @@ include: "results.smk"
 hydra_min_version("1.8.1")
 min_version("7.32.0")
 
+from datetime import datetime
+from hydra_genetics.utils.misc import export_config_as_file
+from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
+from hydra_genetics.utils.software_versions import add_software_version_to_config
+from hydra_genetics.utils.software_versions import export_pipeline_version_as_file
+from hydra_genetics.utils.software_versions import export_software_version_as_files
+from hydra_genetics.utils.software_versions import get_pipeline_version
+from hydra_genetics.utils.software_versions import use_container
+from hydra_genetics.utils.software_versions import touch_software_version_files
+
+
+date_string = datetime.now().strftime("%Y%m%d")
+# This will create a (empty) version files that can be defined as input to
+# multiqc, will be populated with version during onstart (before the pipeline starts)
+if use_container(workflow):
+    version_files = touch_software_version_files(config, date_string=date_string, directory="versions/software")
+    add_version_files_to_multiqc(config, version_files)
+
+
+# Use onstart to make sure that containers have been downloaded
+# before extracting versions. This will also prevent the functions from
+# running twice.
+onstart:
+    # Make sure that the user have the requested containers to be used
+    if use_container(workflow):
+        # From the config retrieve all dockers used and parse labels for software versions. Add
+        # this information to config dict.
+        update_config, software_info = add_software_version_to_config(config, workflow, False)
+        # Print all softwares used as files. Additional parameters that can be set
+        # - directory, default value: versions/software
+        # - file_name_ending, default value: mqc_versions.yaml
+        # date_string, a string that will be added to the folder name to make it unique (preferably a timestamp)
+        export_software_version_as_files(software_info, date_string=date_string)
+
+
 ### Set and validate config file
 
 if not workflow.overwrite_configfiles:

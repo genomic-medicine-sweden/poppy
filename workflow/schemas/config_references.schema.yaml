@@ -2,7 +2,6 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-
   bed_to_interval_list:
     type: object
     description: >

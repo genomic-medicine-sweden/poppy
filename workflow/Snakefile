@@ -7,7 +7,12 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
+ruleorder: annotation_vep_pindel > annotation_vep
+
+
 include: "rules/common.smk"
+include: "rules/fix_af_pindel.smk"
+include: "rules/annotation_vep_pindel.smk"
 
 
 report: "report/workflow.rst"
@@ -37,7 +42,7 @@ module annotation:
         github(
             "hydra-genetics/annotation",
             path="workflow/Snakefile",
-            tag="v0.3.0",
+            tag="v1.0.0",
         )
     config:
         config
@@ -60,7 +65,13 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
     input:
         segment="cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns",
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz",
-        tc_file=cnv_sv.get_tc_file,
+        purity=cnv_sv.get_tc_file,
+
+
+use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
+    input:
+        bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
+        metrics="qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt",
 
 
 module filtering:
@@ -110,13 +121,42 @@ module snv_indels:
         github(
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag="v0.3.0",
+            tag="v0.6.0",
         )
     config:
         config
 
 
 use rule * from snv_indels as snv_indels_*
+
+
+use rule vt_decompose from snv_indels as snv_indels_vt_decompose_pindel with:
+    input:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.gz",
+    output:
+        vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz"),
+    log:
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz.log",
+    benchmark:
+        repeat(
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz.benchmark.tsv",
+            config.get("vt_decompose", {}).get("benchmark_repeats", 1),
+        )
+
+
+use rule vt_normalize from snv_indels as snv_indels_vt_normalize_pindel with:
+    input:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz",
+        ref=config["reference"]["fasta"],
+    output:
+        vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz"),
+    log:
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz.log",
+    benchmark:
+        repeat(
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz.benchmark.tsv",
+            config.get("vt_normalize", {}).get("benchmark_repeats", 1),
+        )
 
 
 module qc:
@@ -131,3 +171,33 @@ module qc:
 
 
 use rule * from qc as qc_*
+
+
+use rule mosdepth_bed from qc as qc_mosdepth_bed with:
+    output:
+        bed=temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"),
+        bed_csi=temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz.csi"),
+        coverage=temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"),
+        coverage_csi=temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz.csi"),
+        thresholds=temp("qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"),
+        glob=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"),
+        region=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"),
+        summary=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"),
+    params:
+        thresholds=config["mosdepth_bed"]["thresholds"],
+
+
+use rule multiqc from qc as qc_multiqc with:
+    input:
+        files=lambda wildcards: set(
+            [
+                file.format(sample=sample, type=u.type, lane=u.lane, flowcell=u.flowcell, barcode=u.barcode, read=read, ext=ext)
+                for file in config["multiqc"]["reports"][wildcards.report]["qc_files"]
+                for sample in get_samples(samples)
+                for u in units.loc[sample].dropna().itertuples()
+                if u.type in config["multiqc"]["reports"][wildcards.report]["included_unit_types"]
+                for read in ["fastq1", "fastq2"]
+                for ext in config.get("picard_collect_multiple_metrics", {}).get("output_ext", [""])
+            ]
+        ),
+        config=lambda wildcards: config["multiqc"]["reports"][wildcards.report]["config"],

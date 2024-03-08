@@ -10,6 +10,7 @@ reference:
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
+  artifacts: "reference/artifact_panel.tsv"
 
 annotate_cnv:
   cnv_genes: ../../config/cnv_genes.hg19.bed
@@ -30,6 +31,7 @@ cnvkit_batch:
 filter_vcf:
   germline: "../../config/config_hard_filter_germline.yaml"
   somatic: "../../config/config_soft_filter_somatic.yaml"
+  pindel: "../../config/config_soft_filter_pindel.yaml"
   cnv_hard_filter_amp: "../../config/config_hard_filter_cnv_amp.yaml"
   cnv_hard_filter_loh: "../../config/config_hard_filter_cnv_loh.yaml"
 
@@ -44,7 +46,9 @@ merge_cnv_json:
     - ../../config/cnv_genes.hg19.bed
 
 multiqc:
-  config: "../../config/multiqc.yaml"
+  reports:
+    DNA:
+      config: "../../config/multiqc.yaml"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
@@ -52,6 +56,7 @@ pindel_call:
 purecn:
   normaldb: reference/purecn_normal_db.rds
   intervals: reference/purecn_target_intervals.txt
+  mapping_bias_file: reference/purecn_mapping_bias.rds
 
 purecn_coverage:
   intervals: reference/purecn_target_intervals.txt

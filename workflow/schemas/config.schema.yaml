@@ -2,7 +2,6 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-
   # General config
   default_container:
     type: string
@@ -70,13 +69,19 @@ properties:
         items:
           type: string
 
+      artifacts:
+        type: string
+        description: >
+          tsv-file with artifact freq in normal samples, created with reference pipeline
+        format: uri-reference
+
     required:
       - fasta
       - fai
-      - dict
       - design_bed
       - design_intervals
       - design_intervals_gatk_cnv
+      - artifacts
 
   samples:
     type: string
@@ -96,6 +101,17 @@ properties:
     format: uri-reference
 
   # Rule-specific configs
+  annotate_cnv:
+    type: object
+    description: >
+      Annotate cnv genes in cnv vcf files
+    properties:
+      cnv_genes:
+        type: string
+        description: >
+          Path to bedfile with genes to annotate in cnvreport.
+        format: uri-reference
+
   bcbio_variation_recall_ensemble:
     type: object
     description: >
@@ -112,7 +128,6 @@ properties:
           enum:
             - gatk_mutect2
             - vardict
-            - freebayes
         minItems: 1
       container:
         type: string
@@ -166,6 +181,18 @@ properties:
       - sa
       - container
 
+  cnv_html_report:
+    type: object
+    description: >
+      Configureation for cnv html report
+    properties:
+      cytobands:
+        type: boolean
+        description: If true cytobands will be included in report
+      show_table:
+        type: boolean
+        description: If true cnv table will be included
+
   cnvkit_batch:
     type: object
     description: >
@@ -216,6 +243,15 @@ properties:
         description: >
           Name or path to container containing cnvkit executable
         format: uri-reference
+      hom_del_limit:
+        type: number
+        description: copy number threshold for homozygous deletion
+      het_del_limit:
+        type: number
+        description: copy number threshold for heterozygous deletion
+      dup_limit:
+        type: number
+        description: copy number threshold for duplication
 
   fastp_pe:
     type: object
@@ -253,21 +289,20 @@ properties:
         description: >
           Path to germline filter definition
         format: uri-reference
-    required:
-      - germline
-
-  freebayes:
-    type: object
-    description: >
-      Config for the freebayes rule
-    properties:
-      container:
+      somatic:
         type: string
         description: >
-          Name or path to container containing the freebayes executable
+          Path to somatic filter definition
+        format: uri-reference
+      pindel:
+        type: string
+        description: >
+          Path to pindel vcf filter definition
         format: uri-reference
     required:
-      - container
+      - germline
+      - somatic
+      - pindel
 
   gatk_collect_allelic_counts:
     type: object
@@ -417,11 +452,6 @@ properties:
     description: >
       Config for the multiqc rule
     properties:
-      config:
-        type: string
-        description: >
-          Path to multiqc config file
-        format: uri-reference
       container:
         type: string
         description: >
@@ -435,6 +465,11 @@ properties:
           DNA:
             type: object
             properties:
+              config:
+                type: string
+                description: >
+                  Path to multiqc config file
+                format: uri-reference
               included_unit_types:
                 type: array
                 description: >
@@ -458,7 +493,6 @@ properties:
         required:
           - DNA
     required:
-      - config
       - container
       - reports
 
@@ -526,26 +560,6 @@ properties:
         format: uri-reference
     required:
       - container
-
-  picard_collect_multiple_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_multiple_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-      output_ext:
-        type: array
-        items:
-          type: string
-          description: >
-            Output extension
-    required:
-      - container
-      - output_ext
 
   picard_mark_duplicates:
     type: object
@@ -693,8 +707,7 @@ properties:
         type: string
         description: >
           Name of path to container containing the vep executable
-        format:
-          uri-reference
+        format: uri-reference
       vep_cache:
         type: string
         description: >
@@ -739,6 +752,34 @@ properties:
     required:
       - container
 
+  annotation_vep_pindel:
+    type: object
+    description: parameters for annotation with vep on pindel vcf, most taken from vep rule to ensure that pindel result is processed identical to snvs
+    properties:
+      container:
+        type: string
+        description: >
+          From config["vep"]: Name of path to container containing the vep executable
+        format: uri-reference
+      vep_cache:
+        type: string
+        description: >
+          From config["vep"]: Path to offline VEP cache
+        format: uri-reference
+      mode:
+        type: string
+        description: >
+          From config["vep"]: VEP arguments for run mode
+        examples:
+          - "--offline --cache"
+      extra:
+        type: string
+        description: >
+          From config["vep"]: Additional command line arguments for VEP
+      benchmark_repeats:
+        type: integer
+        description: 'From config["vep"]: set number of times benchmark should be repeated'
+
 required:
   - bcbio_variation_recall_ensemble
   - bwa_mem
@@ -749,7 +790,6 @@ required:
   - fastp_pe
   - fastqc
   - filter_vcf
-  - freebayes
   - gatk_collect_allelic_counts
   - gatk_collect_read_counts
   - gatk_denoise_read_counts
@@ -767,7 +807,6 @@ required:
   - picard_collect_gc_bias_metrics
   - picard_collect_hs_metrics
   - picard_collect_insert_size_metrics
-  - picard_collect_multiple_metrics
   - picard_mark_duplicates
   - pindel2vcf
   - pindel_call
