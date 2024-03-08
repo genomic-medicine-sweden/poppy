@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/env bash
 
 if ( zcat "${snakemake_input[vcf]}" | grep -q -v '^#' );
  then
