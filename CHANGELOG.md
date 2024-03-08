@@ -3,10 +3,6 @@
 ## 0.1.0 (2024-03-08)
 
 
-### ⚠ BREAKING CHANGES
-
-* update to new develop for modules
-
 ### Features
 
 * add annotation and seq dict for pindel vcf ([046d2a5](https://github.com/genomic-medicine-sweden/poppy/commit/046d2a5c244d7b0d6689561e833ffc9fd5883f26))
