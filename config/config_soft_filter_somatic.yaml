@@ -21,16 +21,17 @@ filters:
     soft_filter: "True"
   consequences:
     description: "Soft filter based on consequences"
-    expression: "(exist[intergenic_variant, VEP:Consequence] or exist[NMD_transcript_variant, VEP:Consequence] or
-                  exist[non_coding_transcript_variant, VEP:Consequence] or
-                  exist[upstream_gene_variant, VEP:Consequence] or
-                  exist[downstream_gene_variant, VEP:Consequence] or
-                  exist[TFBS_ablation, VEP:Consequence] or
-                  exist[TFBS_amplification, VEP:Consequence] or
-                  exist[TF_binding_site_variant, VEP:Consequence] or
-                  exist[regulatory_region_ablation, VEP:Consequence] or
-                  exist[regulatory_region_amplification, VEP:Consequence] or
-                  exist[regulatory_region_variant, VEP:Consequence])"
+    expression:
+      "(exist[intergenic_variant, VEP:Consequence] or exist[NMD_transcript_variant, VEP:Consequence] or
+      exist[non_coding_transcript_variant, VEP:Consequence] or
+      exist[upstream_gene_variant, VEP:Consequence] or
+      exist[downstream_gene_variant, VEP:Consequence] or
+      exist[TFBS_ablation, VEP:Consequence] or
+      exist[TFBS_amplification, VEP:Consequence] or
+      exist[TF_binding_site_variant, VEP:Consequence] or
+      exist[regulatory_region_ablation, VEP:Consequence] or
+      exist[regulatory_region_amplification, VEP:Consequence] or
+      exist[regulatory_region_variant, VEP:Consequence])"
     soft_filter_flag: "Consequence"
     soft_filter: "True"
   germline:

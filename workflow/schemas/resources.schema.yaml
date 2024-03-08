@@ -2,7 +2,6 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-
   default_resources:
     type: object
     properties:
@@ -25,8 +24,6 @@ properties:
   required:
     - default_resources
 
-
-# Entry added using Hydra-Genetics CLI - please move it into alphabetically sorted order
   annotation_vep_pindel:
     type: object
     description: resource definitions for annotation_vep_pindel
@@ -46,4 +43,3 @@ properties:
       time:
         type: string
         description: max execution time
-

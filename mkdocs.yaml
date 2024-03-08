@@ -1,23 +1,23 @@
 site_name: Poppy
 nav:
   - Overview:
-    - Introduction: intro.md
-    - Pipeline overview: overview.md
-    - Output: output_files.md
-    - Setup and configuration: setup.md
-  - Running Poppy: 
-    - Poppy: poppy.md
-    - Reference pipeline: reference_files.md
-  - Step-by-step: 
-    - Pre-alignment: prealignment.md
-    - Alignment: alignment.md
-    - SNV and indels: snvs.md
-    - CNVs: cnvs.md
-    - QC: qc.md
+      - Introduction: intro.md
+      - Pipeline overview: overview.md
+      - Output: output_files.md
+      - Setup and configuration: setup.md
+  - Running Poppy:
+      - Poppy: poppy.md
+      - Reference pipeline: reference_files.md
+  - Step-by-step:
+      - Pre-alignment: prealignment.md
+      - Alignment: alignment.md
+      - SNV and indels: snvs.md
+      - CNVs: cnvs.md
+      - QC: qc.md
   - Pipeline specific rules:
-    - Software: softwares.md
+      - Software: softwares.md
   - Project info:
-    - Changelog: changelog.md
+      - Changelog: changelog.md
 
 theme: readthedocs
 extra_css: [extra.css]
@@ -48,9 +48,9 @@ plugins:
           tag: "RESOURCESSCHEMA"
   - snakemake-rule:
       rule_folders:
-        - 'workflow/rules'
+        - "workflow/rules"
       schemas:
-        - 'workflow/schemas/rules.schema.yaml'
+        - "workflow/schemas/rules.schema.yaml"
   - mkdocs-simple-hooks:
       hooks:
         on_pre_build: "docs.hooks:copy_changelog_and_license"

@@ -1,7 +1,6 @@
 $schema: "http://json-schema.org/draft-04/schema#"
 description: row represents one dataset
 properties:
-
   adapter:
     type: string
     description: one or more sequence, separated by ","

@@ -1,5 +1,4 @@
 ---
-
 resources: "config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
@@ -59,7 +58,7 @@ cnvkit_vcf:
   dup_limit: 2.3
 
 fastp_pe:
-   container: "docker://hydragenetics/fastp:0.20.1"
+  container: "docker://hydragenetics/fastp:0.20.1"
 
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"

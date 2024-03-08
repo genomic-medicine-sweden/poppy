@@ -1,5 +1,4 @@
 ---
-
 default_resources:
   threads: 1
   time: "01:00:00"

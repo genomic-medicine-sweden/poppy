@@ -2,7 +2,6 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
-
   annotation_vep_pindel:
     type: object
     description: input and output parameters for vep
@@ -29,4 +28,4 @@ properties:
         properties:
           vcf:
             type: string
-            description: annotated (or incase of empty just copied) vcf file 
+            description: annotated (or incase of empty just copied) vcf file

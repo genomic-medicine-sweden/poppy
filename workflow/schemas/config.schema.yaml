@@ -2,7 +2,6 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-
   # General config
   default_container:
     type: string
@@ -110,7 +109,7 @@ properties:
       cnv_genes:
         type: string
         description: >
-          Path to bedfile with genes to annotate in cnvreport. 
+          Path to bedfile with genes to annotate in cnvreport.
         format: uri-reference
 
   bcbio_variation_recall_ensemble:
@@ -193,7 +192,7 @@ properties:
       show_table:
         type: boolean
         description: If true cnv table will be included
-  
+
   cnvkit_batch:
     type: object
     description: >
@@ -708,8 +707,7 @@ properties:
         type: string
         description: >
           Name of path to container containing the vep executable
-        format:
-          uri-reference
+        format: uri-reference
       vep_cache:
         type: string
         description: >
@@ -754,7 +752,6 @@ properties:
     required:
       - container
 
-
   annotation_vep_pindel:
     type: object
     description: parameters for annotation with vep on pindel vcf, most taken from vep rule to ensure that pindel result is processed identical to snvs
@@ -763,8 +760,7 @@ properties:
         type: string
         description: >
           From config["vep"]: Name of path to container containing the vep executable
-        format:
-          uri-reference
+        format: uri-reference
       vep_cache:
         type: string
         description: >
