@@ -49,7 +49,7 @@ pip install -r requirements.txt
 ## Setup required data and config
 
 To run the pipeline you need to complement the config file located in `config/config.yaml` with the paths to your local design and reference files. The areas that need filling in are marked in the config file. 
-Some reference files such as panel of normals for CNVkit and GATK as well as other reference files needed by purecn, SVDB and an artifact panel can be created using the [reference pipeline](./reference_files.md) included in Poppy.
+Some reference files such as panel of normals for CNVkit and GATK as well as other reference files needed by purecn, SVDB and an artifact panel can be created using the [reference pipeline](./reference_files.md) included in Poppy. You can choose what files to generate by commenting out the ones you don't want in the `config/output_files_references.yaml` file.
 
 When you have generated your reference files and given the path to them in your config file, you should be ready to start running Poppy.
 
