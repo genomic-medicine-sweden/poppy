@@ -14,52 +14,43 @@ import re
 from snakemake.utils import validate
 from snakemake.utils import min_version
 import yaml
+from datetime import datetime
 
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
 from hydra_genetics import min_version as hydra_min_version
-
-
-include: "results.smk"
-
-
-hydra_min_version("1.8.1")
-min_version("7.32.0")
-
-from datetime import datetime
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
 from hydra_genetics.utils.software_versions import add_software_version_to_config
 from hydra_genetics.utils.software_versions import export_pipeline_version_as_file
-from hydra_genetics.utils.software_versions import export_software_version_as_files
+from hydra_genetics.utils.software_versions import export_software_version_as_file
 from hydra_genetics.utils.software_versions import get_pipeline_version
 from hydra_genetics.utils.software_versions import use_container
-from hydra_genetics.utils.software_versions import touch_software_version_files
+from hydra_genetics.utils.software_versions import touch_software_version_file
+from hydra_genetics.utils.software_versions import touch_pipeline_version_file_name
 
+include: "results.smk"
 
-date_string = datetime.now().strftime("%Y%m%d")
-# This will create a (empty) version files that can be defined as input to
-# multiqc, will be populated with version during onstart (before the pipeline starts)
+# hydra_min_version("1.8.1")
+# min_version("7.32.0")
+
+## Version logging for MultiQC
+date_string = datetime.now().strftime('%Y%m%d')
+
+# Create empty version files and add to multiqc input
+pipeline_version = get_pipeline_version(workflow, pipeline_name="poppy")
+version_files = touch_pipeline_version_file_name(pipeline_version, date_string=date_string, directory="versions/software")
 if use_container(workflow):
-    version_files = touch_software_version_files(config, date_string=date_string, directory="versions/software")
-    add_version_files_to_multiqc(config, version_files)
+    version_files.append(touch_software_version_file(config, date_string=date_string, directory="versions/software"))
+add_version_files_to_multiqc(config, version_files)
 
-
-# Use onstart to make sure that containers have been downloaded
-# before extracting versions. This will also prevent the functions from
-# running twice.
 onstart:
+    export_pipeline_version_as_file(pipeline_version, date_string=date_string, directory="versions/software")
     # Make sure that the user have the requested containers to be used
     if use_container(workflow):
-        # From the config retrieve all dockers used and parse labels for software versions. Add
-        # this information to config dict.
         update_config, software_info = add_software_version_to_config(config, workflow, False)
-        # Print all softwares used as files. Additional parameters that can be set
-        # - directory, default value: versions/software
-        # - file_name_ending, default value: mqc_versions.yaml
-        # date_string, a string that will be added to the folder name to make it unique (preferably a timestamp)
-        export_software_version_as_files(software_info, date_string=date_string)
+        export_software_version_as_file(software_info, date_string=date_string)
 
 
 ### Set and validate config file
