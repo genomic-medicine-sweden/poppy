@@ -33,7 +33,7 @@ from hydra_genetics.utils.software_versions import touch_pipeline_version_file_n
 include: "results.smk"
 
 hydra_min_version("3.0.0")
-# min_version("7.32.0")
+min_version("7.32.0")
 
 ## Version logging for MultiQC
 date_string = datetime.now().strftime('%Y%m%d')
