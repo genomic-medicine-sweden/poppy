@@ -28,6 +28,7 @@ hydra_min_version("1.8.1")
 min_version("7.32.0")
 
 from datetime import datetime
+from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
 from hydra_genetics.utils.software_versions import add_software_version_to_config
@@ -66,6 +67,9 @@ onstart:
 
 if not workflow.overwrite_configfiles:
     sys.exit("At least one config file must be passed using --configfile/" "--configfiles, by command line or a profile!")
+
+
+config = replace_dict_variables(config)
 
 try:
     validate(config, schema="../schemas/config.schema.yaml")
