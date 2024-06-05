@@ -48,7 +48,7 @@ merge_cnv_json:
 multiqc:
   reports:
     DNA:
-      config: "../../config/multiqc.yaml"
+      config: "../../config/config_multiqc.yaml"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"

@@ -1,0 +1,147 @@
+sp:
+  fastp:
+    fn: "*.json"
+
+extra_fn_clean_exts:
+  - ".duplication_metrics"
+
+mosdepth_config:
+  include_contigs:
+    - "chr*"
+  exclude_contigs:
+    - "*_alt"
+    - "*_decoy"
+    - "*_random"
+    - "chrUn*"
+    - "HLA*"
+    - "chrM"
+    - "chrEBV"
+
+  general_stats_coverage:
+    - 100
+    - 200
+    - 1000
+  
+table_columns_visible:
+  FastQC:
+    percent_duplicates: False
+    percent_gc: False
+    avg_sequence_length: False
+    percent_fails: False
+    total_sequences: False
+  fastp:
+    pct_adapter: False
+    after_filtering_q30_rate: False
+    after_filtering_q30_bases: False
+    filtering_result_passed_filter_reads: False
+    after_filtering_gc_content: False
+    pct_surviving: False
+    pct_duplication: False
+  mosdepth:
+    median_coverage: True
+    mean_coverage: False
+    1_x_pc: False
+    5_x_pc: False
+    10_x_pc: False
+    20_x_pc: False
+    30_x_pc: False
+    50_x_pc: False
+    100_x_pc: True
+    200_x_pc: True
+    1000_x_pc: False
+  "Picard: HsMetrics":
+    FOLD_ENRICHMENT: False
+    MEDIAN_TARGET_COVERAGE: False
+    PCT_TARGET_BASES_30X: False
+  "Picard: InsertSizeMetrics":
+    summed_median: False
+    summed_mean: True
+  "Picard: Mark Duplicates":
+    PERCENT_DUPLICATION: True
+  "Samtools: stats":
+    error_rate: False
+    non-primary_alignments: False
+    reads_mapped: False
+    reads_mapped_percent: True
+    reads_properly_paired_percent: True
+    reads_MQ0_percent: False
+    raw_total_sequences: True #only on bedfile not total of fastq, bases on target only
+
+# Custom columns to general stats
+multiqc_cgs:
+  "Picard: HsMetrics": 
+    FOLD_80_BASE_PENALTY:
+      title: "Fold80"
+      description: "Fold80 penalty from picard hs metrics"
+      min: 1
+      max: 3
+      scale: "RdYlGn-rev"
+      format: "{:.1f}"
+    PCT_SELECTED_BASES:
+      title: "Bases on Target"
+      description: "On+Near Bait Bases / PF Bases Aligned from Picard HsMetrics"
+      format: "{:.2%}"
+    ZERO_CVG_TARGETS_PCT:
+      title: "Target bases with zero coverage [%]"
+      description: "Target bases with zero coverage [%] from Picard HsMetrics"
+      min: 0
+      max: 100
+      scale: "RdYlGn-rev"
+      format: "{:.2%}"
+  "Samtools: stats":
+    average_quality:
+      title: "Average Quality"
+      description: "Ratio between the sum of base qualities and total length from Samtools stats"
+      min: 0
+      max: 60
+      scale: "RdYlGn"
+
+table_columns_placement:
+  mosdepth:
+    median_coverage: 601
+    1_x_pc: 666
+    5_x_pc: 666
+    10_x_pc: 602
+    20_x_pc: 603
+    30_x_pc: 604
+    50_x_pc: 605
+    100_x_pc: 606
+    200_x_pc: 607
+    1000_x_pc: 608
+  "Samtools: stats":
+    raw_total_sequences: 500
+    reads_mapped: 501
+    reads_mapped_percent: 502
+    reads_properly_paired_percent: 503
+    average_quality: 504
+    error_rate: 555
+    reads_MQ0_percent: 555
+    non-primary_alignments: 555
+  "Picard: HsMetrics":
+    FOLD_ENRICHMENT: 888
+    MEDIAN_TARGET_COVERAGE: 888
+    PCT_TARGET_BASES_30X: 888
+    FOLD_80_BASE_PENALTY: 801
+    PCT_SELECTED_BASES: 800
+    ZERO_CVG_TARGETS_PCT: 803
+  "Picard: InsertSizeMetrics":
+    summed_median: 803
+    summed_mean: 803
+  "Picard: Mark Duplicates":
+    PERCENT_DUPLICATION: 802
+  Picard:
+    TOTAL_READS: 500
+    PCT_SELECTED_BASES: 801
+    FOLD_80_BASE_PENALTY: 802
+    PCT_PF_READS_ALIGNED: 888
+    summed_median: 888
+    PERCENT_DUPLICATION: 803
+    summed_mean: 804
+    STANDARD_DEVIATION: 805
+    ZERO_CVG_TARGETS_PCT: 888
+    MEDIAN_COVERAGE: 888
+    MEAN_COVERAGE: 888
+    SD_COVERAGE: 888
+    PCT_30X: 888
+    PCT_TARGET_BASES_30X: 888
+    FOLD_ENRICHMENT: 888
