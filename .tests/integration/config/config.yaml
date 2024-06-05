@@ -1,8 +1,4 @@
 ---
-
-output: "../../config/output_files.yaml"
-resources: "../../config/resources.yaml"
-
 reference:
   fasta: "reference/hg19.fasta"
   fai: "reference/hg19.fasta.fai"
@@ -11,9 +7,6 @@ reference:
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
   artifacts: "reference/artifact_panel.tsv"
-
-annotate_cnv:
-  cnv_genes: ../../config/cnv_genes.hg19.bed
 
 bwa_mem:
   amb: "reference/hg19.fasta.amb"
@@ -28,27 +21,11 @@ cnv_html_report:
 cnvkit_batch:
   normal_reference: "data/cnvkit/cnvkit_pon.cnn"
 
-filter_vcf:
-  germline: "../../config/config_hard_filter_germline.yaml"
-  somatic: "../../config/config_soft_filter_somatic.yaml"
-  pindel: "../../config/config_soft_filter_pindel.yaml"
-  cnv_hard_filter_amp: "../../config/config_hard_filter_cnv_amp.yaml"
-  cnv_hard_filter_loh: "../../config/config_hard_filter_cnv_loh.yaml"
-
 gatk_collect_allelic_counts:
   SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 
 gatk_denoise_read_counts:
   normal_reference: "data/gatk/pon.hdf5"
-
-merge_cnv_json:
-  annotations:
-    - ../../config/cnv_genes.hg19.bed
-
-multiqc:
-  reports:
-    DNA:
-      config: "../../config/config_multiqc.yaml"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"

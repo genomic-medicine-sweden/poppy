@@ -20,6 +20,9 @@ from hydra_genetics.utils.resources import load_resources
 from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
 from hydra_genetics import min_version as hydra_min_version
+
+from datetime import datetime
+from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
 from hydra_genetics.utils.software_versions import add_software_version_to_config
@@ -60,6 +63,9 @@ onstart:
 
 if not workflow.overwrite_configfiles:
     sys.exit("At least one config file must be passed using --configfile/" "--configfiles, by command line or a profile!")
+
+
+config = replace_dict_variables(config)
 
 try:
     validate(config, schema="../schemas/config.schema.yaml")

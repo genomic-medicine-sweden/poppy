@@ -1,8 +1,8 @@
 ---
-resources: "config/resources.yaml"
+resources: "{{POPPY_HOME}}/config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "config/output_files.yaml"
+output: "{{POPPY_HOME}}/config/output_files.yaml"
 
 default_container: "docker://hydragenetics/common:1.10.2"
 
@@ -20,7 +20,7 @@ reference:
     - "chrM"
 
 annotate_cnv:
-  cnv_genes: config/cnv_genes.hg19.bed
+  cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
 
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
@@ -64,11 +64,11 @@ fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
 filter_vcf:
-  germline: "config/config_hard_filter_germline.yaml"
-  somatic: "config/config_soft_filter_somatic.yaml"
-  pindel: "config/config_soft_filter_pindel.yaml"
-  cnv_hard_filter_amp: "config/config_hard_filter_cnv_amp.yaml"
-  cnv_hard_filter_loh: "config/config_hard_filter_cnv_loh.yaml"
+  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
+  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml"
+  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml"
+  cnv_hard_filter_amp: "{{POPPY_HOME}}/config/config_hard_filter_cnv_amp.yaml"
+  cnv_hard_filter_loh: "{{POPPY_HOME}}/config/config_hard_filter_cnv_loh.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -100,7 +100,7 @@ mark_duplicates:
 
 merge_cnv_json:
   annotations:
-    - config/cnv_genes.hg19.bed
+    - "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
   filtered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
@@ -115,7 +115,7 @@ multiqc:
   container: "docker://hydragenetics/multiqc:1.21"
   reports:
     DNA:
-      config: "config/config_multiqc.yaml"
+      config: "{{POPPY_HOME}}/config/config_multiqc.yaml"
       included_unit_types:
         - T
         - N
