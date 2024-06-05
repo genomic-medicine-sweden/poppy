@@ -30,13 +30,15 @@ from hydra_genetics.utils.software_versions import use_container
 from hydra_genetics.utils.software_versions import touch_software_version_file
 from hydra_genetics.utils.software_versions import touch_pipeline_version_file_name
 
+
 include: "results.smk"
+
 
 hydra_min_version("3.0.0")
 min_version("7.32.0")
 
 ## Version logging for MultiQC
-date_string = datetime.now().strftime('%Y%m%d')
+date_string = datetime.now().strftime("%Y%m%d")
 
 # Create empty version files and add to multiqc input
 pipeline_version = get_pipeline_version(workflow, pipeline_name="poppy")
@@ -44,6 +46,7 @@ version_files = touch_pipeline_version_file_name(pipeline_version, date_string=d
 if use_container(workflow):
     version_files.append(touch_software_version_file(config, date_string=date_string, directory="versions/software"))
 add_version_files_to_multiqc(config, version_files)
+
 
 onstart:
     export_pipeline_version_as_file(pipeline_version, date_string=date_string, directory="versions/software")
