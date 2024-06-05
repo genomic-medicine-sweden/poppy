@@ -29,4 +29,5 @@ jobs:
         run: |
           snakemake -s ../../workflow/Snakefile \
             --configfile ../../config/config.yaml config/config.yaml \
+            --config POPPY_HOME=../.. \
             --lint
