@@ -1,0 +1,5 @@
+reference:
+  mappability: "reference/cnvkit_mappability.bed"
+
+purecn_coverage:
+  intervals: "references/purecn_targets_intervals.txt"

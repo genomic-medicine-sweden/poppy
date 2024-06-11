@@ -31,3 +31,7 @@ files:
   - name: artifacts tsv-file
     input: references/create_artifact_file/artifact_panel.tsv
     output: artifact_panel.tsv
+
+  - name: background tsv-file
+    input: "references/create_background_file/background_panel.tsv"
+    output: background_panel.tsv

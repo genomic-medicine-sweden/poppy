@@ -49,7 +49,7 @@ module references:
         github(
             repo="hydra-genetics/references",
             path="workflow/Snakefile",
-            tag="7e0a806dd6fbf4689aeea7e8624cc310a962cf5b",
+            tag="d647807",
         )
     config:
         config
@@ -114,3 +114,9 @@ use rule purecn_coverage from references as references_purecn_coverage with:
     params:
         intervals="references/purecn_interval_file/targets_intervals.txt",
         extra=config.get("purecn_coverage", {}).get("extra", ""),
+
+
+# background
+use rule create_background_file from references as references_create_background_file with:
+    input:
+        gvcfs=get_gvcfs(),
