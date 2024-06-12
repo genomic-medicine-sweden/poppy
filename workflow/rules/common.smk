@@ -21,7 +21,6 @@ from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
 from hydra_genetics import min_version as hydra_min_version
 
-from datetime import datetime
 from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
