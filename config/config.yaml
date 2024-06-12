@@ -110,6 +110,7 @@ merge_cnv_json:
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
   thresholds: "100,200,1000"
+  extra: " --mapq 20 "
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.21"
@@ -202,7 +203,7 @@ vardict:
   bed_columns: "-c 1 -S 2 -E 3"
 
 vep:
-  container: docker://ensemblorg/ensembl-vep:release_110.1
+  container: "docker://hydragenetics/vep:111.0"
   vep_cache: ""
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything "
