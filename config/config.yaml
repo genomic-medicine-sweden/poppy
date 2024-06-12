@@ -116,7 +116,7 @@ multiqc:
   container: "docker://hydragenetics/multiqc:1.21"
   reports:
     DNA:
-      config: "{{POPPY_HOME}}/config/multiqc.yaml"
+      config: "{{POPPY_HOME}}/config/config_multiqc.yaml"
       included_unit_types:
         - T
         - N
