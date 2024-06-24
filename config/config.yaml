@@ -95,8 +95,6 @@ gatk_mutect2_gvcf:
 
 gatk_mutect2_merge_stats:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-mark_duplicates:
-  container: "docker://hydragenetics/picard:2.25.0"
 
 merge_cnv_json:
   annotations:
