@@ -421,19 +421,6 @@ properties:
     required:
       - container
 
-  mark_duplicates:
-    type: object
-    description: >
-      Config for the mark_duplicates rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
   mosdepth_bed:
     type: object
     description: >
@@ -798,7 +785,6 @@ required:
   - gatk_mutect2_filter
   - gatk_mutect2_gvcf
   - gatk_mutect2_merge_stats
-  - mark_duplicates
   - mosdepth_bed
   - multiqc
   - output
