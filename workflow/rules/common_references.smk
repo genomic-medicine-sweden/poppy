@@ -25,7 +25,7 @@ config = load_resources(config, config["resources_references"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 # Sample information
-samples = pd.read_table(config["samples"], dtype=str).set_index("sample", drop=False)
+samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "type"], drop=False)
