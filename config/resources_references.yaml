@@ -7,3 +7,6 @@ default_resources:
 
 cnvkit_build_normal_reference:
   threads: 8
+
+purecn_coverage:
+  time: "5:00:00"
