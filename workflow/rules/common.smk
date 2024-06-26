@@ -35,6 +35,7 @@ from hydra_genetics.utils.software_versions import touch_pipeline_version_file_n
 
 include: "results.smk"
 
+
 hydra_min_version("3.0.0")
 min_version("7.32.0")
 
