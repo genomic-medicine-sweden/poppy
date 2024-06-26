@@ -21,7 +21,6 @@ from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
 from hydra_genetics import min_version as hydra_min_version
 
-from datetime import datetime
 from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
@@ -35,7 +34,6 @@ from hydra_genetics.utils.software_versions import touch_pipeline_version_file_n
 
 
 include: "results.smk"
-
 
 hydra_min_version("3.0.0")
 min_version("7.32.0")
