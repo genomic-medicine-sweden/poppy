@@ -7,6 +7,7 @@ reference:
   design_bed: "data/bed/design.bed"
   design_intervals_gatk_cnv: "data/bed/design.bed"
   artifacts: "reference/artifact_panel.tsv"
+  background: "reference/background_panel.tsv"
 
 bwa_mem:
   amb: "reference/hg19.fasta.amb"

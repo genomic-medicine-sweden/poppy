@@ -54,6 +54,21 @@ properties:
     required:
       - container
 
+  create_background_file:
+    type: object
+    description: config for create create_background_file
+    properties:
+      container:
+        type: string
+        description: uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+      min_dp:
+        type: number
+        description: min depth to look at for including position in background calculation
+      max_af:
+        type: number
+        description: max allelic freq to be included in background calculation
+
   create_read_count_panel_of_normals:
     type: object
     description: >

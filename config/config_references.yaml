@@ -1,9 +1,9 @@
-samples: samples_references.tsv
-units: units_references.tsv
-resources_references: config/resources_references.yaml
+samples: samples.tsv # only samples to include in panels
+units: units.tsv # only units to include in panels
+resources_references: "{{POPPY_HOME}}/config/resources_references.yaml"
 
 default_container: docker://hydragenetics/common:1.10.2
-output: config/output_files_references.yaml
+output: "{{POPPY_HOME}}/config/output_files_references.yaml"
 
 reference:
   mappability: ""

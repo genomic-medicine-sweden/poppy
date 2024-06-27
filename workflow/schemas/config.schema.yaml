@@ -75,6 +75,11 @@ properties:
           tsv-file with artifact freq in normal samples, created with reference pipeline
         format: uri-reference
 
+      background:
+        type: string
+        description: tsv-file with background freq in normal samples, created with reference pipeline.
+        format: uri-reference
+
     required:
       - fasta
       - fai
@@ -82,6 +87,7 @@ properties:
       - design_intervals
       - design_intervals_gatk_cnv
       - artifacts
+      - background
 
   samples:
     type: string
@@ -110,6 +116,16 @@ properties:
         type: string
         description: >
           Path to bedfile with genes to annotate in cnvreport.
+        format: uri-reference
+
+  background_annotation:
+    type: object
+    description: configuration for background annotation of vcf
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container using for background_annotation
         format: uri-reference
 
   bcbio_variation_recall_ensemble:

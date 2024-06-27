@@ -7,16 +7,19 @@ import yaml
 
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics import min_version as hydra_min_version
+from hydra_genetics.utils.misc import replace_dict_variables
 
 
 include: "results.smk"
 
 
-hydra_min_version("1.8.1")
+hydra_min_version("3.0.0")
 min_version("7.32.0")
 
 if not workflow.overwrite_configfiles:
     sys.exit("config file has to be specified with --configfile")
+
+config = replace_dict_variables(config)
 
 # Validate config
 validate(config, schema="../schemas/config_references.schema.yaml")
@@ -56,3 +59,7 @@ def get_vcfs():
             ]
         )
     )
+
+
+def get_gvcfs():
+    return list(set([f"snv_indels/gatk_mutect2_gvcf/{t.sample}_{t.type}.merged.g.vcf.gz" for t in units.itertuples()]))
