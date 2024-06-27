@@ -4,7 +4,7 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
-rule annotation_vep_pindel:
+rule pindel_processing_annotation_vep:
     input:
         cache=config.get("vep", {}).get("vep_cache", ""),
         fasta=config["reference"]["fasta"],
@@ -34,4 +34,33 @@ rule annotation_vep_pindel:
     message:
         "{rule}: vep annotate {input.vcf}"
     script:
-        "../scripts/annotation_vep_pindel.sh"
+        "../scripts/pindel_processing_annotation_vep.sh"
+
+
+rule pindel_processing_fix_af:
+    input:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vcf",
+    output:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf",
+    params:
+        extra=config.get("pindel_processing_fix_af", {}).get("extra", ""),
+    log:
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.log",
+    benchmark:
+        repeat(
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.benchmark.tsv",
+            config.get("pindel_processing_fix_af", {}).get("benchmark_repeats", 1),
+        )
+    threads: config.get("pindel_processing_fix_af", {}).get("threads", config["default_resources"]["threads"])
+    resources:
+        mem_mb=config.get("pindel_processing_fix_af", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+        mem_per_cpu=config.get("pindel_processing_fix_af", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+        partition=config.get("pindel_processing_fix_af", {}).get("partition", config["default_resources"]["partition"]),
+        threads=config.get("pindel_processing_fix_af", {}).get("threads", config["default_resources"]["threads"]),
+        time=config.get("pindel_processing_fix_af", {}).get("time", config["default_resources"]["time"]),
+    container:
+        config.get("pindel_processing_fix_af", {}).get("container", config["default_container"])
+    message:
+        "{rule}: add af and dp to info field in {input.vcf}"
+    script:
+        "../scripts/pindel_processing_fix_af.py"

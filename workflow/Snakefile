@@ -7,12 +7,11 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
-ruleorder: annotation_vep_pindel > annotation_vep
+ruleorder: pindel_processing_annotation_vep > annotation_vep
 
 
 include: "rules/common.smk"
-include: "rules/fix_af_pindel.smk"
-include: "rules/annotation_vep_pindel.smk"
+include: "rules/pindel_processing.smk"
 
 
 report: "report/workflow.rst"

@@ -2,9 +2,9 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
-  annotation_vep_pindel:
+  pindel_processing_annotation_vep:
     type: object
-    description: input and output parameters for vep
+    description: input and output parameters for vep annotation of pindel vcf
     properties:
       input:
         type: object
@@ -12,7 +12,7 @@ properties:
         properties:
           cache:
             type: string
-            description: path to vep cache directory
+            description: path to vep cache directory from config["vep"]["vep_cache"]
           fasta:
             type: string
             description: path to fasta reference genome
@@ -29,3 +29,22 @@ properties:
           vcf:
             type: string
             description: annotated (or incase of empty just copied) vcf file
+  
+  pindel_processing_fix_af:
+    type: object
+    description: input and output parameters for pindel_processing_fix_af
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcf:
+            type: string
+            description: vcf where AF and DP is needed in INFO field
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: vcf with added AF and DP in INFO field
