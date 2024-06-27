@@ -43,3 +43,26 @@ Since pindel is run on limited region it does not always produce results, if an 
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__pindel_processing_fix_af#
+
+---
+
+## reference_rules.smk
+Software used specifically to create the reference-files for Poppy.
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__reference_rules__reference_rules_create_artefact_file_pindel#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__reference_rules__reference_rules_create_artifact_file_pindel#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__reference_rules_create_artifact_file_pindel#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__reference_rules_create_artefact_file_pindel#

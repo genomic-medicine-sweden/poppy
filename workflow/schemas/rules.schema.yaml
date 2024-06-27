@@ -48,3 +48,25 @@ properties:
           vcf:
             type: string
             description: vcf with added AF and DP in INFO field
+
+  reference_rules_create_artefact_file_pindel:
+    type: object
+    description: input and output parameters for reference_rules_create_artefact_file_pindel
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcfs:
+            type: string
+            description: all (gzipped) vcfs to be used for artifact panel
+          tbis:
+            type: string
+            description: tbi index to all input vcfs
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          artifact_panel:
+            type: string
+            description: tsv file with chr, pos, svtype, median, sd, num_obs of detected variants
