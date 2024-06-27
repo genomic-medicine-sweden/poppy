@@ -86,9 +86,9 @@ config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 ### Read and validate samples file
-
 samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
+
 
 ### Read and validate units file
 units = (
@@ -109,9 +109,8 @@ with open(config["output"], "r") as f:
     output_spec = yaml.safe_load(f.read())
     validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
 
+
 ### Set wildcard constraints
-
-
 wildcard_constraints:
     barcode="[A-Z+]+",
     chr="[^_]+",
@@ -119,6 +118,15 @@ wildcard_constraints:
     lane="L[0-9]+",
     sample="|".join(get_samples(samples)),
     type="N|T|R",
+
+
+def get_priority(wildcards):
+    priority_dict = {}
+    for v in config.get("svdb_merge", {}).get("tc_method"):
+        tc_method = v["name"]
+        priority_dict[tc_method] = v["priority"]
+
+    return priority_dict[wildcards.tc_method]
 
 
 generate_copy_rules(output_spec)

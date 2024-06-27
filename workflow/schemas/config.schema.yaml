@@ -21,6 +21,16 @@ properties:
       Path to resources.yaml file
     format: uri-reference
 
+  pacbio_alignment:
+    type: boolean
+    description: if pacbio_alignment is used set to true
+    default: false
+
+  ont_alignment:
+    type: boolean
+    description: if ont_alignment should be used set to true
+    default: false
+
   reference:
     type: object
     description: >
@@ -645,9 +655,13 @@ properties:
                 description: >
                   Name of the caller to use
               minItems: 1
+            priority:
+              type: string
+              description: Ordered comma seperated list of callers to be used for the method
           required:
             - name
             - cnv_caller
+            - priority
       overlap:
         type: number
         description: >
