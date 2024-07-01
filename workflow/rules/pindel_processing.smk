@@ -37,6 +37,42 @@ rule pindel_processing_annotation_vep:
         "../scripts/pindel_processing_annotation_vep.sh"
 
 
+rule pindel_processing_artifact_annotation:
+    input:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz",
+        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz.tbi",
+        artifacts=config["reference"]["artifacts_pindel"],
+    output:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf",
+    params:
+        extra=config.get("pindel_processing_artifact_annotation", {}).get("extra", ""),
+    log:
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf.log",
+    benchmark:
+        repeat(
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf.benchmark.tsv",
+            config.get("pindel_processing_artifact_annotation", {}).get("benchmark_repeats", 1),
+        )
+    threads: config.get("pindel_processing_artifact_annotation", {}).get("threads", config["default_resources"]["threads"])
+    resources:
+        mem_mb=config.get("pindel_processing_artifact_annotation", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+        mem_per_cpu=config.get("pindel_processing_artifact_annotation", {}).get(
+            "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
+        ),
+        partition=config.get("pindel_processing_artifact_annotation", {}).get(
+            "partition", config["default_resources"]["partition"]
+        ),
+        threads=config.get("pindel_processing_artifact_annotation", {}).get("threads", config["default_resources"]["threads"]),
+        time=config.get("pindel_processing_artifact_annotation", {}).get("time", config["default_resources"]["time"]),
+    container:
+        config.get("pindel_processing_artifact_annotation", {}).get("container", config["default_container"])
+    message:
+        "{rule}: add artifact annotation on {input.vcf}, based on arifact_panel_pindel.tsv "
+    localrule: True
+    script:
+        "../scripts/pindel_processing_artifact_annotation.py"
+
+
 rule pindel_processing_fix_af:
     input:
         vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vcf",

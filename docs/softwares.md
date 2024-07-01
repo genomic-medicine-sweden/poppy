@@ -3,9 +3,9 @@
 Rules specifically for Poppy listed here.
 
 ## pindel_processing.smk
-[Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older version of vcf and therefor has to be processed slightly different than the more modern vcfs.  Here we add the AF and DP fields to the vcf INFO column, and annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html).
+[Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older version of vcf and therefor has to be processed slightly different than the more modern vcfs.  Here we add the AF and DP fields to the vcf INFO column, annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html) and add artifact annotation based on artifact panel created with the reference pipeline.
 
-Since pindel is run on limited region it does not always produce results, if an empty vcf-file is used with VEP it will fail and the entire pipeline will stop, therefor a specific rule is needed to ensure there are variants in the pindel vcf before annotating the vcf. If no variants are found the empty vcf file is just copied to the output.
+<!-- Since pindel is run on limited region it does not always produce results, if an empty vcf-file is used with VEP it will fail and the entire pipeline will stop, therefor a specific rule is needed to ensure there are variants in the pindel vcf before annotating the vcf. If no variants are found the empty vcf file is just copied to the output. -->
 
 ### :snake: Rule
 
@@ -43,6 +43,26 @@ Since pindel is run on limited region it does not always produce results, if an 
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__pindel_processing_fix_af#
+
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__pindel_processing__pindel_processing_artifact_annotation#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__pindel_processing__pindel_processing_artifact_annotation#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__pindel_processing_artifact_annotation#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__pindel_processing_artifact_annotation#
+
 
 ---
 

@@ -85,6 +85,12 @@ properties:
           tsv-file with artifact freq in normal samples, created with reference pipeline
         format: uri-reference
 
+      artifacts_pindel:
+        type: string
+        description: >
+          tsv-file with artifact freq for pindel calls in normal samples, created with reference pipeline
+        format: uri-reference
+
       background:
         type: string
         description: tsv-file with background freq in normal samples, created with reference pipeline.
@@ -97,6 +103,7 @@ properties:
       - design_intervals
       - design_intervals_gatk_cnv
       - artifacts
+      - artifacts_pindel
       - background
 
   samples:
@@ -648,6 +655,20 @@ properties:
       benchmark_repeats:
         type: integer
         description: 'From config["vep"]: set number of times benchmark should be repeated'
+
+  pindel_processing_artifact_annotation:
+    type: object
+    description: parameters for pindel_processing_artifact_annotation to add artifact annotation to pindel vcf
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      extra:
+        type: string
+        description: parameters that should be forwarded
 
   pindel_processing_fix_af:
     type: object

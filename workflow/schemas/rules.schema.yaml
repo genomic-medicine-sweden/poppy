@@ -29,6 +29,31 @@ properties:
           vcf:
             type: string
             description: annotated (or incase of empty just copied) vcf file
+
+  pindel_processing_artifact_annotation:
+    type: object
+    description: input and output parameters for pindel_processing_artifact_annotation
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcf:
+            type: string
+            description: gzipped vcf to be artifact annotated
+          tbi:
+            type: string
+            description: tbi index to input.vcf
+          artifacts:
+            type: string
+            description: tsv file with artifact pindel calls, created in reference pipeline
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: vcf with artifact annotation
   
   pindel_processing_fix_af:
     type: object

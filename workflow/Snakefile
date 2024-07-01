@@ -8,6 +8,7 @@ __license__ = "GPL-3"
 
 
 ruleorder: pindel_processing_annotation_vep > annotation_vep
+ruleorder: pindel_processing_artifact_annotation > annotation_artifact_annotation
 
 
 include: "rules/common.smk"
