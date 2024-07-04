@@ -687,7 +687,7 @@ properties:
   svdb_merge:
     type: object
     description: >
-      Configuration for the svdb_merge rule
+      Configuration for the svdb_merge_wo_priority rule
     properties:
       container:
         type: string
@@ -718,13 +718,9 @@ properties:
                 description: >
                   Name of the caller to use
               minItems: 1
-            priority:
-              type: string
-              description: Ordered comma separated list of callers to be used for the method
           required:
             - name
             - cnv_caller
-            - priority
       overlap:
         type: number
         description: >
@@ -831,7 +827,6 @@ properties:
         format: uri-reference
     required:
       - container
-
 
 required:
   - bcbio_variation_recall_ensemble

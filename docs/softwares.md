@@ -64,6 +64,28 @@ Rules specifically for Poppy listed here.
 #RESOURCESSCHEMA__pindel_processing_artifact_annotation#
 
 
+## [svdb](https://github.com/J35P312/SVDB).smk
+Since when running `svdb --merge` with the priority flag set, svdb cuts off the FORMAT column for cnvkit variants [git issue](). We use a non-Hydra Genetics rule for the `svdb --merge` command.
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__svdb__svdb_merge_wo_priority#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__svdb__svdb_merge_wo_priority#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__svdb_merge#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__svdb_merge#
+
+
 ---
 
 ## reference_rules.smk
@@ -86,3 +108,5 @@ Software used specifically to create the reference-files for Poppy.
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__reference_rules_create_artefact_file_pindel#
+
+

@@ -54,7 +54,7 @@ properties:
           vcf:
             type: string
             description: vcf with artifact annotation
-  
+
   pindel_processing_fix_af:
     type: object
     description: input and output parameters for pindel_processing_fix_af
@@ -95,3 +95,22 @@ properties:
           artifact_panel:
             type: string
             description: tsv file with chr, pos, svtype, median, sd, num_obs of detected variants
+
+  svdb_merge_wo_priority:
+    type: object
+    description: input and output parameters for svdb_merge_wo_priority
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcfs:
+            type: string
+            description: a function get_vcfs_for_svdb_merge (common.smk) is used to list all files (eg. from different callers) that should be merge into a SVDB 'vcf'
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: a 'vcf' file containing the merged SV calls

@@ -9,9 +9,11 @@ __license__ = "GPL-3"
 
 ruleorder: pindel_processing_annotation_vep > annotation_vep
 ruleorder: pindel_processing_artifact_annotation > annotation_artifact_annotation
+ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
 
 
 include: "rules/common.smk"
+include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
 
