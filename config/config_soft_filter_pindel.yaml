@@ -1,4 +1,9 @@
 filters:
+  vaf:
+    description: "Soft filter variants with low vaf (AF lower than 0.01)"
+    expression: "(INFO:AF:0 < 0.01)"
+    soft_filter_flag: "AF_0.01"
+    soft_filter: "True"
   depth:
     description: "Soft filter on depth lower than 200"
     expression: "FORMAT:DP < 200"
@@ -9,11 +14,6 @@ filters:
     expression: "(FORMAT:AD:1 < 5)"
     soft_filter_flag: "AD_5"
     soft_filter: "True"
-  vaf:
-    description: "Soft filter variants with low vaf (AF lower than 0.01)"
-    expression: "(INFO:AF:0 < 0.01)"
-    soft_filter_flag: "AF_0.01"
-    soft_filter: "True"
   intron:
     description: "Soft filter intronic variants except if also splice, in cosmic, or in gata2 or tert genes"
     expression: "(exist[intron_variant, VEP:Consequence] and !exist[splice, VEP:Consequence] and VEP:SYMBOL != TERT and VEP:SYMBOL != GATA2 and !exist[COSV[0-9]+, VEP:Existing_variation])"
@@ -23,4 +23,9 @@ filters:
     description: "Soft filter germline if >2% in any population from 1000 genomes, ESP or gnomADe"
     expression: "(VEP:MAX_AF > 0.02)"
     soft_filter_flag: "PopAF_0.02"
+    soft_filter: "True"
+  artifacts:
+    description: "Soft filter position that occurs in 4 or more normal samples and AF is less than 5 sd from median af in normalpool"
+    expression: "(INFO:Artifact > 3 and INFO:ArtifactNrSD < 5)"
+    soft_filter_flag: "Artifact_gt_3"
     soft_filter: "True"
