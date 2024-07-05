@@ -1,19 +1,4 @@
 filters:
-  vaf:
-    description: "Soft filter variants with low vaf (AF lower than 0.01)"
-    expression: "(INFO:AF:0 < 0.01)"
-    soft_filter_flag: "AF_0.01"
-    soft_filter: "True"
-  depth:
-    description: "Soft filter on depth lower than 100"
-    expression: "FORMAT:DP < 100"
-    soft_filter_flag: "DP_100"
-    soft_filter: "True"
-  ad:
-    description: "Soft filter variants with few observations (AD lower than 5)"
-    expression: "(FORMAT:AD:1 < 5)"
-    soft_filter_flag: "AD_5"
-    soft_filter: "True"
   intron:
     description: "Soft filter intronic variants except if also splice"
     expression: "(exist[intron_variant, VEP:Consequence] and !exist[splice, VEP:Consequence])"
@@ -45,7 +30,12 @@ filters:
     soft_filter_flag: "Biotype"
     soft_filter: "True"
   artifacts:
-    description: "Soft filter position that occurs in 4 or more normal samples (100 %) and AF is less than 5 sd from median af in normalpool"
+    description: "Soft filter position that occurs in 4 or more normal samples and AF is less than 5 sd from median af in normalpool"
     expression: "((INFO:Artifact:0 > 3 and INFO:ArtifactNrSD:0 < 5) or (INFO:Artifact:1 > 3 and INFO:ArtifactNrSD:1 < 5))"
-    soft_filter_flag: "Artifact"
+    soft_filter_flag: "Artifact_gt_3"
+    soft_filter: "True"
+  background:
+    description: "Soft filter position with where background distribution overlaps variant (lower than 4 SD from median)"
+    expression: "(INFO:PositionNrSD < 4)"
+    soft_filter_flag: "Background_lt_4"
     soft_filter: "True"

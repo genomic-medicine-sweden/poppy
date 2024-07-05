@@ -1,0 +1,13 @@
+filters:
+  vaf:
+    description: "Soft filter variants with low vaf (AF lower than 0.01)"
+    expression: "(INFO:AF:0 < 0.01)"
+    soft_filter: "False"
+  depth:
+    description: "Soft filter on depth lower than 100"
+    expression: "FORMAT:DP < 100"
+    soft_filter: "False"
+  ad:
+    description: "Soft filter variants with few observations (AD lower than 5)"
+    expression: "(FORMAT:AD:1 < 5)"
+    soft_filter: "False"

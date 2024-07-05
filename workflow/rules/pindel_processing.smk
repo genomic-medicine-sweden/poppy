@@ -11,15 +11,15 @@ rule pindel_processing_annotation_vep:
         tabix="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz.tbi",
         vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz",
     output:
-        vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf"),
+        vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf"),
     params:
         extra=config.get("vep", {}).get("extra", "--pick"),
         mode=config.get("vep", {}).get("mode", "--offline --cache --merged "),
     log:
-        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.log",
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.log",
     benchmark:
         repeat(
-            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.benchmark.tsv",
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.benchmark.tsv",
             config.get("vep", {}).get("benchmark_repeats", 1),
         )
     threads: config.get("vep", {}).get("threads", config["default_resources"]["threads"])
@@ -39,18 +39,18 @@ rule pindel_processing_annotation_vep:
 
 rule pindel_processing_artifact_annotation:
     input:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz",
-        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.vcf.gz.tbi",
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz",
+        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz.tbi",
         artifacts=config["reference"]["artifacts_pindel"],
     output:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf",
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.vcf",
     params:
         extra=config.get("pindel_processing_artifact_annotation", {}).get("extra", ""),
     log:
-        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf.log",
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.vcf.log",
     benchmark:
         repeat(
-            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vep_annotated.artifact_annotated.vcf.benchmark.tsv",
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.vcf.benchmark.tsv",
             config.get("pindel_processing_artifact_annotation", {}).get("benchmark_repeats", 1),
         )
     threads: config.get("pindel_processing_artifact_annotation", {}).get("threads", config["default_resources"]["threads"])
