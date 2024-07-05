@@ -13,7 +13,6 @@ ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
 
 
 include: "rules/common.smk"
-include: "rules/cnv_processing.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
