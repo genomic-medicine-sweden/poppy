@@ -13,7 +13,7 @@ files:
     output: qc/multiqc_DNA.html
 
   - name: SNV ensemble soft filtered VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic.vcf.gz
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz
     output: vcf/{sample}_{type}.filter.somatic.vcf.gz
 
   - name: Caller-specific VCF file
@@ -21,7 +21,7 @@ files:
     output: vcf/{sample}_{type}.{caller}.vcf.gz
 
   - name: Pindel VCF file
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalizd.vep_annotated.filter.pindel.vcf.gz
+    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalizd.vep_annotated.filter.somatic_hard.filter.pindel.vcf.gz
     output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz
 
   - name: SVDB CNV VCF file

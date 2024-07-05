@@ -68,9 +68,9 @@ fastqc:
 filter_vcf:
   germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
   somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml"
+  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml"
   pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml"
-  cnv_hard_filter_amp: "{{POPPY_HOME}}/config/config_hard_filter_cnv_amp.yaml"
-  cnv_hard_filter_loh: "{{POPPY_HOME}}/config/config_hard_filter_cnv_loh.yaml"
+  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -103,7 +103,7 @@ merge_cnv_json:
     - "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
   filtered_cnv_vcfs:
-    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter_amp.vcf.gz
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
   unfiltered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
 
