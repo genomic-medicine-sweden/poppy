@@ -3,7 +3,7 @@
 Rules specifically for Poppy listed here.
 
 ## pindel_processing.smk
-[Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older version of vcf and therefor has to be processed slightly different than the more modern vcfs.  Here we add the AF and DP fields to the vcf INFO column, annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html) and add artifact annotation based on artifact panel created with the reference pipeline.
+[Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older type of VCF and therefore has to be processed slightly different than more modern VCFs. Here we add the AF and DP fields to the VCF INFO column, annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html) and add artifact annotation based an on artifact panel created with the reference pipeline.
 
 <!-- Since pindel is run on limited region it does not always produce results, if an empty vcf-file is used with VEP it will fail and the entire pipeline will stop, therefor a specific rule is needed to ensure there are variants in the pindel vcf before annotating the vcf. If no variants are found the empty vcf file is just copied to the output. -->
 
