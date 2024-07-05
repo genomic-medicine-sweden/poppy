@@ -1,4 +1,5 @@
 include: "rules/common_references.smk"
+include: "rules/reference_rules.smk"
 
 
 rule all:

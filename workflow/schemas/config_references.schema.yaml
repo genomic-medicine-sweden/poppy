@@ -112,6 +112,20 @@ properties:
     required:
       - mappability
 
+  reference_rules_create_artifact_file_pindel:
+    type: object
+    description: parameters for reference_rules_create_artifact_file_pindel
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      extra:
+        type: string
+        description: parameters that should be forwarded
+
   resources_references:
     type: string
     description: >

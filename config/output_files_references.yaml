@@ -32,6 +32,10 @@ files:
     input: references/create_artifact_file/artifact_panel.tsv
     output: artifact_panel.tsv
 
+  - name: artifacts pindel tsv-file
+    input: references/create_artifact_file_pindel/artifact_panel.tsv
+    output: artifact_panel_pindel.tsv
+
   - name: background tsv-file
     input: "references/create_background_file/background_panel.tsv"
     output: background_panel.tsv

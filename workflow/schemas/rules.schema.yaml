@@ -2,9 +2,9 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
-  annotation_vep_pindel:
+  pindel_processing_annotation_vep:
     type: object
-    description: input and output parameters for vep
+    description: input and output parameters for vep annotation of pindel vcf
     properties:
       input:
         type: object
@@ -12,7 +12,7 @@ properties:
         properties:
           cache:
             type: string
-            description: path to vep cache directory
+            description: path to vep cache directory from config["vep"]["vep_cache"]
           fasta:
             type: string
             description: path to fasta reference genome
@@ -29,3 +29,88 @@ properties:
           vcf:
             type: string
             description: annotated (or incase of empty just copied) vcf file
+
+  pindel_processing_artifact_annotation:
+    type: object
+    description: input and output parameters for pindel_processing_artifact_annotation
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcf:
+            type: string
+            description: gzipped vcf to be artifact annotated
+          tbi:
+            type: string
+            description: tbi index to input.vcf
+          artifacts:
+            type: string
+            description: tsv file with artifact pindel calls, created in reference pipeline
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: vcf with artifact annotation
+
+  pindel_processing_fix_af:
+    type: object
+    description: input and output parameters for pindel_processing_fix_af
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcf:
+            type: string
+            description: vcf where AF and DP is needed in INFO field
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: vcf with added AF and DP in INFO field
+
+  reference_rules_create_artefact_file_pindel:
+    type: object
+    description: input and output parameters for reference_rules_create_artefact_file_pindel
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcfs:
+            type: string
+            description: all (gzipped) vcfs to be used for artifact panel
+          tbis:
+            type: string
+            description: tbi index to all input vcfs
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          artifact_panel:
+            type: string
+            description: tsv file with chr, pos, svtype, median, sd, num_obs of detected variants
+
+  svdb_merge_wo_priority:
+    type: object
+    description: input and output parameters for svdb_merge_wo_priority
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcfs:
+            type: string
+            description: a function get_vcfs_for_svdb_merge (common.smk) is used to list all files (eg. from different callers) that should be merge into a SVDB 'vcf'
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          vcf:
+            type: string
+            description: a 'vcf' file containing the merged SV calls

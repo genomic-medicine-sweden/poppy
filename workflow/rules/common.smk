@@ -86,9 +86,9 @@ config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 ### Read and validate samples file
-
 samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
+
 
 ### Read and validate units file
 units = (
@@ -109,9 +109,8 @@ with open(config["output"], "r") as f:
     output_spec = yaml.safe_load(f.read())
     validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
 
+
 ### Set wildcard constraints
-
-
 wildcard_constraints:
     barcode="[A-Z+]+",
     chr="[^_]+",
@@ -119,6 +118,25 @@ wildcard_constraints:
     lane="L[0-9]+",
     sample="|".join(get_samples(samples)),
     type="N|T|R",
+
+
+def get_vcfs_for_svdb_merge(wildcards, add_suffix=False):
+    vcf_dict = {}
+    for v in config.get("svdb_merge", {}).get("tc_method"):
+        tc_method = v["name"]
+        callers = v["cnv_caller"]
+        for caller in callers:
+            if add_suffix:
+                caller_suffix = f":{caller}"
+            else:
+                caller_suffix = ""
+            if tc_method in vcf_dict:
+                vcf_dict[tc_method].append(
+                    f"cnv_sv/{caller}_vcf/{wildcards.sample}_{wildcards.type}.{tc_method}.vcf{caller_suffix}"
+                )
+            else:
+                vcf_dict[tc_method] = [f"cnv_sv/{caller}_vcf/{wildcards.sample}_{wildcards.type}.{tc_method}.vcf{caller_suffix}"]
+    return vcf_dict[wildcards.tc_method]
 
 
 generate_copy_rules(output_spec)

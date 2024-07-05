@@ -7,12 +7,14 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
-ruleorder: annotation_vep_pindel > annotation_vep
+ruleorder: pindel_processing_annotation_vep > annotation_vep
+ruleorder: pindel_processing_artifact_annotation > annotation_artifact_annotation
+ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
 
 
 include: "rules/common.smk"
-include: "rules/fix_af_pindel.smk"
-include: "rules/annotation_vep_pindel.smk"
+include: "rules/svdb.smk"
+include: "rules/pindel_processing.smk"
 
 
 report: "report/workflow.rst"
@@ -53,7 +55,7 @@ use rule * from annotation as annotation_*
 
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="b549266")
+        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="1aa9a68")
     config:
         config
 
