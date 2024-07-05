@@ -13,6 +13,7 @@ ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
 
 
 include: "rules/common.smk"
+include: "rules/cnv_processing.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
@@ -132,23 +133,10 @@ module snv_indels:
 use rule * from snv_indels as snv_indels_*
 
 
-use rule vt_decompose from snv_indels as snv_indels_vt_decompose_pindel with:
-    input:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.gz",
-    output:
-        vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz"),
-    log:
-        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz.log",
-    benchmark:
-        repeat(
-            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz.benchmark.tsv",
-            config.get("vt_decompose", {}).get("benchmark_repeats", 1),
-        )
-
-
 use rule vt_normalize from snv_indels as snv_indels_vt_normalize_pindel with:
     input:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.decomposed.vcf.gz",
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.gz",
+        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.gz.tbi",
         ref=config["reference"]["fasta"],
     output:
         vcf=temp("cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vcf.gz"),
