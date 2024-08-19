@@ -195,7 +195,7 @@ svdb_merge:
 
 svdb_query:
   container: docker://hydragenetics/svdb:2.6.0
-  db_string: "FILL_ME_IN"
+  db_string: "--db FILL_ME_IN --out_frq Normal_AF --out_occ Normal_OCC"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
