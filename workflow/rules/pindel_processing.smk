@@ -68,7 +68,6 @@ rule pindel_processing_artifact_annotation:
         config.get("pindel_processing_artifact_annotation", {}).get("container", config["default_container"])
     message:
         "{rule}: add artifact annotation on {input.vcf}, based on arifact_panel_pindel.tsv "
-    localrule: True
     script:
         "../scripts/pindel_processing_artifact_annotation.py"
 
