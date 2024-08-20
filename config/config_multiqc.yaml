@@ -21,7 +21,7 @@ mosdepth_config:
     - 100
     - 200
     - 1000
-  
+
 table_columns_visible:
   FastQC:
     percent_duplicates: False
@@ -69,7 +69,7 @@ table_columns_visible:
 
 # Custom columns to general stats
 multiqc_cgs:
-  "Picard: HsMetrics": 
+  "Picard: HsMetrics":
     FOLD_80_BASE_PENALTY:
       title: "Fold80"
       description: "Fold80 penalty from picard hs metrics"

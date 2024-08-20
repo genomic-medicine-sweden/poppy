@@ -2,7 +2,6 @@ from pysam import VariantFile
 
 
 def add_artifact_annotation_data(in_vcf_filename, artifacts_filename, out_vcf_filename):
-
     artifact_dict = {}
     with open(artifacts_filename, "r") as artifacts:
         next(artifacts)

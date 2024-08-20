@@ -10,4 +10,4 @@ def copy_changelog_and_license(*args, **kwargs):
     shutil.copy("config/config_references.yaml", "docs/includes/config_references.yaml")
     shutil.copy("config/multiqc.yaml", "docs/includes/multiqc_config.yaml")
     shutil.copy("config/resources.yaml", "docs/includes/resources.yaml")
-    #shutil.copy("images/rulegraph.svg", "docs/includes/images/rulegraph.svg")
+    # shutil.copy("images/rulegraph.svg", "docs/includes/images/rulegraph.svg")
