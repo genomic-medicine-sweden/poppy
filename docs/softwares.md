@@ -108,5 +108,3 @@ Software used specifically to create the reference-files for Poppy.
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__reference_rules_create_artefact_file_pindel#
-
-

@@ -1,1 +1,2 @@
 line-length = 130
+skip-string-normalization = true

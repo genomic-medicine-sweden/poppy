@@ -1,0 +1,13 @@
+filters:
+  copy_number_normal:
+    description: Hard filter CNVs with COPY_NORMAL
+    expression: "INFO:SVTYPE = COPY_NORMAL"
+    soft_filter: "False"
+  artifacts:
+    description: Hard filter variants found in more than 15% of the normal samples
+    expression: "(INFO:Normal_AF > 0.15)"
+    soft_filter: "False"
+  amp_gene:
+    description: Only keep variants with gene annotations
+    expression: "(!exist[[A-Za-z0-9_,-]+, INFO:Genes])"
+    soft_filter: "False"
