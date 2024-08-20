@@ -21,7 +21,7 @@ files:
     output: vcf/{sample}_{type}.{caller}.vcf.gz
 
   - name: Pindel VCF file
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.filter.somatic_hard.filter.pindel.vcf.gz
+    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz
     output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz
 
   - name: SVDB CNV VCF file
