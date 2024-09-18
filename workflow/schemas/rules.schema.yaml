@@ -2,6 +2,31 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
+  cnv_tsv_reports_loh_large:
+    type: object
+    description: input and output parameters for cnv_tsv_reports_loh_large
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          vcf:
+            type: string
+            description: Annotated vcf with cnv calls
+          chrom_arm_size:
+            type: string
+            description: tsv file with chromosomal arm lengths (corresponding to used reference genome)
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          large_tsv:
+            type: string
+            description: tsv table with larger cnvs detected
+          loh_tsv:
+            type: string
+            description: tsv table with LOH identified
+
   pindel_processing_annotation_vep:
     type: object
     description: input and output parameters for vep annotation of pindel vcf

@@ -13,6 +13,7 @@ ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
 
 
 include: "rules/common.smk"
+include: "rules/cnv_tsv_reports.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
@@ -116,6 +117,22 @@ module reports:
 
 
 use rule * from reports as reports_*
+
+
+use rule cnv_html_report from reports as reports_cnv_html_report with:
+    input:
+        json="reports/cnv_html_report/{sample}_{type}.{tc_method}.merged.json",
+        html_template=workflow.get_rule("reports_cnv_html_report").input.html_template,
+        js_files=workflow.get_rule("reports_cnv_html_report").input.js_files,
+        css_files=workflow.get_rule("reports_cnv_html_report").input.css_files,
+        tc_file=reports.get_tc_file,
+        extra_table_files=[t["path"] for t in config.get("cnv_html_report", {}).get("extra_tables", [])],
+    params:
+        extra_tables=config.get("cnv_html_report", {}).get("extra_tables", []),
+        include_table=config.get("cnv_html_report", {}).get("show_table", True),
+        tc=reports.get_tc,
+        tc_method=lambda wildcards: wildcards.tc_method,
+        include_cytobands=config.get("cnv_html_report", {}).get("cytobands", False),
 
 
 module snv_indels:

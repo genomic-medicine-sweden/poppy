@@ -23,6 +23,9 @@ cnv_html_report:
 cnvkit_batch:
   normal_reference: "data/cnvkit/cnvkit_pon.cnn"
 
+cnv_tsv_reports_loh_large:
+  chrom_arm_size: "reference/chrom_arms.tsv"
+
 gatk_collect_allelic_counts:
   SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 

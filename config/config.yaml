@@ -44,6 +44,19 @@ bwa_mem:
 cnv_html_report:
   cytobands: false
   show_table: true
+  extra_tables:
+  - name: LOH calls
+    description: >
+      Table with LOH regions identified with Poppy's in-house scripts.
+      Also warns if potential polyploidy is detected in sample.
+    path: "cnv_tsv_reports/{sample}_{type}.{tc_method}.loh_table.tsv"
+  - name: Large chromosomal aberrations
+    description: >
+      Large chromosomal aberrations in the form of deletions and duplications larger than 100k bp.
+      Also warns if potential polyploidy is detected in sample.
+    path: "cnv_tsv_reports/{sample}_{type}.{tc_method}.large_table.tsv"
+
+
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -58,6 +71,9 @@ cnvkit_vcf:
   hom_del_limit: 0.47
   het_del_limit: 1.68
   dup_limit: 2.3
+
+cnv_tsv_reports_loh_large:
+  chrom_arm_size: ""
 
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.20.1"
@@ -186,12 +202,12 @@ svdb_merge:
   tc_method:
     - name: purecn
       cnv_caller:
-        - cnvkit
         - gatk
+        - cnvkit
     - name: pathology
       cnv_caller:
-        - cnvkit
         - gatk
+        - cnvkit
 
 svdb_query:
   container: docker://hydragenetics/svdb:2.6.0

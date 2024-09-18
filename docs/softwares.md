@@ -2,6 +2,28 @@
 # Software used in Poppy
 Rules specifically for Poppy listed here.
 
+## cnv_tsv_reports.smk
+In-house script to extract large cnvs and loh calls into extra tsv-tables to the html-cnv-report.
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__cnv_tsv_reports__cnv_tsv_reports_loh_large#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__cnv_tsv_reports__cnv_tsv_reports_loh_large#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__cnv_tsv_reports_loh_large#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__cnv_tsv_reports_loh_large#
+
+
 ## pindel_processing.smk
 [Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older type of VCF and therefore has to be processed slightly different than more modern VCFs. Here we add the AF and DP fields to the VCF INFO column, annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html) and add artifact annotation based an on artifact panel created with the reference pipeline.
 
@@ -108,5 +130,4 @@ Software used specifically to create the reference-files for Poppy.
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__reference_rules_create_artefact_file_pindel#
-
 
