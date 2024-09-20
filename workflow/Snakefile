@@ -110,7 +110,7 @@ module reports:
         github(
             "hydra-genetics/reports",
             path="workflow/Snakefile",
-            tag="v0.3.1",
+            tag="v0.4.2",
         )
     config:
         config
