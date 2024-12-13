@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.0](https://github.com/genomic-medicine-sweden/poppy/compare/v0.1.0...v0.2.0) (2024-12-13)
+
+
+### Features
+
+* add background to reference pipeline and annotation to snvs vcfs ([#70](https://github.com/genomic-medicine-sweden/poppy/issues/70)) ([f5c1903](https://github.com/genomic-medicine-sweden/poppy/commit/f5c1903686952f99439683850004391935ae6222))
+* add pindel artifact annotation and filter ([#71](https://github.com/genomic-medicine-sweden/poppy/issues/71)) ([8aaa171](https://github.com/genomic-medicine-sweden/poppy/commit/8aaa171162433dd9f2f32fdd8266c1c2ba247005))
+* update hydra genetics version to include software version into multiqc ([#63](https://github.com/genomic-medicine-sweden/poppy/issues/63)) ([19b33d3](https://github.com/genomic-medicine-sweden/poppy/commit/19b33d37d1bdf583f01d5663a61183a25b526cca))
+
+
+### Bug Fixes
+
+* add bam-files to purecn rules where bamlist is used ([#73](https://github.com/genomic-medicine-sweden/poppy/issues/73)) ([b657c84](https://github.com/genomic-medicine-sweden/poppy/commit/b657c849040ff1763771dfd1ab34e411dcd037f6))
+* remove default string for all col when loading samples.tsv ([#67](https://github.com/genomic-medicine-sweden/poppy/issues/67)) ([9efae47](https://github.com/genomic-medicine-sweden/poppy/commit/9efae473e1cb1c9319e010f3ffe6aecd970cd4f8))
+* remove pindel decompose and update filters ([#72](https://github.com/genomic-medicine-sweden/poppy/issues/72)) ([6efbfc0](https://github.com/genomic-medicine-sweden/poppy/commit/6efbfc088233e5947600d9331d4fd733c08bffdf))
+
 ## 0.1.0 (2024-03-08)
 
 
