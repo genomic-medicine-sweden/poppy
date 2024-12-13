@@ -48,6 +48,19 @@ def get_bams():
     return list(set([f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam" for t in units.itertuples()]))
 
 
+def get_bais():
+    return list(set([f"alignment/samtools_merge_bam/{t.sample}_{t.type}.bam.bai" for t in units.itertuples()]))
+
+
+def get_coverage_files(samples, units):
+    coverage_list = [
+        "references/purecn_coverage/%s_%s_coverage_loess.txt.gz" % (sample, unit_type)
+        for sample in get_samples(samples)
+        for unit_type in get_unit_types(units, sample)
+    ]
+    return coverage_list
+
+
 def get_cnv_vcfs():
     return list(set([f"cnv_sv/svdb_merge/{t.sample}_{t.type}.pathology.merged.vcf" for t in units.itertuples()]))
 

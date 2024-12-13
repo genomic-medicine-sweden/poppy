@@ -112,9 +112,19 @@ use rule purecn_coverage from references as references_purecn_coverage with:
     input:
         bam_list_file="references/purecn_bam_list/bam_files.list",
         intervals="references/purecn_interval_file/targets_intervals.txt",
+        bam_files=get_bams(),
+        bai_files=get_bais(),
     params:
         intervals="references/purecn_interval_file/targets_intervals.txt",
         extra=config.get("purecn_coverage", {}).get("extra", ""),
+
+
+use rule purecn_normal_db from references as references_purecn_normal_db with:
+    input:
+        coverage_list_file="references/purecn_coverage_list/coverage_files.list",
+        coverage_files=get_coverage_files(samples, units),
+        normal_vcf="references/bcftools_merge/normal_db.vcf.gz",
+        normal_vcf_tbi="references/bcftools_merge/normal_db.vcf.gz.tbi",
 
 
 # background
