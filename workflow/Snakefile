@@ -67,7 +67,8 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
     input:
         segment="cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns",
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz",
-        purity=cnv_sv.get_tc_file,
+    params:
+        extra=config.get("cnvkit_call", {}).get("extra", ""),
 
 
 use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
