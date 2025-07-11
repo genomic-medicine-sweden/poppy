@@ -1,13 +1,5 @@
-from collections import OrderedDict
-import gzip
 import logging
 from pysam import VariantFile
-
-from hydra_genetics.utils.io.chr import ChrTranslater
-from hydra_genetics.utils.models.hotspot import MultiBpVariantData
-from hydra_genetics.utils.models.hotspot import ReportClass
-from hydra_genetics.utils.io.hotspot import Reader
-from hydra_genetics.utils.io import utils
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
