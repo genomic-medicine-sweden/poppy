@@ -117,8 +117,7 @@ rule pindel_processing_add_missing_csq:
             "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf.benchmark.tsv",
             config.get("pindel_processing_add_missing_csq", {}).get("benchmark_repeats", 1),
         )
-    threads:
-        config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"])
+    threads: config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"])
     resources:
         mem_mb=config.get("pindel_processing_add_missing_csq", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
         mem_per_cpu=config.get("pindel_processing_add_missing_csq", {}).get(
