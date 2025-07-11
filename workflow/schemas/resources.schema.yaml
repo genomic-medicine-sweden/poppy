@@ -24,6 +24,26 @@ properties:
   required:
     - default_resources
 
+  pindel_processing_add_missing_csq:
+    type: object
+    description: resource definitions for pindel_processing_add_missing_csq
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
   pindel_processing_annotation_vep:
     type: object
     description: resource definitions for pindel_processing_annotation_vep, all resources taken from config["vep"]
@@ -103,3 +123,5 @@ properties:
       time:
         type: string
         description: max execution time
+
+

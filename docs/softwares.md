@@ -28,6 +28,25 @@ Rules specifically for Poppy listed here.
 
 ### :snake: Rule
 
+#SNAKEMAKE_RULE_SOURCE__pindel_processing__pindel_processing_add_missing_csq#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__pindel_processing__pindel_processing_add_missing_csq#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__pindel_processing_add_missing_csq#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__pindel_processing_add_missing_csq#
+
+
+### :snake: Rule
+
 #SNAKEMAKE_RULE_SOURCE__pindel_processing__pindel_processing_fix_af#
 
 #### :left_right_arrow: input / output files
@@ -108,3 +127,6 @@ Software used specifically to create the reference-files for Poppy.
 #### Resources settings (`resources.yaml`)
 
 #RESOURCESSCHEMA__reference_rules_create_artefact_file_pindel#
+
+
+
