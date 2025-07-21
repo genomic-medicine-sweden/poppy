@@ -842,7 +842,6 @@ properties:
     required:
       - container
 
-
 required:
   - bcbio_variation_recall_ensemble
   - bwa_mem
