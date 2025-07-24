@@ -628,6 +628,20 @@ properties:
     required:
       - container
 
+  pindel_processing_add_missing_csq:
+    type: object
+    description: parameters for pindel_processing_add_missing_csq
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      extra:
+        type: string
+        description: parameters that should be forwarded
+
   pindel_processing_annotation_vep:
     type: object
     description: parameters for annotation with vep on pindel vcf, most taken from vep rule to ensure that pindel result is processed identical to snvs
