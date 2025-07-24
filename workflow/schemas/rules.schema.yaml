@@ -136,4 +136,3 @@ properties:
           vcf:
             type: string
             description: a 'vcf' file containing the merged SV calls
-
