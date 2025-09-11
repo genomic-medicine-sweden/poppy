@@ -16,6 +16,7 @@ from snakemake.utils import min_version
 import yaml
 from datetime import datetime
 
+from hydra_genetics.utils.misc import get_module_snakefile
 from hydra_genetics.utils.resources import load_resources
 from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
