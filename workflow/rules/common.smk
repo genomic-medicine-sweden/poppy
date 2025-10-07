@@ -87,7 +87,7 @@ config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
 
 ### Read and validate samples file
-samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
+samples = pd.read_table(config["samples"], comment="#", dtype=str).set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
 
