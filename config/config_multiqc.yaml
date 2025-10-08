@@ -16,6 +16,9 @@ mosdepth_config:
     - "HLA*"
     - "chrM"
     - "chrEBV"
+    - "MT"
+    - "NC_007605"
+    - "GL000*"
 
   general_stats_coverage:
     - 100

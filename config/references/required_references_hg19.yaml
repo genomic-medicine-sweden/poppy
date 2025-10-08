@@ -35,7 +35,7 @@ mappability:
 
 ## Local files
 design:
-  path: ref_data/design
+  path: ref_data/design_hg19
   compressed_checksum: 5609498d2547078ce131fcf117ce4bff
   type: directory
   url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/design.tar.gz
