@@ -58,7 +58,11 @@ use rule * from annotation as annotation_*
 module cnv_sv:
     snakefile:
         get_module_snakefile(
-            config,"hydra-genetics/cnv_sv", path="workflow/Snakefile", tag=config["modules"]["cnv_sv"],)
+            config,
+            "hydra-genetics/cnv_sv",
+            path="workflow/Snakefile",
+            tag=config["modules"]["cnv_sv"],
+        )
     config:
         config
 
@@ -161,7 +165,7 @@ module qc:
             config,
             "hydra-genetics/qc",
             path="workflow/Snakefile",
-            tag=config["modules"]["snv_indels"],
+            tag=config["modules"]["qc"],
         )
     config:
         config
