@@ -134,7 +134,7 @@ module snv_indels:
             config,
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag=config["modules"]["snv_indels"],
+            tag=config["modules"]["snv_indels_gms"],
         )
     config:
         config
