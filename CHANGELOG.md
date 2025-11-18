@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/genomic-medicine-sweden/poppy/compare/v0.2.0...v0.2.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* write blank CSQ for pindel variants skipped by VEP ([#80](https://github.com/genomic-medicine-sweden/poppy/issues/80)) ([0b5be7a](https://github.com/genomic-medicine-sweden/poppy/commit/0b5be7a7d9843f4097a63e391c39b2a5ccebb1ed))
+
 ## [0.2.0](https://github.com/genomic-medicine-sweden/poppy/compare/v0.1.0...v0.2.0) (2024-12-13)
 
 
