@@ -27,10 +27,11 @@ rule all:
 
 module alignment:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/alignment",
             path="workflow/Snakefile",
-            tag="v0.5.1",
+            tag=config["modules"]["alignment"],
         )
     config:
         config
@@ -41,10 +42,11 @@ use rule * from alignment as alignment_*
 
 module annotation:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/annotation",
             path="workflow/Snakefile",
-            tag="v1.0.0",
+            tag=config["modules"]["annotation"],
         )
     config:
         config
@@ -55,7 +57,12 @@ use rule * from annotation as annotation_*
 
 module cnv_sv:
     snakefile:
-        github("hydra-genetics/cnv_sv", path="workflow/Snakefile", tag="1aa9a68")
+        get_module_snakefile(
+            config,
+            "hydra-genetics/cnv_sv",
+            path="workflow/Snakefile",
+            tag=config["modules"]["cnv_sv"],
+        )
     config:
         config
 
@@ -78,10 +85,11 @@ use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config wit
 
 module filtering:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/filtering",
             path="workflow/Snakefile",
-            tag="v0.3.0",
+            tag=config["modules"]["filtering"],
         )
     config:
         config
@@ -92,10 +100,11 @@ use rule * from filtering as filtering_*
 
 module prealignment:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/prealignment",
             path="workflow/Snakefile",
-            tag="v1.2.0",
+            tag=config["modules"]["prealignment"],
         )
     config:
         config
@@ -106,10 +115,11 @@ use rule * from prealignment as prealignment_*
 
 module reports:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/reports",
             path="workflow/Snakefile",
-            tag="v0.3.1",
+            tag=config["modules"]["reports"],
         )
     config:
         config
@@ -120,10 +130,11 @@ use rule * from reports as reports_*
 
 module snv_indels:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/snv_indels",
             path="workflow/Snakefile",
-            tag="v0.6.0",
+            tag=config["modules"]["snv_indels_gms"],
         )
     config:
         config
@@ -150,10 +161,11 @@ use rule vt_normalize from snv_indels as snv_indels_vt_normalize_pindel with:
 
 module qc:
     snakefile:
-        github(
+        get_module_snakefile(
+            config,
             "hydra-genetics/qc",
             path="workflow/Snakefile",
-            tag="v0.4.1",
+            tag=config["modules"]["qc"],
         )
     config:
         config

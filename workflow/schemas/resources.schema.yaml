@@ -123,4 +123,3 @@ properties:
       time:
         type: string
         description: max execution time
-
