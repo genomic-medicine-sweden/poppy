@@ -1,5 +1,13 @@
 # Changelog
 
+
+## [1.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v0.2.1...v1.0.0) (2025-11-18)
+
+
+### Features
+
+* BREAKING CHANGE: make the pipeline compatible with both online or offline HPC environments ([#82](https://github.com/genomic-medicine-sweden/poppy/issues/82)) ([9d9240f](https://github.com/genomic-medicine-sweden/poppy/commit/9d9240fe9887038bf6f58b1c34a102d5cd015c0d))
+
 ## [0.2.1](https://github.com/genomic-medicine-sweden/poppy/compare/v0.2.0...v0.2.1) (2025-07-24)
 
 
