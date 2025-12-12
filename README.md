@@ -31,8 +31,8 @@ It includes a reference pipeline used with normal samples (panel of normals, PoN
 
 To run this workflow, the following tools need to be available:
 
-![python](https://img.shields.io/badge/python-3.8-blue)
-[![snakemake](https://img.shields.io/badge/snakemake-7.13.0-blue)](https://snakemake.readthedocs.io/en/stable/)
+![python](https://img.shields.io/badge/python-3.9.22-blue)
+[![snakemake](https://img.shields.io/badge/snakemake-7.32.4-blue)](https://snakemake.readthedocs.io/en/stable/)
 [![singularity](https://img.shields.io/badge/singularity-3.7-blue)](https://sylabs.io/docs/)
 
 The worflow can be run in a HPC environment that is connected to the internet or not. If no internet connection is available in the HPC environment, note that the pipeline must be [packaged appropriately](https://hydra-genetics.readthedocs.io/en/latest/packaging_pipeline/prepare_pipeline/).
@@ -53,6 +53,7 @@ python3 -m venv poppy_env
 source poppy_env/bin/activate
 pip install -r requirements.txt
 ```
+> Note: it seems like not all python versions > v3.8 work. Python v3.13.2 didn't work to install this venv. Tested with `python v3.9.22`
 
 ## 3. Download reference files (first time only)
 
@@ -66,10 +67,11 @@ Run from the Poppy directory. If run from somewhere else, the paths to the files
 POPPY_HOME=/path/to/poppy_repo
 source $POPPY_HOME/poppy_env/bin/activate
 
-snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references \
---profile $POPPY_HOME/configs/profiles/grid_engine/ \
---configfile config/config_references_pipeline_<GENOME>.yaml \
---configfile config/config_<GENOME>.yaml \
+snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
+--profile $POPPY_HOME/profiles/grid_engine/ \
+--configfiles \
+$POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml
+$POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
@@ -80,8 +82,8 @@ POPPY_HOME=/path/to/poppy_repo
 source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile \
---profile $POPPY_HOME/configs/profiles/cluster/ \
---configfile config/config_<GENOME>.yaml \
+--profile $POPPY_HOME/profiles/cluster/ \
+--configfile $POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
@@ -128,7 +130,7 @@ Requirements:
 Generate the input files with Hydra-Genetics `create-input-files`:
 
 ```bash
-Hydra-Genetics create-input-files -d <path to fastqs> -p nextseq
+hydra-genetics create-input-files -d <path to fastqs> -p nextseq
 ```
 
 Selected flags:
@@ -175,19 +177,25 @@ The files specified in the table below are required to run both the references p
 | **FASTA & indexes**            | Reference genome FASTA and associated index files                                   | [Reference genome (GRCh38;GRCh37)](https://github.com/PacificBiosciences/reference_genomes)                                                                                                                         |
 | **Design files**               | Target region design files                                                          | Custom file*                                                                                                                                                                                                                |
 | **bcftools annotation_db**     | Annotation database for bcftools                                                    | [hg19 - Twist Solid v0.6.1 references](https://figshare.scilifelab.se/ndownloader/articles/23220416/versions/1) or [GRCh38 - GATK best practices](https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz)                  |
-| **gatk_collect_allelic_counts: SNP_interval** | SNP interval list for allelic counts collection                                   | [genomic-medicine-sweden/Twist_Solid_pipeline_files/refs](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/tree/v.0.20.0/cnv): [hg19 - gnomad_SNP_0.001_target.annotated.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.interval_list) or [GRCh38 - gnomad_SNP_0.001_target.annotated.hg38.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) (remove "chr" prefix if needed)    |
+| **gatk_collect_allelic_counts: SNP_interval*** | SNP interval list for allelic counts collection                                   | [genomic-medicine-sweden/Twist_Solid_pipeline_files/refs](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/tree/v.0.20.0/cnv): [hg19 - gnomad_SNP_0.001_target.annotated.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.interval_list) or [GRCh38 - gnomad_SNP_0.001_target.annotated.hg38.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) (remove "chr" prefix if needed)    |
 | **pindel_call: include_bed**   | BED file for Pindel calling                                                         | `twist_shortlist_pindel.bed` - custom file*                                                                                            |
 | **vep: vep_cache**             | VEP cache for variant annotation                                                    | homo_sapiens_merged_vep_111_GRCh37.tar.gz or  homo_sapiens_merged_vep_111_GRCh38.tar.gz                                             |
 | **SNP_interval**               |                                    | [hg19](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.interval_list), [GRCh38](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) |
 
 \* Design file: Custom file designed by geneticists.  
-\*\* pindel bed file: custom file with regions of interest - regions that are known to show longer indels (< 50 bp) which are relevant to diagnostics. Custom file designed by geneticists.
+\*\* pindel bed file: custom file with regions of interest - regions that are known to show longer indels (> 50 bp) which are relevant to diagnostics. Custom file designed by geneticists.
 Four columns:
 
 1. Chromosome
 2. Start position
 3. End position
 4. Gene name
+
+* **hg19 only:** The "gatk_collect_allelic_counts: SNP_interval" file has "chr" at the beginning of the line.
+Use this line below to remove "chr". Otherwise, the pipeline will crash at the `cnv_sv_gatk_collect_allelic_counts` step.
+```{bash}
+sed -i 's/^chr//' initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.interval_list
+```
 
 ##### Download files for hg19 and GRCh38
 
@@ -260,10 +268,11 @@ Activate the venv and run from the Poppy directory:
 POPPY_HOME=/path/to/poppy_repo
 source $POPPY_HOME/poppy_env/bin/activate
 
-snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references \
---profile $POPPY_HOME/configs/profiles/grid_engine/ \
---configfile config/config_references_pipeline_<GENOME>.yaml \
---configfile config/config_<GENOME>.yaml \
+snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
+--profile $POPPY_HOME/profiles/grid_engine/ \
+--configfiles \
+$POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
+$POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
@@ -287,7 +296,7 @@ This pipeline will create a references folder `reference_files` in the Poppy dir
 Use the Hydra-Genetics `create-input-files` tool to create the samples and units files for the samples you want to process with Poppy
 
 ```bash
-Hydra-Genetics create-input-files -d /path/to/fastq/ -p <seq machine> -f
+hydra-genetics create-input-files -d /path/to/fastq/ -p <seq machine> -f
 ```
 
 Selected flags:
@@ -306,13 +315,15 @@ Selected flags:
 
 ### 7. Launch Poppy
 
+Execute the command from the location where snakemake should run and where the results will be saved.
+
 ```bash
 POPPY_HOME=/path/to/poppy_repo
 source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile \
---profile $POPPY_HOME/configs/profiles/grid_engine/ \
---configfile config/config_<GENOME>.yaml \
+--profile $POPPY_HOME/profiles/grid_engine/ \
+--configfile $POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 

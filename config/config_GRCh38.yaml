@@ -15,9 +15,9 @@ reference:
   design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed"
   design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list"
   design_intervals_gatk_cnv: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/design.preprocessed.interval_list"
-  artifacts: "FILL_ME_IN.tsv" # created by the ref pipeline
-  artifacts_pindel: "FILL_ME_IN.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
-  background: "FILL_ME_IN.tsv" # -background freq in normal samples, created with reference pipeline. # TODO why is the chr column empty?
+  artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv" # created by the ref pipeline
+  artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
+  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline. # TODO why is the chr column empty?
   skip_chrs:
     - "chrM"
     - "chr1_KI270706v1_random"
@@ -216,7 +216,7 @@ cnv_html_report:
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
-  normal_reference: "FILL_ME_IN.cnn" # created by the ref pipeline
+  normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn" # created by the ref pipeline
   method: hybrid
   extra: "--segment-method hmm-tumor" # I added the field because it was in our poppy config
 
@@ -235,13 +235,12 @@ fastp_pe:
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
-filter_vcf: 
+filter_vcf:
   germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml" # same as ours
   somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" # different from the one we have in /clinical/exec/poppy/configs/config_v0.1.0-2/config_soft_filter_somatic.yaml
   somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" # doesn't exist in our original files. - is ours a combination of the soft and hard somatic filters?
   pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" # different than ours
   cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" # we have two different cnv filter configs
-
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -252,7 +251,7 @@ gatk_collect_read_counts:
 
 gatk_denoise_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: "FILL_ME_IN.hdf5" # created by the ref pipeline 
+  normal_reference: "{{POPPY_HOME}}/reference_files/gatk.PoN.hdf5" # created by the ref pipeline
 
 gatk_model_segments:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -345,13 +344,13 @@ purecn:
   interval_padding: 100
   segmentation_method: internal
   fun_segmentation: PSCBS
-  normaldb: "FILL_ME_IN" # created by the ref pipeline
-  intervals: "FILL_ME_IN" # created by the ref pipeline
-  mapping_bias_file: "FILL_ME_IN" # created by the ref pipeline
+  normaldb: "{{POPPY_HOME}}/reference_files/purecn_normal_db.rds" # created by the ref pipeline
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
+  mapping_bias_file: "{{POPPY_HOME}}/reference_files/purecn_mapping_bias.rds" # created by the ref pipeline
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
-  intervals: "FILL_ME_IN" # created by the ref pipeline? 
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline?
 
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
@@ -367,7 +366,7 @@ svdb_merge:
 
 svdb_query: # svdb file comes from references workflow
   container: docker://hydragenetics/svdb:2.6.0
-  db_string: "--db FILL_ME_IN --out_frq Normal_AF --out_occ Normal_OCC"
+  db_string: "--db {{POPPY_HOME}}/reference_files/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
@@ -377,7 +376,7 @@ vardict:
 vep:
   container: "docker://hydragenetics/vep:111.0"
   vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/homo_sapiens_merged/" # had to download v111_GRCh37
-  
+
   mode: "--offline --cache --merged " # in our config we don't use --merged
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
 

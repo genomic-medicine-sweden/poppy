@@ -92,7 +92,7 @@ bcbio_variation_recall_ensemble:
     - vardict
 
 bcftools_annotate:
-  annotation_db: "{{POPPY_HOME}}/initial_references/ref_data/GNOMAD/mall_exac_common_3.hg19.vcf.gz"
+  annotation_db: "{{POPPY_HOME}}/initial_references/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz"
 bwa_mem:
   amb: "{{POPPY_HOME}}/initial_references/ref_data/genome/hg19/human_hs37d5/human_hs37d5.fasta.amb"
   ann: "{{POPPY_HOME}}/initial_references/ref_data/genome/hg19/human_hs37d5/human_hs37d5.fasta.ann"
@@ -135,7 +135,7 @@ filter_vcf:
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  SNP_interval: ""
+  SNP_interval: "{{POPPY_HOME}}/initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.interval_list"
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"

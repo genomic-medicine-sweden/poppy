@@ -4,14 +4,19 @@ genome:
     path: ref_data/genome/GRCh38
     type: folder
     compressed_checksum: fd041c73877a6a10f5a17e2dcaf6d194
-    url: https://downloads.pacbcloud.com/public/reference-genomes/human_GRCh38_no_alt_analysis_set.tar.2023-12-04.gz 
-    
+    url: https://downloads.pacbcloud.com/public/reference-genomes/human_GRCh38_no_alt_analysis_set.tar.2023-12-04.gz
+
 bcftools_annotate:
   annotation_db:
     checksum: 4c75c1755a45c64e8af7784db7fde009
     path: ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz
     type: file
-    url:  https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz
+    url: https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz
+  annotation_db_tbi:
+    checksum: f650d1dda6bd68cba65d77f131147985
+    path: ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz.tbi
+    type: file
+    url: https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz.tbi
 
 gatk:
   snp_interval:
@@ -32,7 +37,6 @@ mappability:
   type: file
   url: https://raw.githubusercontent.com/etal/cnvkit/52f367bd0edbf55cabaaa2fbcf68c8742dc97b4c/data/access-10kb.hg38.bed
 
-
 # Local files
 # design_bed; design_intervals; design_intervals_gatk_cnv
 design:
@@ -51,3 +55,4 @@ pindel_call:
     path: ref_data/pindel/Twist_myeloid_pindel_240628.uppsala.bed
     type: file
     url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/initial_references/Twist_myeloid_pindel_240628.uppsala.bed
+
