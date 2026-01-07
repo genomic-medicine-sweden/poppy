@@ -1,6 +1,12 @@
 # Output files
 The output files in Poppy are defined in the `config/output_files.yaml` which can be altered to your need.
 
+/// details | Expand to view current output_files.yaml
+```yaml
+{% include "includes/output_files.yaml" %}
+```
+///
+
 ## Default
 The following files are located in the `results/`-folder:
 
