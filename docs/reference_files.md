@@ -10,6 +10,8 @@ The samples and units files can be generated [as for the main pipeline]() using 
 hydra-genetics create-input-files -d <path to fastqs> -p <seq machine>
 ```
 
+Make sure that all the references are downloaded. See [Set up and configuration](setup.md)
+
 The reference pipeline can then be run with the following command:
 
 ```bash
@@ -24,7 +26,7 @@ $POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
-Using the config files available in the pipeline repository provides sane defaults, but paths will most likely have to be adjusted to your system. This is easiest done by pulling in patches alongside the repository config files. For example, if you want to change the path to the reference genome fasta file and corresponding index, create a new config file (`local_config.yaml`):
+Using the config files available in the pipeline repository provides sane defaults. If, for example, you want to change the path to the reference genome fasta file and corresponding index, create a new config file (`local_config.yaml`):
 
 ```yaml
 reference:
@@ -44,8 +46,6 @@ Or you can add all configs to the profile. The order of the configs matters, as 
 config-files:
    - $POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
    - $POPPY_HOME/config/config_<GENOME>.yaml
-   - config/config.yaml
-   - config/config_references.yaml
    - local_config.yaml
 ```
 
@@ -53,13 +53,16 @@ config-files:
 
 The output files of the reference pipeline are defined in `config/output_files_references.yaml`. By default, this includes:
 
-- `reference_files/cnvkit.PoN.cnn`
-- `reference_files/design.preprocessed.interval_list`
-- `reference_files/gatk.PoN.hdf5`
-- `reference_files/svdb_cnv.vcf`
-- `reference_files/purecn_normal_db.rds`
-- `reference_files/purecn_mapping_bias.rds`
-- `reference_files/purecn_targets_intervals.txt`
+- `artifact_panel_pindel.tsv`
+- `background_panel.tsv`
+- `design.preprocessed.interval_list`
+- `purecn_mapping_bias.rds`
+- `purecn_targets_intervals.txt`
+- `artifact_panel.tsv`
+- `cnvkit.PoN.cnn`
+- `gatk.PoN.hdf5`
+- `purecn_normal_db.rds`
+- `svdb_cnv.vcf`
 
 ### Troubleshooting
 

@@ -7,6 +7,7 @@ The output files in Poppy are defined in the `config/output_files.yaml` which ca
 ```
 ///
 
+
 ## Default
 The following files are located in the `results/`-folder:
 
@@ -28,3 +29,14 @@ Poppy produces a **[MultiQC](https://github.com/ewels/MultiQC)**-report for the 
 
 
 <!-- Maybe more detail on each value we choose to have in general stats? -->
+
+## Output files reference pipeline
+
+The output files in the Poppy references pipeline are defined in the `config/output_files_references.yaml`
+
+/// details | Expand to view current output_files_references.yaml
+```yaml
+{% include "includes/output_files_references.yaml" %}
+```
+///
+

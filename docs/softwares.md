@@ -107,4 +107,14 @@ Since when running `svdb --merge` with the priority flag set, svdb cuts off the 
 
 ---
 
+## reference_rules.smk
+Software used specifically to create the reference-files for Poppy.
+
+### :snake: Rule
+
+#SNAKEMAKE_RULE_SOURCE__reference_rules__reference_rules_create_artifact_file_pindel#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__reference_rules__reference_rules_create_artifact_file_pindel#
 

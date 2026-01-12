@@ -39,7 +39,7 @@ Requirements:
 Generate the input files with Hydra-Genetics `create-input-files`:
 
 ```bash
-hydra-genetics create-input-files -d <path to fastqs> -p nextseq
+hydra-genetics create-input-files -d <path to fastqs> -p <seq machine>
 ```
 
 Selected flags:
@@ -98,7 +98,7 @@ Four columns:
 1. Chromosome
 2. Start position
 3. End position
-4. Gene name
+4. Gene name  
 
 * **hg19 only:** The "gatk_collect_allelic_counts: SNP_interval" file has "chr" at the beginning of the line.
 Use this line below to remove "chr". Otherwise, the pipeline will crash at the `cnv_sv_gatk_collect_allelic_counts` step.
@@ -187,16 +187,16 @@ $POPPY_HOME/config/config_<GENOME>.yaml \
 
 This pipeline will create a references folder `reference_files` in the Poppy directory (if run from there), containing the necessary reference files to run Poppy:
 
-- artifact_panel_pindel.tsv
-- background_panel.tsv
-- design.preprocessed.interval_list
-- purecn_mapping_bias.rds
-- purecn_targets_intervals.txt
-- artifact_panel.tsv
-- cnvkit.PoN.cnn
-- gatk.PoN.hdf5
-- purecn_normal_db.rds
-- svdb_cnv.vcf
+- `artifact_panel_pindel.tsv`
+- `background_panel.tsv`
+- `design.preprocessed.interval_list`
+- `purecn_mapping_bias.rds`
+- `purecn_targets_intervals.txt`
+- `artifact_panel.tsv`
+- `cnvkit.PoN.cnn`
+- `gatk.PoN.hdf5`
+- `purecn_normal_db.rds`
+- `svdb_cnv.vcf`
 
 ### 6. Prepare Poppy run
 

@@ -96,9 +96,9 @@ properties:
             type: string
             description: vcf with added AF and DP in INFO field
 
-  reference_rules_create_artefact_file_pindel:
+  reference_rules_create_artifact_file_pindel:
     type: object
-    description: input and output parameters for reference_rules_create_artefact_file_pindel
+    description: input and output parameters for reference_rules_create_artifact_file_pindel
     properties:
       input:
         type: object

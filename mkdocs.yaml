@@ -3,8 +3,8 @@ nav:
   - Overview:
       - Introduction: intro.md
       - Pipeline overview: overview.md
-      - Output: output_files.md
       - Setup and configuration: setup.md
+      - Output: output_files.md
   - Running Poppy:
       - Poppy: poppy.md
       - Reference pipeline: reference_files.md

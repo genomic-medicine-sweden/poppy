@@ -336,7 +336,7 @@ Log files for each rule are saved in the execution directory for that rule.
 ## :judge: Rule Graph
 
 Poppy workflow:
-![Poppy Workflow](images/workflow.png)
+![Poppy Workflow](docs/static/workflow_refs.png)
 
 Poppy References workflow:
-![Poppy References Workflow](images/workflow_refs.png)
+![Poppy References Workflow](docs/static/workflow_refs.png)
