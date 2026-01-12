@@ -2,7 +2,15 @@
 
 # GMS Twist Myeloid pipeline
 ## Poppy
-Poppy is a Snakemake pipeline used for analysing hybrid capture short-read sequencing data from the [Genomic Medicine Sweden](https://genomicmedicine.se/en/) myeloid gene panel. The pipeline analyses tumor-only samples and reports small variants, CNVs, as well as a QC report. It includes a reference pipeline used with normal samples to build the necessary files needed to run Poppy.
+Poppy is a Snakemake pipeline used for analysing hybrid capture short-read sequencing data from the Genomic Medicine Sweden myeloid gene panel.
+
+The pipeline analyses tumor-only samples and reports:
+
+- Small variants
+- CNVs
+- QC report.
+
+It includes a reference pipeline used with normal samples (panel of normals, PoN) to build the necessary files needed to run Poppy.
 <!-- Somthing about that is it tested before releases? -->
 
 ## Gene Panel

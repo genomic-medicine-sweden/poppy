@@ -26,14 +26,5 @@ The following files are located in the `results/`-folder:
 ## MultiQC report
 Poppy produces a **[MultiQC](https://github.com/ewels/MultiQC)**-report for the entire sequencing run to enable easier QC tracking. The report starts with a general statistics table showing the most important QC-values followed by additional QC data and diagrams. The entire MultiQC html-file is interactive and you can filter, highlight, hide or export data using the ToolBox at the right edge of the report.
 
-<br />
-
-The report is configured based on a MultiQC config file.
-
-/// details | Expand to view current MultiQC config.yaml
-```yaml
-{% include "includes/multiqc_config.yaml" %}
-```
-///
 
 <!-- Maybe more detail on each value we choose to have in general stats? -->

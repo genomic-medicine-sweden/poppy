@@ -75,7 +75,7 @@ $POPPY_HOME/config/config_<GENOME>.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
-## 4. Run Poppy
+## 5. Run Poppy
 
 ```bash
 POPPY_HOME=/path/to/poppy_repo
