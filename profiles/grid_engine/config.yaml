@@ -3,8 +3,6 @@ jobs: 100
 drmaa: "  -V -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
 printshellcmds: True
 use-singularity: True
-configfile: 
-  - /path/to/config/config_with_references.yaml
 singularity-prefix: "/path/to/singularity_cache"
 singularity-args: "-e --bind <your bind>"
 rerun-incomplete: True
