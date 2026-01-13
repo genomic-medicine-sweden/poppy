@@ -118,3 +118,12 @@ Software used specifically to create the reference-files for Poppy.
 
 #SNAKEMAKE_RULE_TABLE__reference_rules__reference_rules_create_artifact_file_pindel#
 
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__reference_rules_create_artifact_file_pindel#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__reference_rules_create_artifact_file_pindel#
