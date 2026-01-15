@@ -4,7 +4,7 @@
 
 A pipeline for generating panels of normals for various software is included in Poppy. This leverages the main pipeline when it comes to generating input files for the reference-specific rules, which in turn means that the configuration for the main pipeline in addition to the reference pipeline has to be applied when running it.
 
-The samples and units files can be generated [as for the main pipeline]() using `hydra-genetics create-input-files`:
+The samples and units files can be generated [as for the main pipeline](poppy.md#create-samplestsv-and-unitstsv-for-your-samples) using `hydra-genetics create-input-files`:
 
 ```bash
 hydra-genetics create-input-files -d <path to fastqs> -p <seq machine>
