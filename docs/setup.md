@@ -48,7 +48,7 @@ Selected flags:
 -d, --directory TEXT          path to dir where fastq-files should be looked
                                 for when platform is Illumina.Path to unmapped
                                 BAM files when platform is ONT or PACBIO
--p, --platform TEXT           Sequence platform that the data originate from, e.g., nextseq, miseq, Illumina.
+-p, --platform TEXT           Sequence platform that the data originate from, e.g., NextSeq, MiSeq, Illumina.
 -f, --force                   overwrite existing files
 ```
 
@@ -214,7 +214,7 @@ Selected flags:
 -d, --directory TEXT          path to dir where fastq-files should be looked
                                 for when platform is Illumina.Path to unmapped
                                 BAM files when platform is ONT or PACBIO
--p, --platform TEXT           Sequence platform that the data originate from, e.g., nextseq, miseq, Illumina.
+-p, --platform TEXT           Sequence platform that the data originate from, e.g., NextSeq, MiSeq, Illumina.
 -f, --force                   overwrite existing files
 ```
 
