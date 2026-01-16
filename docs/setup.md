@@ -8,7 +8,7 @@ Poppy set up and configuration
 6. [Prepare Poppy run](#6-prepare-poppy-run)
 7. [Launch Poppy](#7-launch-poppy)
 
-To run Poppy, first go through the setup steps to download and generate reference files.
+To run Poppy, first go through the setup steps to download and generate reference files. (requires internet connection)
 
 Generating the necessary references only needs to be done once. To start Poppy, go to [Prepare Poppy run](#6-prepare-poppy-run).
 
@@ -84,10 +84,10 @@ The files specified in the table below are required to run both the references p
 | File / Resource                | Description / Usage                                                                 | Source / Notes                                                                 |
 |------------------------------- |------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | **FASTA & indexes**            | Reference genome FASTA and associated index files                                   | [Reference genome (GRCh38;GRCh37)](https://github.com/PacificBiosciences/reference_genomes)                                                                                                                         |
-| **Design files**               | Target region design files                                                          | Custom file*                                                                                                                                                                                                                |
+| **Design files***              | Target region design files                                                          | Custom file*                                                                                                                                                                                                                |
 | **bcftools annotation_db**     | Annotation database for bcftools                                                    | [hg19 - Twist Solid v0.6.1 references](https://figshare.scilifelab.se/ndownloader/articles/23220416/versions/1) or [GRCh38 - GATK best practices](https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz)                  |
-| **gatk_collect_allelic_counts: SNP_interval*** | SNP interval list for allelic counts collection                                   | [genomic-medicine-sweden/Twist_Solid_pipeline_files/refs](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/tree/v.0.20.0/cnv): [hg19 - gnomad_SNP_0.001_target.annotated.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.interval_list) or [GRCh38 - gnomad_SNP_0.001_target.annotated.hg38.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) (remove "chr" prefix if needed)    |
-| **pindel_call: include_bed**   | BED file for Pindel calling                                                         | `twist_shortlist_pindel.bed` - custom file**                                                                                            |
+| **gatk_collect_allelic_counts: SNP_interval** | SNP interval list for allelic counts collection                                   | [genomic-medicine-sweden/Twist_Solid_pipeline_files/refs](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/tree/v.0.20.0/cnv): [hg19 - gnomad_SNP_0.001_target.annotated.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.interval_list) or [GRCh38 - gnomad_SNP_0.001_target.annotated.hg38.interval_list](https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) (remove "chr" prefix if needed)    |
+| **pindel_call: include_bed****   | BED file for Pindel calling                                                         | `twist_shortlist_pindel.bed` - custom file**                                                                                            |
 | **vep: vep_cache**             | VEP cache for variant annotation                                                    | homo_sapiens_merged_vep_111_GRCh37.tar.gz or  homo_sapiens_merged_vep_111_GRCh38.tar.gz                                             |
 | **SNP_interval**               |                                    | [hg19](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.interval_list), [GRCh38](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) |
 
@@ -100,7 +100,7 @@ Four columns:
 3. End position
 4. Gene name  
 
-* **hg19 only:** The "gatk_collect_allelic_counts: SNP_interval" file has "chr" at the beginning of the line.
+**hg19 only (version included in repo):** The `gatk_collect_allelic_counts: SNP_interval` file has "chr" at the beginning of the line.
 Use this line below to remove "chr". Otherwise, the pipeline will crash at the `cnv_sv_gatk_collect_allelic_counts` step.
 ```{bash}
 sed -i 's/^chr//' initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.interval_list
@@ -113,7 +113,11 @@ The initial reference files are defined in the `config/references/required_refer
 - design files
 - pindel bed file
 
-Run `hydra-genetics references download` to download the references to the `initial_references` directory:
+
+<br>
+**The following commands should be run from the Poppy directory.**
+
+Run `hydra-genetics references download` to download the references to the `initial_references` directory (requires internet connection):
 
 ```sh
 source poppy_env/bin/activate
@@ -121,13 +125,13 @@ mkdir -p initial_references
 hydra-genetics references download -v config/references/required_references_GRCh38.yaml -o initial_references/
 ```
 
-The `bwa` indexes and `picard.dict` file need to be created manually after the genome files are downloaded. Use the commands below and change paths according to your reference genome. The bind path should make your Poppy location available. For example, if Poppy is installed in `/path/to/poppy`, the bind path would be `/path:/path`.
+The `bwa` indexes and `picard.dict` file need to be created manually after the genome files are downloaded. Use the commands below and change paths according to your reference genome. 
 
 ```sh
 SINGULARITY_PREFIX="<path to your singularity cache>" # same as in the cluster profile
 
 apptainer exec -e \
-  --bind /YOUR_BIND_PATH \
+  --bind $PWD:$PWD \
   docker://hydragenetics/bwa_mem:0.7.17 \
   bwa index initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta
 ```
@@ -136,7 +140,7 @@ apptainer exec -e \
 SINGULARITY_PREFIX="<path to your singularity cache>" # same as in the cluster profile
 
 apptainer exec -e \
-  --bind /YOUR_BIND_PATH \
+  --bind $PWD:$PWD \
   docker://hydragenetics/picard:2.25.0 \
   picard CreateSequenceDictionary \
   R=initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta \
@@ -161,6 +165,7 @@ Command line:
 `--config_file config_references_pipeline_<GENOME>.yaml --config_file config_<GENOME>.yaml`
 
 In profile config:
+Attention! the order of the config files matters, as the latter will override the settings of the previous ones.
 
 ```
 snakefile: /path/to/Snakefile
