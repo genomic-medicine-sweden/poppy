@@ -17,7 +17,7 @@ reference:
   design_intervals_gatk_cnv: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/design.preprocessed.interval_list"
   artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv" # created by the ref pipeline
   artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
-  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline. # TODO why is the chr column empty?
+  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline.
   skip_chrs:
     - "chrM"
     - "chr1_KI270706v1_random"
@@ -218,7 +218,7 @@ cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn" # created by the ref pipeline
   method: hybrid
-  extra: "--segment-method hmm-tumor" # I added the field because it was in our poppy config
+  extra: ""
 
 cnvkit_call:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -226,8 +226,8 @@ cnvkit_call:
 cnvkit_vcf:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   hom_del_limit: 0.47
-  het_del_limit: 1.814 # changed the value according to our config
-  dup_limit: 2.07 # changed the value according to our config
+  het_del_limit: 1.68 
+  dup_limit: 2.3 
 
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.20.1"
@@ -236,11 +236,11 @@ fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
 filter_vcf:
-  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml" # same as ours
-  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" # different from the one we have in /clinical/exec/poppy/configs/config_v0.1.0-2/config_soft_filter_somatic.yaml
-  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" # doesn't exist in our original files. - is ours a combination of the soft and hard somatic filters?
-  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" # different than ours
-  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" # we have two different cnv filter configs
+  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
+  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" 
+  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" 
+  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" 
+  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" 
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -271,7 +271,6 @@ gatk_mutect2_merge_stats:
 merge_cnv_json:
   annotations:
     - "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
-  # the following are created by the ref pipeline?
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
   filtered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
@@ -281,13 +280,13 @@ merge_cnv_json:
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
   thresholds: "100,200,1000"
-  extra: " --mapq 20 " # TODO: not present in our config, remove?
+  extra: " --mapq 20 "
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.21"
   reports:
     DNA:
-      config: "{{POPPY_HOME}}/config/config_multiqc.yaml" # TODO: our file is different, change?
+      config: "{{POPPY_HOME}}/config/config_multiqc.yaml"
       included_unit_types:
         - T
         - N
@@ -350,7 +349,7 @@ purecn:
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
-  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline?
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
 
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
@@ -377,7 +376,7 @@ vep:
   container: "docker://hydragenetics/vep:111.0"
   vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/homo_sapiens_merged/" # had to download v111_GRCh37
 
-  mode: "--offline --cache --merged " # in our config we don't use --merged
+  mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
 
 vt_decompose:
