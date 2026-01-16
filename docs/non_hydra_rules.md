@@ -1,8 +1,9 @@
 
-# Software used in Poppy
-Rules specifically for Poppy listed here.
+# Rules specific to Poppy that are not defined in Hydra Genetics
 
 ## pindel_processing.smk
+These are custom rules created for Poppy to process the output from Pindel so that it can be processed by VEP.  
+
 [Pindel](http://gmt.genome.wustl.edu/packages/pindel/) creates an older type of VCF and therefore has to be processed slightly different than more modern VCFs. Here we add the AF and DP fields to the VCF INFO column, annotate the calls using [vep](https://www.ensembl.org/info/docs/tools/vep/index.html) and add artifact annotation based an on artifact panel created with the reference pipeline.
 
 <!-- Since pindel is run on limited region it does not always produce results, if an empty vcf-file is used with VEP it will fail and the entire pipeline will stop, therefor a specific rule is needed to ensure there are variants in the pindel vcf before annotating the vcf. If no variants are found the empty vcf file is just copied to the output. -->
@@ -27,6 +28,8 @@ Rules specifically for Poppy listed here.
 
 
 ### :snake: Rule
+
+There are instances where the VEP annotation is not added to a variant. This rule adds missing CSQ annotations back to the VCF file.
 
 #SNAKEMAKE_RULE_SOURCE__pindel_processing__pindel_processing_add_missing_csq#
 

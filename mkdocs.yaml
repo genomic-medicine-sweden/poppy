@@ -15,7 +15,7 @@ nav:
       - CNVs: cnvs.md
       - QC: qc.md
   - Pipeline specific rules:
-      - Software: softwares.md
+      - Rule list: non_hydra_rules.md
   - Project info:
       - Changelog: changelog.md
 
