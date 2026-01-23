@@ -1,0 +1,56 @@
+genome:
+  fasta:
+    path: ref_data/genome/hg19
+    type: folder
+    compressed_checksum: 84bb2d56bd8011558b86e2f1f5c385f6
+    url: https://downloads.pacbcloud.com/public/reference-genomes/human_hs37d5.tar.2023-12-04.gz
+
+bcftools_annotate:
+  annotation_db:
+    checksum: 1eb85e09195f0092e389510b40765f5e
+    path: ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
+    type: file
+    url: https://figshare.scilifelab.se/ndownloader/files/40933373
+
+  annotation_db_tbi:
+    checksum: 7d5a3f6d3350476a234aed9953351a08
+    path: ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz.tbi
+    type: file
+    url: https://figshare.scilifelab.se/ndownloader/files/41119760
+
+gatk:
+  snp_interval:
+    checksum: 47cee8e04769d13e1c282fedf7333eac
+    path: ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.interval_list
+    type: file
+    url: https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.interval_list
+
+vep_cache:
+  compressed_checksum: a3a77c74e827e51694148c2e04417cbc
+  path: ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh37
+  type: folder
+  url: ftp://ftp.ensembl.org/pub/release-111/variation/vep/homo_sapiens_merged_vep_111_GRCh37.tar.gz
+
+mappability:
+  checksum: 8d2b0b45b2551aa6bcecb92a7727d2b3
+  path: ref_data/mappability/access-10kb.hg19.bed
+  type: file
+  url: https://raw.githubusercontent.com/etal/cnvkit/refs/heads/master/data/access-10kb.hg19.bed
+
+## Local files
+design:
+  path: ref_data/design_hg19
+  compressed_checksum: 5609498d2547078ce131fcf117ce4bff
+  type: directory
+  url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/design.tar.gz
+  content_checksum:
+    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed: 46fd0b9382fe404000a028c299f68554
+    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list: 223b6b64a3c9214a48e00879f26424f1
+    design.preprocessed.interval_list: a5937cc146d1f306709ba0775c576830
+
+pindel:
+  include_bed:
+    checksum: f657dbc01bcb6dbaead9a5225e552be8
+    path: ref_data/pindel/twist_shortlist_pindel.bed
+    type: file
+    url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/twist_shortlist_pindel.bed

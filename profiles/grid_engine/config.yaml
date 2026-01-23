@@ -1,0 +1,12 @@
+# Adjust as needed
+jobs: 100
+drmaa: "  -V -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
+printshellcmds: True
+use-singularity: True
+singularity-prefix: "/path/to/singularity_cache"
+singularity-args: "-e --bind <your bind>"
+rerun-incomplete: True
+restart-times: 1
+latency-wait: 180
+jobname: "hydra.{name}.{jobid}"
+default-resources: [queue="development.q", threads=20] # other resources

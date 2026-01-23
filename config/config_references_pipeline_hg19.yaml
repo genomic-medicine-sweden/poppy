@@ -1,12 +1,13 @@
-samples: samples.tsv # only samples to include in panels
-units: units.tsv # only units to include in panels
+samples: samples_ref.tsv # only samples to include in panels
+units: units_ref.tsv # only units to include in panels
 resources_references: "{{POPPY_HOME}}/config/resources_references.yaml"
+resources: "{{POPPY_HOME}}/config/resources.yaml"
 
 default_container: docker://hydragenetics/common:1.10.2
 output: "{{POPPY_HOME}}/config/output_files_references.yaml"
 
 reference:
-  mappability: ""
+  mappability: "{{POPPY_HOME}}/initial_references/ref_data/mappability/access-10kb.hg19.bed"
 
 bed_to_interval_list:
   container: docker://hydragenetics/gatk4:4.2.2.0

@@ -1,0 +1,58 @@
+# fasta; fai
+genome:
+  fasta:
+    path: ref_data/genome/GRCh38
+    type: folder
+    compressed_checksum: fd041c73877a6a10f5a17e2dcaf6d194
+    url: https://downloads.pacbcloud.com/public/reference-genomes/human_GRCh38_no_alt_analysis_set.tar.2023-12-04.gz
+
+bcftools_annotate:
+  annotation_db:
+    checksum: 4c75c1755a45c64e8af7784db7fde009
+    path: ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz
+    type: file
+    url: https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz
+  annotation_db_tbi:
+    checksum: f650d1dda6bd68cba65d77f131147985
+    path: ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz.tbi
+    type: file
+    url: https://storage.googleapis.com/gatk-best-practices/somatic-hg38/small_exac_common_3.hg38.vcf.gz.tbi
+
+gatk:
+  snp_interval:
+    checksum: 32f3be3365e485092c33e9f0997968c1
+    path: ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.hg38.interval_list
+    type: file
+    url: https://raw.githubusercontent.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/refs/tags/v.0.20.0/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list
+
+vep_cache:
+  compressed_checksum: bcb3bd066ca9c8c85c811dd5f703e547
+  path: ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38
+  type: folder
+  url: ftp://ftp.ensembl.org/pub/release-111/variation/vep/homo_sapiens_merged_vep_111_GRCh38.tar.gz
+
+mappability:
+  checksum: c8c77c7cbb5713626389334031e66849
+  path: ref_data/mappability/access-10kb.hg38.bed
+  type: file
+  url: https://raw.githubusercontent.com/etal/cnvkit/52f367bd0edbf55cabaaa2fbcf68c8742dc97b4c/data/access-10kb.hg38.bed
+
+# Local files
+# design_bed; design_intervals; design_intervals_gatk_cnv
+design:
+  path: ref_data/design
+  compressed_checksum: 5609498d2547078ce131fcf117ce4bff
+  type: directory
+  url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/design.tar.gz
+  content_checksum:
+    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed: 46fd0b9382fe404000a028c299f68554
+    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list: 223b6b64a3c9214a48e00879f26424f1
+    design.preprocessed.interval_list: a5937cc146d1f306709ba0775c576830
+
+pindel_call:
+  include_bed:
+    checksum: 37be76e48bd6648e85aa01e17ce95fee
+    path: ref_data/pindel/Twist_myeloid_pindel_240628.uppsala.bed
+    type: file
+    url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/initial_references/Twist_myeloid_pindel_240628.uppsala.bed
+

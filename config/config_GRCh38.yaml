@@ -1,0 +1,386 @@
+---
+resources: "{{POPPY_HOME}}/config/resources.yaml"
+samples: "samples.tsv"
+units: "units.tsv"
+output: "{{POPPY_HOME}}/config/output_files.yaml"
+
+default_container: "docker://hydragenetics/common:1.10.2"
+
+trimmer_software: "fastp_pe"
+
+reference:
+  fasta: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta"
+  fai: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.fai"
+  dict: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.dict"
+  design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed"
+  design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list"
+  design_intervals_gatk_cnv: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/design.preprocessed.interval_list"
+  artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv" # created by the ref pipeline
+  artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
+  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline.
+  skip_chrs:
+    - "chrM"
+    - "chr1_KI270706v1_random"
+    - "chr1_KI270707v1_random"
+    - "chr1_KI270708v1_random"
+    - "chr1_KI270709v1_random"
+    - "chr1_KI270710v1_random"
+    - "chr1_KI270711v1_random"
+    - "chr1_KI270712v1_random"
+    - "chr1_KI270713v1_random"
+    - "chr1_KI270714v1_random"
+    - "chr2_KI270715v1_random"
+    - "chr2_KI270716v1_random"
+    - "chr3_GL000221v1_random"
+    - "chr4_GL000008v2_random"
+    - "chr5_GL000208v1_random"
+    - "chr9_KI270717v1_random"
+    - "chr9_KI270718v1_random"
+    - "chr9_KI270719v1_random"
+    - "chr9_KI270720v1_random"
+    - "chr11_KI270721v1_random"
+    - "chr14_GL000009v2_random"
+    - "chr14_GL000225v1_random"
+    - "chr14_KI270722v1_random"
+    - "chr14_GL000194v1_random"
+    - "chr14_KI270723v1_random"
+    - "chr14_KI270724v1_random"
+    - "chr14_KI270725v1_random"
+    - "chr14_KI270726v1_random"
+    - "chr15_KI270727v1_random"
+    - "chr16_KI270728v1_random"
+    - "chr17_GL000205v2_random"
+    - "chr17_KI270729v1_random"
+    - "chr17_KI270730v1_random"
+    - "chr22_KI270731v1_random"
+    - "chr22_KI270732v1_random"
+    - "chr22_KI270733v1_random"
+    - "chr22_KI270734v1_random"
+    - "chr22_KI270735v1_random"
+    - "chr22_KI270736v1_random"
+    - "chr22_KI270737v1_random"
+    - "chr22_KI270738v1_random"
+    - "chr22_KI270739v1_random"
+    - "chrY_KI270740v1_random"
+    - "chrUn_KI270302v1"
+    - "chrUn_KI270304v1"
+    - "chrUn_KI270303v1"
+    - "chrUn_KI270305v1"
+    - "chrUn_KI270322v1"
+    - "chrUn_KI270320v1"
+    - "chrUn_KI270310v1"
+    - "chrUn_KI270316v1"
+    - "chrUn_KI270315v1"
+    - "chrUn_KI270312v1"
+    - "chrUn_KI270311v1"
+    - "chrUn_KI270317v1"
+    - "chrUn_KI270412v1"
+    - "chrUn_KI270411v1"
+    - "chrUn_KI270414v1"
+    - "chrUn_KI270419v1"
+    - "chrUn_KI270418v1"
+    - "chrUn_KI270420v1"
+    - "chrUn_KI270424v1"
+    - "chrUn_KI270417v1"
+    - "chrUn_KI270422v1"
+    - "chrUn_KI270423v1"
+    - "chrUn_KI270425v1"
+    - "chrUn_KI270429v1"
+    - "chrUn_KI270442v1"
+    - "chrUn_KI270466v1"
+    - "chrUn_KI270465v1"
+    - "chrUn_KI270467v1"
+    - "chrUn_KI270435v1"
+    - "chrUn_KI270438v1"
+    - "chrUn_KI270468v1"
+    - "chrUn_KI270510v1"
+    - "chrUn_KI270509v1"
+    - "chrUn_KI270518v1"
+    - "chrUn_KI270508v1"
+    - "chrUn_KI270516v1"
+    - "chrUn_KI270512v1"
+    - "chrUn_KI270519v1"
+    - "chrUn_KI270522v1"
+    - "chrUn_KI270511v1"
+    - "chrUn_KI270515v1"
+    - "chrUn_KI270507v1"
+    - "chrUn_KI270517v1"
+    - "chrUn_KI270529v1"
+    - "chrUn_KI270528v1"
+    - "chrUn_KI270530v1"
+    - "chrUn_KI270539v1"
+    - "chrUn_KI270538v1"
+    - "chrUn_KI270544v1"
+    - "chrUn_KI270548v1"
+    - "chrUn_KI270583v1"
+    - "chrUn_KI270587v1"
+    - "chrUn_KI270580v1"
+    - "chrUn_KI270581v1"
+    - "chrUn_KI270579v1"
+    - "chrUn_KI270589v1"
+    - "chrUn_KI270590v1"
+    - "chrUn_KI270584v1"
+    - "chrUn_KI270582v1"
+    - "chrUn_KI270588v1"
+    - "chrUn_KI270593v1"
+    - "chrUn_KI270591v1"
+    - "chrUn_KI270330v1"
+    - "chrUn_KI270329v1"
+    - "chrUn_KI270334v1"
+    - "chrUn_KI270333v1"
+    - "chrUn_KI270335v1"
+    - "chrUn_KI270338v1"
+    - "chrUn_KI270340v1"
+    - "chrUn_KI270336v1"
+    - "chrUn_KI270337v1"
+    - "chrUn_KI270363v1"
+    - "chrUn_KI270364v1"
+    - "chrUn_KI270362v1"
+    - "chrUn_KI270366v1"
+    - "chrUn_KI270378v1"
+    - "chrUn_KI270379v1"
+    - "chrUn_KI270389v1"
+    - "chrUn_KI270390v1"
+    - "chrUn_KI270387v1"
+    - "chrUn_KI270395v1"
+    - "chrUn_KI270396v1"
+    - "chrUn_KI270388v1"
+    - "chrUn_KI270394v1"
+    - "chrUn_KI270386v1"
+    - "chrUn_KI270391v1"
+    - "chrUn_KI270383v1"
+    - "chrUn_KI270393v1"
+    - "chrUn_KI270384v1"
+    - "chrUn_KI270392v1"
+    - "chrUn_KI270381v1"
+    - "chrUn_KI270385v1"
+    - "chrUn_KI270382v1"
+    - "chrUn_KI270376v1"
+    - "chrUn_KI270374v1"
+    - "chrUn_KI270372v1"
+    - "chrUn_KI270373v1"
+    - "chrUn_KI270375v1"
+    - "chrUn_KI270371v1"
+    - "chrUn_KI270448v1"
+    - "chrUn_KI270521v1"
+    - "chrUn_GL000195v1"
+    - "chrUn_GL000219v1"
+    - "chrUn_GL000220v1"
+    - "chrUn_GL000224v1"
+    - "chrUn_KI270741v1"
+    - "chrUn_GL000226v1"
+    - "chrUn_GL000213v1"
+    - "chrUn_KI270743v1"
+    - "chrUn_KI270744v1"
+    - "chrUn_KI270745v1"
+    - "chrUn_KI270746v1"
+    - "chrUn_KI270747v1"
+    - "chrUn_KI270748v1"
+    - "chrUn_KI270749v1"
+    - "chrUn_KI270750v1"
+    - "chrUn_KI270751v1"
+    - "chrUn_KI270752v1"
+    - "chrUn_KI270753v1"
+    - "chrUn_KI270754v1"
+    - "chrUn_KI270755v1"
+    - "chrUn_KI270756v1"
+    - "chrUn_KI270757v1"
+    - "chrUn_GL000214v1"
+    - "chrUn_KI270742v1"
+    - "chrUn_GL000216v2"
+    - "chrUn_GL000218v1"
+    - "chrEBV"
+
+annotate_cnv:
+  cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
+
+bcbio_variation_recall_ensemble:
+  container: "docker://hydragenetics/bcbio-vc:0.2.6"
+  callers:
+    - gatk_mutect2
+    - vardict
+
+bcftools_annotate:
+  annotation_db: "{{POPPY_HOME}}/initial_references/annotation_db/small_exac_common_3.hg38.vcf.gz"
+bwa_mem:
+  amb: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.amb"
+  ann: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.ann"
+  bwt: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.bwt"
+  pac: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.pac"
+  sa: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.sa"
+  container: "docker://hydragenetics/bwa_mem:0.7.17"
+
+cnv_html_report:
+  cytobands: false
+  show_table: true
+
+cnvkit_batch:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+  normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn" # created by the ref pipeline
+  method: hybrid
+  extra: ""
+
+cnvkit_call:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+
+cnvkit_vcf:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+  hom_del_limit: 0.47
+  het_del_limit: 1.68 
+  dup_limit: 2.3 
+
+fastp_pe:
+  container: "docker://hydragenetics/fastp:0.20.1"
+
+fastqc:
+  container: "docker://hydragenetics/fastqc:0.11.9"
+
+filter_vcf:
+  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
+  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" 
+  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" 
+  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" 
+  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" 
+
+gatk_collect_allelic_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  SNP_interval: ""
+
+gatk_collect_read_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_denoise_read_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  normal_reference: "{{POPPY_HOME}}/reference_files/gatk.PoN.hdf5" # created by the ref pipeline
+
+gatk_model_segments:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_mutect2:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_mutect2_filter:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_mutect2_gvcf:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_mutect2_merge_stats:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+merge_cnv_json:
+  annotations:
+    - "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
+  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  filtered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
+  unfiltered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
+
+mosdepth_bed:
+  container: "docker://hydragenetics/mosdepth:0.3.2"
+  thresholds: "100,200,1000"
+  extra: " --mapq 20 "
+
+multiqc:
+  container: "docker://hydragenetics/multiqc:1.21"
+  reports:
+    DNA:
+      config: "{{POPPY_HOME}}/config/config_multiqc.yaml"
+      included_unit_types:
+        - T
+        - N
+      qc_files:
+        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
+        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"
+        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
+        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
+        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
+        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
+        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
+        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
+
+picard_collect_alignment_summary_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+picard_collect_duplication_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+picard_collect_gc_bias_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+picard_collect_hs_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+picard_collect_insert_size_metrics:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+picard_mark_duplicates:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+pindel_call:
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+  extra: "-x 2 -B 60" #x och B?
+  include_bed: "{{POPPY_HOME}}/initial_references/ref_data/pindel/Twist_myeloid_pindel_240628.uppsala.bed"
+
+pindel_update_vcf:
+  container: "docker://hydragenetics/picard:2.25.4"
+
+pindel2vcf:
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+  extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
+  refname: "human_GRCh38_no_alt"
+  refdate: "2023"
+
+purecn:
+  container: docker://hydragenetics/purecn:2.2.0
+  genome: GRCh38
+  interval_padding: 100
+  segmentation_method: internal
+  fun_segmentation: PSCBS
+  normaldb: "{{POPPY_HOME}}/reference_files/purecn_normal_db.rds" # created by the ref pipeline
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
+  mapping_bias_file: "{{POPPY_HOME}}/reference_files/purecn_mapping_bias.rds" # created by the ref pipeline
+
+purecn_coverage:
+  container: docker://hydragenetics/purecn:2.2.0
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
+
+svdb_merge:
+  container: docker://hydragenetics/svdb:2.6.0
+  tc_method:
+    - name: purecn
+      cnv_caller:
+        - cnvkit
+        - gatk
+    - name: pathology
+      cnv_caller:
+        - cnvkit
+        - gatk
+
+svdb_query: # svdb file comes from references workflow
+  container: docker://hydragenetics/svdb:2.6.0
+  db_string: "--db {{POPPY_HOME}}/reference_files/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
+
+vardict:
+  container: "docker://hydragenetics/vardict:1.8.3"
+  extra: " -Q 1 --nosv "
+  bed_columns: "-c 1 -S 2 -E 3"
+
+vep:
+  container: "docker://hydragenetics/vep:111.0"
+  vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/homo_sapiens_merged/" # had to download v111_GRCh37
+
+  mode: "--offline --cache --merged "
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
+
+vt_decompose:
+  container: "docker://hydragenetics/vt:2015.11.10"
+
+vt_normalize:
+  container: "docker://hydragenetics/vt:2015.11.10"
