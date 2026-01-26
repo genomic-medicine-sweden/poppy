@@ -2,6 +2,7 @@
 
 ## [1.1.0](https://github.com/genomic-medicine-sweden/poppy/compare/v1.0.0...v1.1.0) (2026-01-26)
 
+The main change in this version is a huge improvement to the documentation, mainly thanks to @CarolinaPB.
 
 ### Features
 
