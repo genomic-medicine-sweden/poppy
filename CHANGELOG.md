@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/genomic-medicine-sweden/poppy/compare/v1.0.0...v1.1.0) (2026-01-26)
+
+
+### Features
+
+* add Grid Engine example snakemake profile ([21e7431](https://github.com/genomic-medicine-sweden/poppy/commit/21e7431ca715ab1a26c48734cd47255ae5830598))
+* possible to use hydra-genetics for downloading references ([21e7431](https://github.com/genomic-medicine-sweden/poppy/commit/21e7431ca715ab1a26c48734cd47255ae5830598))
+* separate configs for hg19 and GRCh38 (untested) ([21e7431](https://github.com/genomic-medicine-sweden/poppy/commit/21e7431ca715ab1a26c48734cd47255ae5830598))
+
 ## [1.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v0.2.1...v1.0.0) (2025-11-18)
 
 
