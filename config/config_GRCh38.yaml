@@ -8,13 +8,23 @@ default_container: "docker://hydragenetics/common:1.10.2"
 
 trimmer_software: "fastp_pe"
 
+modules:
+  alignment: v0.5.1
+  annotation: v1.0.0
+  cnv_sv: "1aa9a68"
+  filtering: v0.3.0
+  prealignment: v1.2.0
+  qc: v0.4.1
+  reports: v0.3.1
+  snv_indels_gms: v0.6.0
+
 reference:
   fasta: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta"
   fai: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.fai"
   dict: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.dict"
-  design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed"
-  design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list"
-  design_intervals_gatk_cnv: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/design.preprocessed.interval_list"
+  design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/gene_panel.bed"
+  design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/gene_panel.interval_list"
+  design_intervals_gatk_cnv: "{{POPPY_HOME}}/reference_files/design.preprocessed.interval_list"
   artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv" # created by the ref pipeline
   artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
   background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline.
@@ -226,8 +236,8 @@ cnvkit_call:
 cnvkit_vcf:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   hom_del_limit: 0.47
-  het_del_limit: 1.68 
-  dup_limit: 2.3 
+  het_del_limit: 1.68
+  dup_limit: 2.3
 
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.20.1"
@@ -237,14 +247,14 @@ fastqc:
 
 filter_vcf:
   germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
-  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" 
-  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" 
-  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" 
-  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" 
+  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml"
+  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml"
+  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml"
+  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  SNP_interval: ""
+  SNP_interval: "{{POPPY_HOME}}/initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.hg38.interval_list"
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -339,7 +349,7 @@ pindel2vcf:
 
 purecn:
   container: docker://hydragenetics/purecn:2.2.0
-  genome: GRCh38
+  genome: "hg38" #hg18, hg19, hg38, mm9, mm10, rn4, rn5, rn6, canFam3  - from the IntervalFile pureCN script
   interval_padding: 100
   segmentation_method: internal
   fun_segmentation: PSCBS
@@ -374,7 +384,7 @@ vardict:
 
 vep:
   container: "docker://hydragenetics/vep:111.0"
-  vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/homo_sapiens_merged/" # had to download v111_GRCh37
+  vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/" # had to download v111_GRCh37
 
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
