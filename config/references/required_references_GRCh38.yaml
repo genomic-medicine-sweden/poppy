@@ -40,19 +40,20 @@ mappability:
 # Local files
 # design_bed; design_intervals; design_intervals_gatk_cnv
 design:
-  path: ref_data/design
-  compressed_checksum: 5609498d2547078ce131fcf117ce4bff
-  type: directory
-  url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/design.tar.gz
-  content_checksum:
-    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed: 46fd0b9382fe404000a028c299f68554
-    all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list: 223b6b64a3c9214a48e00879f26424f1
-    design.preprocessed.interval_list: a5937cc146d1f306709ba0775c576830
+  gene_panel:
+    checksum: da80fd04cb75b7efc8c8bd69c3902d09
+    path: ref_data/design/design_files/gene_panel.bed
+    type: file
+    url: file:/clinical/dev/cgg-cancer/poppy/design_files/Lund_hem-gene-panel-myeloid_v1p2_TE-99236228_hg38_2/Probes_merged_ok_combined_Lund_hem-gene-panel-myeloid_v1p2_TE-99236228_hg38.bed
+  gene_panel_interval:
+    checksum: f9d511b139c89bc75a5dc64e1ebc2f48
+    path: ref_data/design/design_files/gene_panel.interval_list
+    type: file
+    url: file:/clinical/dev/cgg-cancer/poppy/design_files/Lund_hem-gene-panel-myeloid_v1p2_TE-99236228_hg38_2/Probes_merged_ok_combined_Lund_hem-gene-panel-myeloid_v1p2_TE-99236228_hg38.interval_list
 
 pindel_call:
   include_bed:
-    checksum: 37be76e48bd6648e85aa01e17ce95fee
-    path: ref_data/pindel/Twist_myeloid_pindel_240628.uppsala.bed
+    checksum: eb847dae6f3a99f245ea7b95dfc8cfce
+    path: ref_data/pindel/genes_pindel.bed
     type: file
-    url: file:/oldseqstore/workspace/carolina/poppy_pomfrey/poppy/initial_references/Twist_myeloid_pindel_240628.uppsala.bed
-
+    url: file:/clinical/dev/cgg-cancer/poppy/genes_pindel.bed
