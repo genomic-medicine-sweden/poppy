@@ -211,7 +211,7 @@ bcbio_variation_recall_ensemble:
     - vardict
 
 bcftools_annotate:
-  annotation_db: "{{POPPY_HOME}}/initial_references/annotation_db/small_exac_common_3.hg38.vcf.gz"
+  annotation_db: "{{POPPY_HOME}}/initial_references/ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz"
 bwa_mem:
   amb: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.amb"
   ann: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.ann"
