@@ -5,10 +5,6 @@ reference:
   dict: "reference/hg19.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
-  design_intervals_gatk_cnv: "data/bed/design.bed"
-  artifacts: "reference/artifact_panel.tsv"
-  artifacts_pindel: "reference/artifact_panel.tsv"
-  background: "reference/background_panel.tsv"
 
 bwa_mem:
   amb: "reference/hg19.fasta.amb"
@@ -20,25 +16,11 @@ bwa_mem:
 cnv_html_report:
   template_dir: ../../config/cnv_report_template
 
-cnvkit_batch:
-  normal_reference: "data/cnvkit/cnvkit_pon.cnn"
-
 gatk_collect_allelic_counts:
   SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 
-gatk_denoise_read_counts:
-  normal_reference: "data/gatk/pon.hdf5"
-
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
-
-purecn:
-  normaldb: reference/purecn_normal_db.rds
-  intervals: reference/purecn_target_intervals.txt
-  mapping_bias_file: reference/purecn_mapping_bias.rds
-
-purecn_coverage:
-  intervals: reference/purecn_target_intervals.txt
 
 vep:
   vep_cache: "data/vep_cache"
