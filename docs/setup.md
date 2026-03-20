@@ -91,14 +91,14 @@ The files specified in the table below are required to run both the references p
 | **vep: vep_cache**             | VEP cache for variant annotation                                                    | homo_sapiens_merged_vep_111_GRCh37.tar.gz or  homo_sapiens_merged_vep_111_GRCh38.tar.gz                                             |
 | **SNP_interval**               |                                    | [hg19](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.interval_list), [GRCh38](https://github.com/genomic-medicine-sweden/Twist_Solid_pipeline_files/blob/main/cnv/gnomad_SNP_0.001_target.annotated.hg38.interval_list) |
 
-\* Design file: Custom file designed by geneticists.  
+\* Design file: Custom file designed by geneticists.
 \*\* pindel bed file: custom file with regions of interest - regions that are known to show longer indels (> 50 bp) which are relevant to diagnostics. Custom file designed by geneticists.
 Four columns:
 
 1. Chromosome
 2. Start position
 3. End position
-4. Gene name  
+4. Gene name
 
 **hg19 only (version included in repo):** The `gatk_collect_allelic_counts: SNP_interval` file has "chr" at the beginning of the line.
 Use this line below to remove "chr". Otherwise, the pipeline will crash at the `cnv_sv_gatk_collect_allelic_counts` step.
@@ -125,7 +125,7 @@ mkdir -p initial_references
 hydra-genetics references download -v config/references/required_references_GRCh38.yaml -o initial_references/
 ```
 
-The `bwa` indexes and `picard.dict` file need to be created manually after the genome files are downloaded. Use the commands below and change paths according to your reference genome. 
+The `bwa` indexes and `picard.dict` file need to be created manually after the genome files are downloaded. Use the commands below and change paths according to your reference genome.
 
 ```sh
 SINGULARITY_PREFIX="<path to your singularity cache>" # same as in the cluster profile
@@ -169,7 +169,7 @@ Attention! the order of the config files matters, as the latter will override th
 
 ```
 snakefile: /path/to/Snakefile
-configfile: 
+configfile:
   - /path/to/config_references_pipeline_<GENOME>.yaml,
   - /path/to/config_<GENOME>.yaml
 ```
@@ -233,10 +233,11 @@ Execute the command from the location where snakemake should run and where the r
 
 ```bash
 POPPY_HOME=/path/to/poppy_repo
+REFERENCE_RUNFOLDER=/path/to/reference_runfolder
 source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile \
 --profile $POPPY_HOME/profiles/grid_engine/ \
 --configfile $POPPY_HOME/config/config_<GENOME>.yaml \
---config POPPY_HOME=$POPPY_HOME
+--config POPPY_HOME=$POPPY_HOME REFERENCE_RUNFOLDER=$REFERENCE_RUNFOLDER
 ```

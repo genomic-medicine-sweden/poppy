@@ -69,7 +69,7 @@ properties:
       design_intervals_gatk_cnv:
         type: string
         description: >
-          Path to panel design interval file for GATK CNV calling
+          Path to panel design interval file for GATK CNV calling, created with reference pipeline
         format: uri-reference
 
       skip_chrs:
@@ -239,7 +239,7 @@ properties:
       normal_reference:
         type: string
         description: >
-          Path to cnvkit normal reference file (.cnn)
+          Path to cnvkit normal reference file (.cnn), generated with reference pipeline
         format: uri-reference
         pattern: "\\.cnn$"
       method:
@@ -697,7 +697,69 @@ properties:
       extra:
         type: string
         description: parameters that should be forwarded
-        
+
+  purecn:
+    type: object
+    description: >
+      Configuration for the purecn rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing purecn executable
+        format: uri-reference
+      genome:
+        type: string
+        description: Reference genome build
+      interval_padding:
+        type: integer
+      segmentation_method:
+        type: string
+      fun_segmentation:
+        type: string
+      normaldb:
+        type: string
+        format: uri-reference
+        description: >
+          Generated with reference pipeline
+      intervals:
+        type: string
+        format: uri-reference
+        description: >
+          Generated with reference pipeline
+      mapping_bias_file:
+        type: string
+        format: uri-reference
+        description: >
+          Generated with reference pipeline
+    required:
+      - container
+      - genome
+      - interval_padding
+      - segmentation_method
+      - fun_segmentation
+      - normaldb
+      - intervals
+      - mapping_bias_file
+
+  purecn_coverage:
+    type: object
+    description: >
+      Configuration for the purecn_coverage rule
+    properties:
+      container:
+        type: string
+        description: >
+          Name or path to container containing purecn executable
+        format: uri-reference
+      intervals:
+        type: string
+        description: Generated with reference pipeline
+        format: uri-reference
+    required:
+      - container
+      - intervals
+
   reference_rules_create_artifact_file_pindel:
     type: object
     description: parameters for reference_rules_create_artifact_file_pindel
