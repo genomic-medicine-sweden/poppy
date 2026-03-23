@@ -10,8 +10,6 @@ rule reference_rules_create_artifact_file_pindel:
         tbis=set([f"cnv_sv/pindel_vcf/{t.sample}_{t.type}.no_tc.normalized.vep_annotated.vcf.gz.tbi" for t in units.itertuples()]),
     output:
         artifact_panel=temp("references/create_artifact_file_pindel/artifact_panel.tsv"),
-    params:
-        extra=config.get("create_artifact_file_pindel", {}).get("extra", ""),
     log:
         "references/create_artifact_file_pindel/artifact_panel.tsv.log",
     benchmark:
