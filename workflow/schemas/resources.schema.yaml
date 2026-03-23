@@ -1,4 +1,4 @@
-$schema: "http://json-schema.org/draft-04/schema#"
+$schema: http://json-schema.org/draft-04/schema#
 description: snakemake configuration file
 type: object
 properties:
@@ -20,9 +20,6 @@ properties:
       time:
         type: string
         description: default max execution time for a rule
-
-  required:
-    - default_resources
 
   pindel_processing_add_missing_csq:
     type: object
@@ -46,7 +43,8 @@ properties:
 
   pindel_processing_annotation_vep:
     type: object
-    description: resource definitions for pindel_processing_annotation_vep, all resources taken from config["vep"]
+    description: resource definitions for pindel_processing_annotation_vep, all
+      resources taken from config["vep"]
     properties:
       mem_mb:
         type: integer
@@ -103,7 +101,7 @@ properties:
       time:
         type: string
         description: max execution time
-        
+
   reference_rules_create_artifact_file_pindel:
     type: object
     description: parameters for reference_rules_create_artifact_file_pindel
@@ -137,3 +135,6 @@ properties:
       time:
         type: string
         description: max execution time
+
+  required:
+    - default_resources

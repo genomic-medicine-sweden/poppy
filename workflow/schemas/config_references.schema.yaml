@@ -2,115 +2,11 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake configuration file
 type: object
 properties:
-  bed_to_interval_list:
-    type: object
-    description: >
-      config for the bed_to_interval_list rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  cnvkit_build_normal_reference:
-    type: object
-    description: >
-      config for the cnvkit_build_normal_reference rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  cnvkit_create_targets:
-    type: object
-    description: >
-      config for the cnvkit_create_targets rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  collect_read_counts:
-    type: object
-    description: >
-      config for the collect_read_counts rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  create_background_file:
-    type: object
-    description: config for create create_background_file
-    properties:
-      container:
-        type: string
-        description: uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-      min_dp:
-        type: number
-        description: min depth to look at for including position in background calculation
-      max_af:
-        type: number
-        description: max allelic freq to be included in background calculation
-
-  create_read_count_panel_of_normals:
-    type: object
-    description: >
-      config for the create_read_count_panel_of_normals rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
   default_container:
     type: string
     description: >
       uri pointing to default docker/apptainer image that should be used
     format: uri-reference
-
-  preprocess_intervals:
-    type: object
-    description: >
-      config for the preprocess_intervals rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  reference:
-    type: object
-    properties:
-      mappability:
-        type: string
-        description: >
-          path to mappability file
-        format: uri-reference
-    required:
-      - mappability
 
   reference_rules_create_artifact_file_pindel:
     type: object
@@ -122,28 +18,12 @@ properties:
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   resources_references:
     type: string
     description: >
       path to yaml file containing compute resource configuration
     format: uri-reference
-
-  svdb_build:
-    type: object
-    description: >
-      config for the svdb_build rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
 
   svdb_export:
     type: object
@@ -159,14 +39,6 @@ properties:
       - container
 
 required:
-  - bed_to_interval_list
-  - cnvkit_build_normal_reference
-  - cnvkit_create_targets
-  - collect_read_counts
-  - create_read_count_panel_of_normals
   - default_container
-  - preprocess_intervals
-  - reference
   - resources_references
-  - svdb_build
   - svdb_export
