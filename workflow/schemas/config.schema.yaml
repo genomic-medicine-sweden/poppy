@@ -9,16 +9,20 @@ properties:
       Name or path to a default docker/singularity container
     format: uri-reference
 
+  modules:
+    type: object
+    description: >
+      Module versions or commit hashes
+
+  ont_alignment:
+    type: boolean
+    description: if ont_alignment should be used set to true
+    default: false
+
   output:
     type: string
     description: >
       Path to file defining workflow output files
-    format: uri-reference
-
-  resources:
-    type: string
-    description: >
-      Path to resources.yaml file
     format: uri-reference
 
   pacbio_alignment:
@@ -26,85 +30,79 @@ properties:
     description: if pacbio_alignment is used set to true
     default: false
 
-  ont_alignment:
-    type: boolean
-    description: if ont_alignment should be used set to true
-    default: false
-
   reference:
     type: object
     description: >
       Reference genome files
     properties:
-      fasta:
+      artifacts:
         type: string
         description: >
-          Path to genome fasta file
+          tsv-file with artifact freq in normal samples, created with reference pipeline
         format: uri-reference
-
-      fai:
+      artifacts_pindel:
         type: string
         description: >
-          Path to genome fasta file index
+          tsv-file with artifact freq for pindel calls in normal samples, created
+          with reference pipeline
         format: uri-reference
-
-      dict:
+      background:
         type: string
-        description: >
-          Path to genome sequence dict file
+        description: tsv-file with background freq in normal samples, created
+          with reference pipeline.
         format: uri-reference
-
       design_bed:
         type: string
         description: >
           Path to bed file containing panel design
         format: uri-reference
-
       design_intervals:
         type: string
         description: >
           Path to panel design interval file
         format: uri-reference
-
       design_intervals_gatk_cnv:
         type: string
         description: >
-          Path to panel design interval file for GATK CNV calling, created with reference pipeline
+          Path to panel design interval file for GATK CNV calling, created with reference
+          pipeline
         format: uri-reference
-
+      dict:
+        type: string
+        description: >
+          Path to genome sequence dict file
+        format: uri-reference
+      fai:
+        type: string
+        description: >
+          Path to genome fasta file index
+        format: uri-reference
+      fasta:
+        type: string
+        description: >
+          Path to genome fasta file
+        format: uri-reference
       skip_chrs:
         type: array
         description: >
           Reference sequences that should be excluded from analysis
         items:
           type: string
-
-      artifacts:
-        type: string
-        description: >
-          tsv-file with artifact freq in normal samples, created with reference pipeline
-        format: uri-reference
-
-      artifacts_pindel:
-        type: string
-        description: >
-          tsv-file with artifact freq for pindel calls in normal samples, created with reference pipeline
-        format: uri-reference
-
-      background:
-        type: string
-        description: tsv-file with background freq in normal samples, created with reference pipeline.
-        format: uri-reference
-
     required:
-      - fasta
-      - fai
-      - design_bed
-      - design_intervals
-      - design_intervals_gatk_cnv
       - artifacts
       - artifacts_pindel
       - background
+      - design_bed
+      - design_intervals
+      - design_intervals_gatk_cnv
+      - fai
+      - fasta
+
+  resources:
+    type: string
+    description: >
+      Path to resources.yaml file
+    format: uri-reference
 
   samples:
     type: string
@@ -134,16 +132,8 @@ properties:
         description: >
           Path to bedfile with genes to annotate in cnvreport.
         format: uri-reference
-
-  background_annotation:
-    type: object
-    description: configuration for background annotation of vcf
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container using for background_annotation
-        format: uri-reference
+    required:
+      - cnv_genes
 
   bcbio_variation_recall_ensemble:
     type: object
@@ -169,7 +159,19 @@ properties:
         format: uri-reference
     required:
       - callers
-      - container
+
+  bcftools_annotate:
+    type: object
+    description: >
+      Configuration for the bcftools_annotate rule
+    properties:
+      annotation_db:
+        type: string
+        description: >
+          Path to VCF file containing annotation database
+        format: uri-reference
+    required:
+      - annotation_db
 
   bwa_mem:
     type: object
@@ -191,6 +193,11 @@ properties:
         description: bwa bwt file
         format: uri-reference
         pattern: "\\.bwt$"
+      container:
+        type: string
+        description: >
+          Name or path to container containing bwa executable
+        format: uri-reference
       pac:
         type: string
         description: bwa bwt file
@@ -201,18 +208,12 @@ properties:
         description: bwa bwt file
         format: uri-reference
         pattern: "\\.sa$"
-      container:
-        type: string
-        description: >
-          Name or path to container containing bwa executable
-        format: uri-reference
     required:
       - amb
       - ann
       - bwt
       - pac
       - sa
-      - container
 
   cnv_html_report:
     type: object
@@ -236,12 +237,6 @@ properties:
         description: >
           Name or path to container containing cnvkit executable
         format: uri-reference
-      normal_reference:
-        type: string
-        description: >
-          Path to cnvkit normal reference file (.cnn), generated with reference pipeline
-        format: uri-reference
-        pattern: "\\.cnn$"
       method:
         type: string
         description: >
@@ -250,21 +245,15 @@ properties:
           - hybrid
           - wgs
           - amplicon
-    required:
-      - container
-      - normal_reference
-      - method
-
-  cnvkit_call:
-    type: object
-    description: >
-      Configuration for the cnvkit_call rule
-    properties:
-      container:
+      normal_reference:
         type: string
         description: >
-          Name or path to container containing cnvkit executable
+          Path to cnvkit normal reference file (.cnn), generated with reference pipeline
         format: uri-reference
+        pattern: "\\.cnn$"
+    required:
+      - method
+      - normal_reference
 
   cnvkit_vcf:
     type: object
@@ -276,98 +265,73 @@ properties:
         description: >
           Name or path to container containing cnvkit executable
         format: uri-reference
-      hom_del_limit:
-        type: number
-        description: copy number threshold for homozygous deletion
-      het_del_limit:
-        type: number
-        description: copy number threshold for heterozygous deletion
       dup_limit:
         type: number
         description: copy number threshold for duplication
+      het_del_limit:
+        type: number
+        description: copy number threshold for heterozygous deletion
+      hom_del_limit:
+        type: number
+        description: copy number threshold for homozygous deletion
 
-  fastp_pe:
+  create_artifact_file_pindel:
     type: object
-    description: >
-      Config for the fastp_pe rule
     properties:
+      benchmark_repeats:
+        type: integer
       container:
         type: string
-        description: >
-          Name or path to container containing the fastp executable
         format: uri-reference
-    required:
-      - container
-
-  fastqc:
-    type: object
-    description: >
-      Config for the fastqc rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the fastqc executable
-        format: uri-reference
-    required:
-      - container
 
   filter_vcf:
     type: object
     description: >
       Filter definitions for VCF files
     properties:
+      cnv_hard_filter:
+        type: string
+        format: uri-reference
       germline:
         type: string
         description: >
           Path to germline filter definition
-        format: uri-reference
-      somatic:
-        type: string
-        description: >
-          Path to somatic filter definition
         format: uri-reference
       pindel:
         type: string
         description: >
           Path to pindel vcf filter definition
         format: uri-reference
+      somatic:
+        type: string
+        description: >
+          Path to somatic filter definition
+        format: uri-reference
+      somatic_hard:
+        type: string
+        format: uri-reference
     required:
       - germline
-      - somatic
       - pindel
+      - somatic
 
   gatk_collect_allelic_counts:
     type: object
     description: >
       Configuration for the gatk_collect_allelic_counts rule
     properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
       SNP_interval:
         type: string
         description: >
           Path to file containing an interval list with backbone germline SNPs
         format: uri-reference
-    required:
-      - container
-      - SNP_interval
-
-  gatk_collect_read_counts:
-    type: object
-    description: >
-      Configuration for the gatk_collect_allelic_counts rule
-    properties:
       container:
         type: string
         description: >
           Name or path to container containing the gatk executable
         format: uri-reference
     required:
-      - container
+      - SNP_interval
 
   gatk_denoise_read_counts:
     type: object
@@ -386,73 +350,39 @@ properties:
         format: uri-reference
         pattern: "\\.hdf5$"
     required:
-      - container
       - normal_reference
 
-  gatk_model_segments:
+  merge_cnv_json:
     type: object
     description: >
-      Configuration for the gatk_model_segments rule
+      Configuration for the merge_cnv_json rule
     properties:
-      container:
+      annotations:
+        type: array
+        items:
+          type: string
+          format: uri-reference
+      filtered_cnv_vcfs:
+        type: array
+        items:
+          type: string
+        description: >
+          Generated during execution of Poppy
+      germline_vcf:
         type: string
         description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
-    required:
-      - container
-
-  gatk_mutect2:
-    type: object
-    description: >
-      Configuration for the gatk_mutect2 rule
-    properties:
-      container:
-        type: string
+          Generated during execution of Poppy
+      unfiltered_cnv_vcfs:
+        type: array
+        items:
+          type: string
         description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
+          Generated during execution of Poppy
     required:
-      - container
-
-  gatk_mutect2_filter:
-    type: object
-    description: >
-      Configuration for the gatk_mutect2_filter rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
-    required:
-      - container
-
-  gatk_mutect2_gvcf:
-    type: object
-    description: >
-      Configuration for the gatk_mutect2_gvcf rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
-    required:
-      - container
-
-  gatk_mutect2_merge_stats:
-    type: object
-    description: >
-      Configuration for the gatk_mutect2_merge_stats rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the gatk executable
-        format: uri-reference
-    required:
-      - container
+      - annotations
+      - filtered_cnv_vcfs
+      - germline_vcf
+      - unfiltered_cnv_vcfs
 
   mosdepth_bed:
     type: object
@@ -464,8 +394,16 @@ properties:
         description: >
           Name or path to container containing the mosdepth executable
         format: uri-reference
+      extra:
+        type: string
+        description: >
+          Extra arguments to be passed to mosdepth
+      thresholds:
+        type: string
+        description: >
+          Three threshold values to be used as limits to calculate coverage breadth
     required:
-      - container
+      - thresholds
 
   multiqc:
     type: object
@@ -513,86 +451,7 @@ properties:
         required:
           - DNA
     required:
-      - container
       - reports
-
-  picard_collect_alignment_summary_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_alignment_summary_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  picard_collect_duplication_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_duplication_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  picard_collect_gc_bias_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_gc_bias_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  picard_collect_hs_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_hs_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  picard_collect_insert_size_metrics:
-    type: object
-    description: >
-      Configuration for the picard_collect_insert_size_metrics rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
-
-  picard_mark_duplicates:
-    type: object
-    description: >
-      Configuration for the picard_mark_duplicates rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the picard executable
-        format: uri-reference
-    required:
-      - container
 
   pindel2vcf:
     type: object
@@ -604,16 +463,14 @@ properties:
         description: >
           Name or path to container containing the pindel executable
         format: uri-reference
-      refname:
-        type: string
-        description: >
-          Name of the reference genome
       refdate:
         type: string
         description: >
           Release date of the reference genome
-    required:
-      - container
+      refname:
+        type: string
+        description: >
+          Name of the reference genome
 
   pindel_call:
     type: object
@@ -625,8 +482,17 @@ properties:
         description: >
           Name or path to container containing the pindel executable
         format: uri-reference
+      extra:
+        type: string
+        description: >
+          Additional command line arguments for pindel
+      include_bed:
+        type: string
+        description: >
+          BED file with regions to include in pindel analysis
     required:
-      - container
+      - extra
+      - include_bed
 
   pindel_processing_add_missing_csq:
     type: object
@@ -638,41 +504,42 @@ properties:
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   pindel_processing_annotation_vep:
     type: object
-    description: parameters for annotation with vep on pindel vcf, most taken from vep rule to ensure that pindel result is processed identical to snvs
+    description: parameters for annotation with vep on pindel vcf, most taken
+      from vep rule to ensure that pindel result is processed identical to snvs
     properties:
+      benchmark_repeats:
+        type: integer
+        description:
+          'From config["vep"]: set number of times benchmark should be
+          repeated'
       container:
         type: string
         description: >
           From config["vep"]: Name of path to container containing the vep executable
         format: uri-reference
-      vep_cache:
+      extra:
         type: string
         description: >
-          From config["vep"]: Path to offline VEP cache
-        format: uri-reference
+          From config["vep"]: Additional command line arguments for VEP
       mode:
         type: string
         description: >
           From config["vep"]: VEP arguments for run mode
         examples:
           - "--offline --cache"
-      extra:
+      vep_cache:
         type: string
         description: >
-          From config["vep"]: Additional command line arguments for VEP
-      benchmark_repeats:
-        type: integer
-        description: 'From config["vep"]: set number of times benchmark should be repeated'
+          From config["vep"]: Path to offline VEP cache
+        format: uri-reference
 
   pindel_processing_artifact_annotation:
     type: object
-    description: parameters for pindel_processing_artifact_annotation to add artifact annotation to pindel vcf
+    description: parameters for pindel_processing_artifact_annotation to add
+      artifact annotation to pindel vcf
     properties:
       benchmark_repeats:
         type: integer
@@ -680,13 +547,11 @@ properties:
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   pindel_processing_fix_af:
     type: object
-    description: parameters for pindel_processing_fix_af to add AF and DP values in INFO field of vcf
+    description: parameters for pindel_processing_fix_af to add AF and DP values
+      in INFO field of vcf
     properties:
       benchmark_repeats:
         type: integer
@@ -694,9 +559,6 @@ properties:
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   purecn:
     type: object
@@ -708,20 +570,13 @@ properties:
         description: >
           Name or path to container containing purecn executable
         format: uri-reference
+      fun_segmentation:
+        type: string
       genome:
         type: string
         description: Reference genome build
       interval_padding:
         type: integer
-      segmentation_method:
-        type: string
-      fun_segmentation:
-        type: string
-      normaldb:
-        type: string
-        format: uri-reference
-        description: >
-          Generated with reference pipeline
       intervals:
         type: string
         format: uri-reference
@@ -732,15 +587,21 @@ properties:
         format: uri-reference
         description: >
           Generated with reference pipeline
+      normaldb:
+        type: string
+        format: uri-reference
+        description: >
+          Generated with reference pipeline
+      segmentation_method:
+        type: string
     required:
-      - container
+      - fun_segmentation
       - genome
       - interval_padding
-      - segmentation_method
-      - fun_segmentation
-      - normaldb
       - intervals
       - mapping_bias_file
+      - normaldb
+      - segmentation_method
 
   purecn_coverage:
     type: object
@@ -757,22 +618,7 @@ properties:
         description: Generated with reference pipeline
         format: uri-reference
     required:
-      - container
       - intervals
-
-  reference_rules_create_artifact_file_pindel:
-    type: object
-    description: parameters for reference_rules_create_artifact_file_pindel
-    properties:
-      benchmark_repeats:
-        type: integer
-        description: set number of times benchmark should be repeated
-      container:
-        type: string
-        description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   svdb_merge:
     type: object
@@ -784,6 +630,14 @@ properties:
         description: >
           Name or path to container containing the svdb executable
         format: uri-reference
+      extra:
+        type: string
+        description: >
+          Additional arguments to pass to svdb
+      overlap:
+        type: number
+        description: >
+          Minimum overlap between regions for merging
       tc_method:
         type: array
         description: >
@@ -811,16 +665,7 @@ properties:
           required:
             - name
             - cnv_caller
-      overlap:
-        type: number
-        description: >
-          Minimum overlap between regions for merging
-      extra:
-        type: string
-        description: >
-          Additional arguments to pass to svdb
     required:
-      - container
       - tc_method
 
   svdb_query:
@@ -843,7 +688,6 @@ properties:
         description: >
           Other command line options to pass to SVDB query
     required:
-      - container
       - db_string
 
   vardict:
@@ -851,18 +695,22 @@ properties:
     description: >
       Configuration for the vardict rule
     properties:
+      bed_columns:
+        type: string
+        description: >
+          Command line options defining what columns in bed file to use
       container:
         type: string
         description: >
           Name or path to container containing the vardict executable
         format: uri-reference
-      bed_columns:
+      extra:
         type: string
         description: >
-          Command line options defining what columns in bed file to use
+          Additional command line arguments for vardict
     required:
-      - container
       - bed_columns
+      - extra
 
   vep:
     type: object
@@ -874,79 +722,42 @@ properties:
         description: >
           Name of path to container containing the vep executable
         format: uri-reference
-      vep_cache:
+      extra:
         type: string
         description: >
-          Path to offline VEP cache
-        format: uri-reference
+          Additional command line arguments for VEP
       mode:
         type: string
         description: >
           VEP arguments for run mode
         examples:
           - "--offline --cache"
-      extra:
+      vep_cache:
         type: string
         description: >
-          Additional command line arguments for VEP
-    required:
-      - container
-
-  vt_decompose:
-    type: object
-    description: >
-      Configuration for the vt_decompose rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the vt executable
+          Path to offline VEP cache
         format: uri-reference
-    required:
-      - container
-
-  vt_normalize:
-    type: object
-    description: >
-      Configuration for the vt_normalize rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing the vt executable
-        format: uri-reference
-    required:
-      - container
 
 required:
   - bcbio_variation_recall_ensemble
+  - bcftools_annotate
   - bwa_mem
   - cnvkit_batch
-  - cnvkit_call
   - cnvkit_vcf
   - default_container
-  - fastp_pe
-  - fastqc
   - filter_vcf
   - gatk_collect_allelic_counts
   - gatk_collect_read_counts
   - gatk_denoise_read_counts
-  - gatk_model_segments
-  - gatk_mutect2
-  - gatk_mutect2_filter
-  - gatk_mutect2_gvcf
-  - gatk_mutect2_merge_stats
+  - merge_cnv_json
+  - modules
   - mosdepth_bed
   - multiqc
   - output
-  - picard_collect_alignment_summary_metrics
-  - picard_collect_duplication_metrics
-  - picard_collect_gc_bias_metrics
-  - picard_collect_hs_metrics
-  - picard_collect_insert_size_metrics
-  - picard_mark_duplicates
   - pindel2vcf
   - pindel_call
+  - purecn
+  - purecn_coverage
   - reference
   - resources
   - samples
@@ -956,5 +767,3 @@ required:
   - units
   - vardict
   - vep
-  - vt_decompose
-  - vt_normalize
