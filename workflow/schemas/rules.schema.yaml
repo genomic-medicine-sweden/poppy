@@ -79,7 +79,7 @@ properties:
 
   pindel_processing_fix_af:
     type: object
-    description:rule to add AF and DP field in pindel vcf files
+    description: rule to add AF and DP field in pindel vcf files
     properties:
       input:
         type: object
