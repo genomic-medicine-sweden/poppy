@@ -48,3 +48,26 @@ hr {
   width: 20px;
   color: black;
 }
+
+.responsive-diagram-large {
+    display: block;
+    width: 75%;      /* Forces exact size on desktop */
+    height: auto;    /* Retains SVG aspect ratio */
+    margin: 0 auto;  /* Centers on page */
+}
+
+/* For smaller standard DAG flows */
+.responsive-diagram {
+    display: block;
+    width: 45%;      /* The 45% you requested for desktop */
+    height: auto;
+    margin: 0 auto;
+}
+
+/* True Responsiveness: Automatically trigger when viewed on mobile screens (<768px) */
+@media (max-width: 768px) {
+    .responsive-diagram-large,
+    .responsive-diagram {
+        width: 100%;  /* Expand to fill mobile screen so text stays legible */
+    }
+}
