@@ -24,10 +24,10 @@ reference:
   dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
-  design_intervals_gatk_cnv: "{{REFERENCE_RUNFOLDER}}/reference_files/design.preprocessed.interval_list" 
-  artifacts: "{{REFERENCE_RUNFOLDER}}/reference_files/artifact_panel.tsv"
-  artifacts_pindel: "{{REFERENCE_RUNFOLDER}}/reference_files/artifact_panel_pindel.tsv"
-  background: "{{REFERENCE_RUNFOLDER}}/reference_files/background_panel.tsv"
+  design_intervals_gatk_cnv: "{{REFERENCE_DIRECTORY}}/reference_files/design.preprocessed.interval_list"
+  artifacts: "{{REFERENCE_DIRECTORY}}/reference_files/artifact_panel.tsv"
+  artifacts_pindel: "{{REFERENCE_DIRECTORY}}/reference_files/artifact_panel_pindel.tsv"
+  background: "{{REFERENCE_DIRECTORY}}/reference_files/background_panel.tsv"
   skip_chrs:
     - "chrM"
 
@@ -57,7 +57,7 @@ cnv_html_report:
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
-  normal_reference: "{{REFERENCE_RUNFOLDER}}/reference_files/cnvkit.PoN.cnn"
+  normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 
 cnvkit_call:
@@ -84,14 +84,14 @@ filter_vcf:
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  SNP_interval: ""
+  SNP_interval: "FILL_IN"
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
 
 gatk_denoise_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: "{{REFERENCE_RUNFOLDER}}/reference_files/gatk.PoN.hdf5"
+  normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/gatk.PoN.hdf5"
 
 gatk_model_segments:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -183,13 +183,13 @@ purecn:
   interval_padding: 100
   segmentation_method: internal
   fun_segmentation: PSCBS
-  normaldb: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_normal_db.rds"
-  intervals: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_targets_intervals.txt"
-  mapping_bias_file: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_mapping_bias.rds"
+  normaldb: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_normal_db.rds"
+  intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
+  mapping_bias_file: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_mapping_bias.rds"
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
-  intervals: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_targets_intervals.txt"
+  intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
 
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
@@ -205,7 +205,7 @@ svdb_merge:
 
 svdb_query:
   container: docker://hydragenetics/svdb:2.6.0
-  db_string: "--db {{REFERENCE_RUNFOLDER}}/reference_files/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
+  db_string: "--db {{REFERENCE_DIRECTORY}}/reference_files/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
@@ -214,7 +214,7 @@ vardict:
 
 vep:
   container: "docker://hydragenetics/vep:111.0"
-  vep_cache: ""
+  vep_cache: "FILL_IN"
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
   # vep109: VEP:gnomAD_${pop}e or g for exome/genome. Both --af_gnomade and --af_gnomadg included in everything
