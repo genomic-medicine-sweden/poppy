@@ -11,11 +11,11 @@ trimmer_software: "fastp_pe"
 modules:
   alignment: v0.5.1
   annotation: v1.0.0
-  cnv_sv: "1aa9a68"
+  cnv_sv: v3.1.0
   filtering: v0.3.0
   prealignment: v1.2.0
   qc: v0.4.1
-  reports: v0.3.1
+  reports: v1.1.1
   snv_indels_gms: v0.6.0
 
 reference:
@@ -24,7 +24,7 @@ reference:
   dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
   design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
   design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
-  design_intervals_gatk_cnv: "{{REFERENCE_RUNFOLDER}}/reference_files/design.preprocessed.interval_list" 
+  design_intervals_gatk_cnv: "{{REFERENCE_RUNFOLDER}}/reference_files/design.preprocessed.interval_list"
   artifacts: "{{REFERENCE_RUNFOLDER}}/reference_files/artifact_panel.tsv"
   artifacts_pindel: "{{REFERENCE_RUNFOLDER}}/reference_files/artifact_panel_pindel.tsv"
   background: "{{REFERENCE_RUNFOLDER}}/reference_files/background_panel.tsv"
@@ -109,6 +109,8 @@ gatk_mutect2_merge_stats:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
 
 merge_cnv_json:
+  ref_genes:
+    - "/path/to/refGene.txt"
   annotations:
     - "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
