@@ -4,7 +4,7 @@ type: object
 properties:
   pindel_processing_add_missing_csq:
     type: object
-    description: input and output parameters for pindel_processing_add_missing_csq
+    description: rule to add any missing CSQ-field to a vep annotated pindel-vcf
     properties:
       input:
         type: object
@@ -12,7 +12,7 @@ properties:
         properties:
           vcf:
             type: string
-            description: gzipped vcf to be corrected for missing CSQ
+            description: gzipped vep-annotaded vcf to be corrected for missing CSQ
           tbi:
             type: string
             description: tbi index to input.vcf
@@ -26,7 +26,7 @@ properties:
 
   pindel_processing_annotation_vep:
     type: object
-    description: input and output parameters for vep annotation of pindel vcf
+    description: rule to annotate pindel-vcfs with vep
     properties:
       input:
         type: object
@@ -40,21 +40,21 @@ properties:
             description: path to fasta reference genome
           tabix:
             type: string
-            description: vcf index file
+            description: pindel-vcf index file
           vcf:
             type: string
-            description: gzipped vcf file to be annotated
+            description: gzipped pindel-vcf file to be annotated
       output:
         type: object
         description: list of outputs
         properties:
           vcf:
             type: string
-            description: annotated (or incase of empty just copied) vcf file
+            description: annotated (or in case of no calls in input just copied) vcf file
 
   pindel_processing_artifact_annotation:
     type: object
-    description: input and output parameters for pindel_processing_artifact_annotation
+    description: rule to annotate pindel-vcfs with artifact-calls from a panel
     properties:
       input:
         type: object
@@ -79,7 +79,7 @@ properties:
 
   pindel_processing_fix_af:
     type: object
-    description: input and output parameters for pindel_processing_fix_af
+    description: rule to add AF and DP field in pindel vcf files
     properties:
       input:
         type: object
@@ -98,7 +98,7 @@ properties:
 
   reference_rules_create_artifact_file_pindel:
     type: object
-    description: input and output parameters for reference_rules_create_artifact_file_pindel
+    description: rule to create artifact_panel from annotated pindel-vcfs
     properties:
       input:
         type: object

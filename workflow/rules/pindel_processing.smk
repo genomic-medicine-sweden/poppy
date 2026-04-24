@@ -4,6 +4,38 @@ __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 
+rule pindel_processing_add_missing_csq:
+    input:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz",
+        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz.tbi",
+    output:
+        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf",
+    params:
+        field="CSQ",
+    log:
+        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf.log",
+    benchmark:
+        repeat(
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf.benchmark.tsv",
+            config.get("pindel_processing_add_missing_csq", {}).get("benchmark_repeats", 1),
+        )
+    threads: config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"])
+    resources:
+        mem_mb=config.get("pindel_processing_add_missing_csq", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+        mem_per_cpu=config.get("pindel_processing_add_missing_csq", {}).get(
+            "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
+        ),
+        partition=config.get("pindel_processing_add_missing_csq", {}).get("partition", config["default_resources"]["partition"]),
+        threads=config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"]),
+        time=config.get("pindel_processing_add_missing_csq", {}).get("time", config["default_resources"]["time"]),
+    container:
+        config.get("pindel_processing_add_missing_csq", {}).get("container", config["default_container"])
+    message:
+        "{rule}: if need be, add missing CSQ annotation to variants in {input.vcf}"
+    script:
+        "../scripts/pindel_processing_add_missing_csq.py"
+
+
 rule pindel_processing_annotation_vep:
     input:
         cache=config.get("vep", {}).get("vep_cache", ""),
@@ -44,8 +76,6 @@ rule pindel_processing_artifact_annotation:
         artifacts=config["reference"]["artifacts_pindel"],
     output:
         vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.vcf",
-    params:
-        extra=config.get("pindel_processing_artifact_annotation", {}).get("extra", ""),
     log:
         "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.vcf.log",
     benchmark:
@@ -77,8 +107,6 @@ rule pindel_processing_fix_af:
         vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.vcf",
     output:
         vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf",
-    params:
-        extra=config.get("pindel_processing_fix_af", {}).get("extra", ""),
     log:
         "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.fix_af.vcf.log",
     benchmark:
@@ -99,36 +127,3 @@ rule pindel_processing_fix_af:
         "{rule}: add af and dp to info field in {input.vcf}"
     script:
         "../scripts/pindel_processing_fix_af.py"
-
-
-rule pindel_processing_add_missing_csq:
-    input:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz",
-        tbi="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.vcf.gz.tbi",
-    output:
-        vcf="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf",
-    params:
-        field="CSQ",
-        extra=config.get("pindel_processing_add_missing_csq", {}).get("extra", ""),
-    log:
-        "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf.log",
-    benchmark:
-        repeat(
-            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.csq_corrected.vcf.benchmark.tsv",
-            config.get("pindel_processing_add_missing_csq", {}).get("benchmark_repeats", 1),
-        )
-    threads: config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"])
-    resources:
-        mem_mb=config.get("pindel_processing_add_missing_csq", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-        mem_per_cpu=config.get("pindel_processing_add_missing_csq", {}).get(
-            "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
-        ),
-        partition=config.get("pindel_processing_add_missing_csq", {}).get("partition", config["default_resources"]["partition"]),
-        threads=config.get("pindel_processing_add_missing_csq", {}).get("threads", config["default_resources"]["threads"]),
-        time=config.get("pindel_processing_add_missing_csq", {}).get("time", config["default_resources"]["time"]),
-    container:
-        config.get("pindel_processing_add_missing_csq", {}).get("container", config["default_container"])
-    message:
-        "{rule}: if need be, add missing CSQ annotation to variants in {input.vcf}"
-    script:
-        "../scripts/pindel_processing_add_missing_csq.py"
