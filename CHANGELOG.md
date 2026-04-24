@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v1.1.0...v2.0.0) (2026-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* define path to reference pipeline output in config ([#92](https://github.com/genomic-medicine-sweden/poppy/issues/92))
+
+### Miscellaneous Chores
+
+* define path to reference pipeline output in config ([#92](https://github.com/genomic-medicine-sweden/poppy/issues/92)) ([890601c](https://github.com/genomic-medicine-sweden/poppy/commit/890601c3afef9080e260ae434d8d0333a92acac1))
+
 ## [1.1.0](https://github.com/genomic-medicine-sweden/poppy/compare/v1.0.0...v1.1.0) (2026-01-26)
 
 The main change in this version is a huge improvement to the documentation, mainly thanks to @CarolinaPB.
