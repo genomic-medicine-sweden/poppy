@@ -282,11 +282,15 @@ properties:
 
   create_artifact_file_pindel:
     type: object
+    description: >
+      Configuration for the create_artifact_file_pindel rule
     properties:
       benchmark_repeats:
         type: integer
+        description: set number of times benchmark should be repeated
       container:
         type: string
+        description: name or path to docker/singularity container
         format: uri-reference
 
   filter_vcf:
@@ -296,6 +300,8 @@ properties:
     properties:
       cnv_hard_filter:
         type: string
+        description: >
+          Path to cnv hard filter definition
         format: uri-reference
       germline:
         type: string
@@ -314,6 +320,8 @@ properties:
         format: uri-reference
       somatic_hard:
         type: string
+        description: >
+          Path to somatic hard filter definition
         format: uri-reference
     required:
       - germline
@@ -364,13 +372,19 @@ properties:
     properties:
       annotations:
         type: array
+        description: >
+          Path to VCF files containing annotations
         items:
           type: string
+          description: >
+            Path to annotation VCF file
           format: uri-reference
       filtered_cnv_vcfs:
         type: array
         items:
           type: string
+          description: >
+            Path to filtered CNV VCF file
         description: >
           Generated during execution of Poppy
       germline_vcf:
@@ -381,6 +395,8 @@ properties:
         type: array
         items:
           type: string
+          description: >
+            Path to unfiltered CNV VCF file
         description: >
           Generated during execution of Poppy
     required:
@@ -427,6 +443,8 @@ properties:
         properties:
           DNA:
             type: object
+            description: >
+              Reports for DNA sequencing data
             properties:
               config:
                 type: string
@@ -471,11 +489,11 @@ properties:
       refdate:
         type: string
         description: >
-          Release date of the reference genome
+          Release date of the reference genome used for calling
       refname:
         type: string
         description: >
-          Name of the reference genome
+          Name of the reference genome used for calling
 
   pindel_call:
     type: object
@@ -583,10 +601,16 @@ properties:
         description: Reference genome build
       interval_padding:
         type: integer
+        description: >
+          Padding to add to intervals
       segmentation_method:
         type: string
+        description: >
+          Method used for segmentation
       fun_segmentation:
         type: string
+        description: >
+          Function used for segmentation
       normaldb:
         type: string
         format: uri-reference
@@ -633,20 +657,24 @@ properties:
   reference_rules_create_artifact_file_pindel:
     type: object
     description: >
-      Configuration for the purecn rule
+      Configuration for the reference_rules_create_artifact_file_pindel rule
     properties:
       container:
         type: string
         description: >
-          Name or path to container containing purecn executable
+          Name or path to container containing the tool executable
         format: uri-reference
       fun_segmentation:
         type: string
+        description: >
+          Function used for segmentation
       genome:
         type: string
         description: Reference genome build
       interval_padding:
         type: integer
+        description: >
+          Padding to add to intervals
       intervals:
         type: string
         format: uri-reference
@@ -664,6 +692,8 @@ properties:
           Generated with reference pipeline
       segmentation_method:
         type: string
+        description: >
+          Method used for segmentation
     required:
       - fun_segmentation
       - genome
@@ -715,6 +745,8 @@ properties:
         minItems: 1
         items:
           type: object
+          description: >
+            Tumor cell content estimation method details
           properties:
             name:
               type: string
