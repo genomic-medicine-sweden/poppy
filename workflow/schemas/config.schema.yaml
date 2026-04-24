@@ -427,6 +427,8 @@ properties:
         properties:
           DNA:
             type: object
+            description: >
+              Reports for DNA sequencing data
             properties:
               config:
                 type: string

@@ -4,6 +4,7 @@ type: object
 properties:
   default_resources:
     type: object
+    description: Default resources for snakemake rules
     properties:
       mem_mb:
         type: integer
