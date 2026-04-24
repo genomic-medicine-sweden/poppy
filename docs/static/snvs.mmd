@@ -1,0 +1,40 @@
+graph TD
+    accTitle: SNV and Indel Workflow
+    accDescr: Somatic variant calling using Mutect2 and VarDict, followed by ensemble merging and full VEP / artifact annotation.
+
+    alignment_bam[📦 **alignment** BAM] --> gatk_mutect2[⚙️ **gatk_mutect2**]
+    alignment_bam --> vardict[⚙️ **vardict**]
+
+    gatk_mutect2 --> m2_merge[⚙️ **merged** mutect2 VCF]
+    vardict --> vd_merge[⚙️ **merged** vardict VCF]
+
+    m2_merge --> ensemble_recall[⚙️ **bcbio** variation recall]
+    vd_merge --> ensemble_recall
+
+    ensemble_recall --> vt_decompose[⚙️ **vt** decompose]
+    vt_decompose --> vt_normalize_1[⚙️ **vt** normalize]
+    vt_normalize_1 --> vep_annotation_1[⚙️ **VEP** annotation]
+    vep_annotation_1 --> artifact_annotation[⚙️ **artifact** annotation]
+    artifact_annotation --> background_annotation[⚙️ **background** annotation]
+    background_annotation --> hard_filter[⚙️ **somatic** hard filter]
+    hard_filter --> soft_filter[⚙️ **somatic** soft filter]
+    soft_filter --> somatic_vcf[📦 **final** somatic VCF]
+
+    m2_merge --> vt_normalize_2[⚙️ **vt** normalize]
+    vt_normalize_2 --> samtools_sort[⚙️ **samtools** sort]
+    samtools_sort --> vep_annotation_2[⚙️ **VEP** annotation]
+    vep_annotation_2 --> germline_filter[⚙️ **germline** hard filter]
+    germline_filter --> bcftools_annotate[⚙️ **gnomAD** bcftools annotation]
+    bcftools_annotate --> germline_vcf[📦 **germline** SNP VCF]
+    
+    germline_vcf -.-> cnv_module{{🔗 **CNV_SV** module}}
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    classDef warm fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+    classDef accent fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+
+    class alignment_bam primary
+    class somatic_vcf success
+    class germline_vcf warm
+    class cnv_module accent

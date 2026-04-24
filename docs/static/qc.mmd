@@ -1,0 +1,24 @@
+graph TD
+    accTitle: Quality Control Workflow
+    accDescr: Parallel execution of FastQC, Mosdepth, and Picard, consolidated finally through MultiQC.
+
+    raw_fastqs[📦 **Raw** FASTQs] --> fastqc[⚙️ **FastQC**]
+
+    alignment_bam[📦 **alignment** BAM] --> mosdepth[⚙️ **Mosdepth**]
+    alignment_bam --> picard_tools[⚙️ **Picard** Tools]
+    alignment_bam --> samtools_stats[⚙️ **samtools** stats]
+
+    fastp_report[📝 **fastp** report JSON] --> multiqc[⚙️ **MultiQC**]
+
+    fastqc --> multiqc
+    mosdepth --> multiqc
+    picard_tools --> multiqc
+    samtools_stats --> multiqc
+
+    multiqc --> multiqc_report[📝 **multiqc_DNA** HTML]
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class raw_fastqs,alignment_bam,fastp_report primary
+    class multiqc_report success
