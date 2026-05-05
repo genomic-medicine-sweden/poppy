@@ -3,6 +3,7 @@ resources: "{{POPPY_HOME}}/config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
 output: "{{POPPY_HOME}}/config/output_files.yaml"
+general_report: "{{POPPY_HOME}}/config/output_files.yaml" # Not used but required from reports module v1.1.1
 
 default_container: "docker://hydragenetics/common:1.10.2"
 
