@@ -1,0 +1,33 @@
+graph TD
+    accTitle: CNV and SV Workflow
+    accDescr: Structural variant and copy number calling utilizing CNVkit, GATK CNV, PureCN, and Pindel dynamically yielding an HTML report.
+
+    alignment_bam[📦 **alignment** BAM] --> cnvkit[⚙️ **CNVkit**]
+    alignment_bam --> gatk_cnv[⚙️ **GATK** CNV]
+    alignment_bam --> pindel[⚙️ **Pindel**]
+    alignment_bam --> purecn[⚙️ **PureCN**]
+
+    snv_vcfs[📦 **snv_indels** VCFs] --> purecn
+
+    pindel --> pindel_processing[⚙️ **Pindel** local processing]
+    pindel_processing --> pindel_filtered_vcf[📦 **Pindel** Filtered VCF]
+
+    cnvkit --> svdb_merge[⚙️ **svdb_merge** no priority]
+    gatk_cnv --> svdb_merge
+
+    svdb_merge --> svdb_query[⚙️ **svdb_query**]
+    purecn --> svdb_query
+
+    svdb_query --> cnv_annotation[⚙️ **CNV** Annotation & Hard filter]
+    cnv_annotation --> filtered_cnv_vcf[📦 **Filtered** CNV VCF]
+
+    filtered_cnv_vcf --> html_report_module[⚙️ **reports** module generator]
+    purecn --> html_report_module
+
+    html_report_module --> cnv_report[📝 **CNV** HTML Report]
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+
+    class alignment_bam,snv_vcfs primary
+    class pindel_filtered_vcf,filtered_cnv_vcf,cnv_report success

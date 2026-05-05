@@ -1,0 +1,24 @@
+graph TD
+    accTitle: Pre-alignment Workflow
+    accDescr: Pipeline flow taking raw FASTQ files through trimming and merging before downstream alignment.
+
+    raw_fastqs[📦 **Raw** FASTQs] --> fastp_pe[⚙️ **fastp_pe** process]
+    fastp_pe --> is_multiple{**Multiple** lanes?}
+    is_multiple -- Yes --> cat_fastqs[⚙️ **merged** cat FASTQs]
+    is_multiple -- No --> final_fastqs
+    cat_fastqs --> final_fastqs[📦 **final** merged FASTQs]
+    
+    final_fastqs -.-> alignment_module{{🔗 **Alignment** module}}
+
+    fastp_pe --> qc_reports[📝 **fastp** QC reports]
+    qc_reports -.-> qc_module{{🔗 **QC** module}}
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    classDef warm fill:#ffedd5,stroke:#ea580c,stroke-width:2px,color:#7c2d12
+    classDef accent fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+
+    class raw_fastqs primary
+    class final_fastqs success
+    class qc_reports warm
+    class alignment_module,qc_module accent

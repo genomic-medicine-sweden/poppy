@@ -1,0 +1,26 @@
+graph TD
+    accTitle: Alignment Workflow
+    accDescr: Processing merged FASTQ files through BWA-MEM alignment, sorting, duplicate marking, and final indexing.
+
+    merged_fastqs[📦 **prealignment** FASTQs] --> bwa_mem[⚙️ **bwa_mem** per flowcell/lane]
+    bwa_mem --> bwa_mem_merge[⚙️ **merge** lanes]
+    bwa_mem_merge --> samtools_sort_1[⚙️ **samtools** sort]
+    samtools_sort_1 --> samtools_index_1[⚙️ **samtools** index]
+    samtools_sort_1 --> samtools_extract[⚙️ **extract** split by chr]
+    samtools_extract --> picard_mark[⚙️ **picard** MarkDuplicates]
+    picard_mark --> samtools_merge_chr[⚙️ **merge** chromosomes]
+    samtools_merge_chr --> samtools_sort_2[⚙️ **samtools** sort]
+    samtools_sort_2 --> samtools_index_2[⚙️ **samtools** index]
+    samtools_sort_2 --> final_bam[📦 **alignment** BAM]
+    
+    final_bam -.-> snv_module{{🔗 **SNV_indels** module}}
+    final_bam -.-> cnv_module{{🔗 **CNV_SV** module}}
+    final_bam -.-> qc_module{{🔗 **QC** module}}
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    classDef accent fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+
+    class merged_fastqs primary
+    class final_bam success
+    class snv_module,cnv_module,qc_module accent

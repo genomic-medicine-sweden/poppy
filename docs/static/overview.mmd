@@ -1,0 +1,81 @@
+graph TD
+    accTitle: Poppy Pipeline Overview
+    accDescr: Rough overview of the pipeline grouped by subworkflows.
+
+    raw_fastqs[📦 **Raw** FASTQs]
+
+    subgraph prealignment [Prealignment]
+        fastp[⚙️ fastp]
+    end
+
+    subgraph alignment [Alignment]
+        bwa_mem[⚙️ bwa-mem]
+        picard_markdup[⚙️ picard mark duplicates]
+        bwa_mem --> picard_markdup
+    end
+    
+    subgraph qc [QC]
+        fastqc[⚙️ fastqc]
+        mosdepth[⚙️ mosdepth]
+        picard_hs[⚙️ picard target metrics]
+        multiqc[⚙️ multiqc]
+        
+        fastqc --> multiqc
+        mosdepth --> multiqc
+        picard_hs --> multiqc
+    end
+
+    subgraph snvs_indels [SNVs and Indels]
+        mutect2[⚙️ mutect2]
+        vardict[⚙️ vardict]
+        snv_annotate[⚙️ annotation]
+        snv_filter[⚙️ filtering]
+        
+        mutect2 --> snv_annotate
+        vardict --> snv_annotate
+        snv_annotate --> snv_filter
+    end
+
+    subgraph cnvs [CNVs]
+        cnvkit[⚙️ cnvkit]
+        gatk_cnv[⚙️ gatk_cnv]
+        pindel[⚙️ pindel]
+        purecn[⚙️ purecn]
+        
+        cnvkit --> svdb_merge[⚙️ svdb merge]
+        gatk_cnv --> svdb_merge
+        purecn --> svdb_merge
+    end
+
+    raw_fastqs --> fastp
+    fastp --> proc_fastqs[📦 **Processed** FASTQs]
+    proc_fastqs --> bwa_mem
+    picard_markdup --> bam[📦 **Alignment** BAM]
+    
+    bam --> mutect2
+    bam --> vardict
+    
+    snv_filter --> somatic_vcf[📦 **Somatic** VCF]
+    snv_filter --> germline_vcf[📦 **Germline** VCF]
+    
+    bam --> cnvkit
+    bam --> gatk_cnv
+    bam --> pindel
+    bam --> purecn
+    germline_vcf --> purecn
+    
+    svdb_merge --> sv_vcf[📦 **SV/CNV** VCF]
+    pindel --> sv_vcf
+    purecn --> cnv_report[📝 **CNV** HTML Report]
+    
+    raw_fastqs --> fastqc
+    bam --> mosdepth
+    bam --> picard_hs
+    
+    multiqc --> multiqc_report[📝 **MultiQC** Report]
+
+    classDef primary fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a5f
+    classDef success fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    
+    class raw_fastqs,proc_fastqs,germline_vcf primary
+    class bam,somatic_vcf,sv_vcf,multiqc_report,cnv_report success
