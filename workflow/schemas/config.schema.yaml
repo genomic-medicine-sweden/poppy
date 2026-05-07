@@ -281,15 +281,6 @@ properties:
         type: number
         description: copy number threshold for homozygous deletion
 
-  create_artifact_file_pindel:
-    type: object
-    properties:
-      benchmark_repeats:
-        type: integer
-      container:
-        type: string
-        format: uri-reference
-
   filter_vcf:
     type: object
     description: >
@@ -633,6 +624,18 @@ properties:
         format: uri-reference
     required:
       - intervals
+
+  reference_rules_create_artifact_file_pindel:
+    type: object
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        format: uri-reference
+        description: >
+          Name or path to container containing the svdb executable
 
   svdb_merge:
     type: object
