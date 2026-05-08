@@ -8,31 +8,6 @@ properties:
       uri pointing to default docker/apptainer image that should be used
     format: uri-reference
 
-  preprocess_intervals:
-    type: object
-    description: >
-      config for the preprocess_intervals rule
-    properties:
-      container:
-        type: string
-        description: >
-          uri pointing to docker/apptainer image that should be used
-        format: uri-reference
-    required:
-      - container
-
-  reference:
-    type: object
-    description: Reference genome files
-    properties:
-      mappability:
-        type: string
-        description: >
-          path to mappability file
-        format: uri-reference
-    required:
-      - mappability
-
   reference_rules_create_artifact_file_pindel:
     type: object
     description: parameters for reference_rules_create_artifact_file_pindel
