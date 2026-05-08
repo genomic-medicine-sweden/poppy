@@ -4,6 +4,8 @@ This section describes the alignment steps in the Poppy pipeline. It takes the t
 
 All alignment rules are provided by the [Hydra‑Genetics alignment module](https://github.com/hydra-genetics/alignment) (v0.5.1).
 
+![Alignment Workflow](static/alignment.svg){: .responsive-diagram}
+
 ---
 
 ## Input Files
@@ -69,14 +71,6 @@ The final merged BAM is indexed so that it can be efficiently queried by downstr
 | Item   | Value                                                  |
 | ------ | ------------------------------------------------------ |
 | Output | `alignment/samtools_merge_bam/{sample}_{type}.bam.bai` |
-
----
-
-## DAG
-
-The diagram below shows the rule dependencies within the alignment module:
-
-![Alignment Workflow](static/alignment.svg){: .responsive-diagram}
 
 ---
 

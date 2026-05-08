@@ -4,6 +4,8 @@ This section describes the pre‑alignment steps in the Poppy pipeline. Starting
 
 All pre‑alignment rules are provided by the [Hydra‑Genetics prealignment module](https://github.com/hydra-genetics/prealignment) (v1.2.0).
 
+![Pre-alignment Workflow](static/prealignment.svg){: .responsive-diagram}
+
 ---
 
 ## Input Files
@@ -52,12 +54,6 @@ The `trimmer_software` setting in `config.yaml` controls which trimmer output is
 
 ---
 
-## DAG
-
-![Pre-alignment Workflow](static/prealignment.svg){: .responsive-diagram}
-
----
-
 ## Key Output Files
 
 | Output File                                           | Description                        |
@@ -86,3 +82,5 @@ fastp_pe:
 ```
 
 The `trimmer_software` setting tells the prealignment module to use `fastp_pe` output as input for the merge step. See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+
+---

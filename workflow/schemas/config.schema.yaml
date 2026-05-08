@@ -19,6 +19,12 @@ properties:
     description: if ont_alignment should be used set to true
     default: false
 
+  general_report:
+    type: string
+    description: >
+      Path to file defining general report output files (required by reports module v1.1.1)
+    format: uri-reference
+
   output:
     type: string
     description: >
@@ -359,6 +365,13 @@ properties:
         items:
           type: string
           format: uri-reference
+      ref_genes:
+        type: array
+        items:
+          type: string
+          format: uri-reference
+        description: >
+          Path to refGene.txt file for gene annotation in CNV reports
       filtered_cnv_vcfs:
         type: array
         items:
@@ -765,6 +778,7 @@ required:
   - cnvkit_vcf
   - default_container
   - filter_vcf
+  - general_report
   - gatk_collect_allelic_counts
   - gatk_collect_read_counts
   - gatk_denoise_read_counts
