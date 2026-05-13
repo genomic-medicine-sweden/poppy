@@ -207,9 +207,9 @@ vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
 
 filter_vcf:
-  germline: "config/config_hard_filter_germline.yaml"
-  somatic: "config/config_soft_filter_somatic.yaml"
-  somatic_hard: "config/config_hard_filter_somatic.yaml"
+  germline: "config/filters/config_hard_filter_germline.yaml"
+  somatic: "config/filters/config_soft_filter_somatic.yaml"
+  somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
 ```
 
 See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.

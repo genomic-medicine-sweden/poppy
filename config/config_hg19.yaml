@@ -127,11 +127,11 @@ fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
 filter_vcf:
-  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml" 
-  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" 
-  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" 
-  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" 
-  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml"
+  germline: "{{POPPY_HOME}}/config/filters/config_hard_filter_germline.yaml"
+  somatic: "{{POPPY_HOME}}/config/filters/config_soft_filter_somatic.yaml"
+  somatic_hard: "{{POPPY_HOME}}/config/filters/config_hard_filter_somatic.yaml"
+  pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
+  cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"

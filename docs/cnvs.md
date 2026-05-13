@@ -145,6 +145,11 @@ cnvkit_batch:
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 
+filter_vcf:
+  germline: "{{POPPY_HOME}}/config/filters/config_hard_filter_germline.yaml"
+  pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
+  cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
+
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
 
