@@ -1,0 +1,39 @@
+---
+reference:
+  fasta: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"
+  fai: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fai"
+  dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
+  design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
+  design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
+  skip_chrs:
+    - "chrM"
+
+bcftools_annotate:
+  annotation_db: /storage/userdata/references/homo_sapiens/hg19/hydra-genetics/poppy/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
+
+bwa_mem:
+  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
+  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
+  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
+  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
+  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
+
+gatk_collect_allelic_counts:
+  SNP_interval: "FILL_IN.interval_list"
+
+merge_cnv_json:
+  ref_genes:
+    - "/path/to/refGene.txt"
+
+pindel_call:
+  include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
+
+pindel2vcf:
+  refname: "hg19"
+  refdate: "2009"
+
+purecn:
+  genome: hg19
+
+vep:
+  vep_cache: "FILL_IN"

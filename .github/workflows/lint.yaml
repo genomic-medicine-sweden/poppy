@@ -28,6 +28,6 @@ jobs:
         working-directory: .tests/integration
         run: |
           snakemake -s ../../workflow/Snakefile \
-            --configfile ../../config/config.yaml config/config.yaml \
+            --configfile ../../config/config_static.yaml config/config_custom_test.yaml \
             --config POPPY_HOME=../.. REFERENCE_DIRECTORY=data \
             --lint

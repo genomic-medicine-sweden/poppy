@@ -26,4 +26,6 @@ jobs:
       - name: snakemake dry run
         working-directory: .tests/integration
         run: |
-          snakemake -n -s ../../workflow/Snakefile --configfile ../../config/config.yaml config/config.yaml --config POPPY_HOME=../.. REFERENCE_DIRECTORY=data
+          snakemake -n -s ../../workflow/Snakefile \
+            --configfile ../../config/config_static.yaml config/config_custom_test.yaml \
+            --config POPPY_HOME=../.. REFERENCE_DIRECTORY=data
