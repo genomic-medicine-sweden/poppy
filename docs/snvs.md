@@ -6,6 +6,8 @@ A separate germline‑filtered branch of the Mutect2 calls is also created and u
 
 Rules are provided by the [Hydra‑Genetics snv_indels module](https://github.com/hydra-genetics/snv_indels) (v0.6.0), the [annotation module](https://github.com/hydra-genetics/annotation) (v1.0.0), and the [filtering module](https://github.com/hydra-genetics/filtering) (v0.3.0).
 
+![SNV and Indel Workflow](static/snvs.svg){: .responsive-diagram}
+
 ---
 
 ## Input Files
@@ -148,12 +150,6 @@ A separate filtering path is applied to the **Mutect2‑only** calls (not the en
 | Output | `snv_indels/gatk_mutect2/{sample}_{type}.normalized.sorted.vep_annotated.filter.germline.bcftools_annotated.vcf.gz` |
 
 ---
-
-## DAG
-
-The diagram below shows the rule dependencies within the SNV/indel module:
-
-![SNV and Indel Workflow](static/snvs.svg){: .responsive-diagram}
 
 ## Key Output Files
 

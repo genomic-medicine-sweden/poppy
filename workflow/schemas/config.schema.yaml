@@ -19,6 +19,12 @@ properties:
     description: if ont_alignment should be used set to true
     default: false
 
+  general_report:
+    type: string
+    description: >
+      Path to file defining general report output files (required by reports module v1.1.1)
+    format: uri-reference
+
   output:
     type: string
     description: >
@@ -64,7 +70,8 @@ properties:
       design_intervals_gatk_cnv:
         type: string
         description: >
-          Path to panel design interval file for GATK CNV calling, created with reference pipeline
+          Path to panel design interval file for GATK CNV calling, created with reference
+          pipeline
         format: uri-reference
       dict:
         type: string
@@ -280,19 +287,6 @@ properties:
         type: number
         description: copy number threshold for homozygous deletion
 
-  create_artifact_file_pindel:
-    type: object
-    description: >
-      Configuration for the create_artifact_file_pindel rule
-    properties:
-      benchmark_repeats:
-        type: integer
-        description: set number of times benchmark should be repeated
-      container:
-        type: string
-        description: name or path to docker/singularity container
-        format: uri-reference
-
   filter_vcf:
     type: object
     description: >
@@ -300,8 +294,6 @@ properties:
     properties:
       cnv_hard_filter:
         type: string
-        description: >
-          Path to cnv hard filter definition
         format: uri-reference
       germline:
         type: string
@@ -320,8 +312,6 @@ properties:
         format: uri-reference
       somatic_hard:
         type: string
-        description: >
-          Path to somatic hard filter definition
         format: uri-reference
     required:
       - germline
@@ -372,19 +362,20 @@ properties:
     properties:
       annotations:
         type: array
-        description: >
-          Path to VCF files containing annotations
         items:
           type: string
-          description: >
-            Path to annotation VCF file
           format: uri-reference
+      ref_genes:
+        type: array
+        items:
+          type: string
+          format: uri-reference
+        description: >
+          Path to refGene.txt file for gene annotation in CNV reports
       filtered_cnv_vcfs:
         type: array
         items:
           type: string
-          description: >
-            Path to filtered CNV VCF file
         description: >
           Generated during execution of Poppy
       germline_vcf:
@@ -395,8 +386,6 @@ properties:
         type: array
         items:
           type: string
-          description: >
-            Path to unfiltered CNV VCF file
         description: >
           Generated during execution of Poppy
     required:
@@ -489,11 +478,11 @@ properties:
       refdate:
         type: string
         description: >
-          Release date of the reference genome used for calling
+          Release date of the reference genome
       refname:
         type: string
         description: >
-          Name of the reference genome used for calling
+          Name of the reference genome
 
   pindel_call:
     type: object
@@ -582,82 +571,11 @@ properties:
       container:
         type: string
         description: name or path to docker/singularity container
-      extra:
-        type: string
-        description: parameters that should be forwarded
 
   purecn:
     type: object
     description: >
       Configuration for the purecn rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing purecn executable
-        format: uri-reference
-      genome:
-        type: string
-        description: Reference genome build
-      interval_padding:
-        type: integer
-        description: >
-          Padding to add to intervals
-      segmentation_method:
-        type: string
-        description: >
-          Method used for segmentation
-      fun_segmentation:
-        type: string
-        description: >
-          Function used for segmentation
-      normaldb:
-        type: string
-        format: uri-reference
-        description: >
-          Generated with reference pipeline
-      intervals:
-        type: string
-        format: uri-reference
-        description: >
-          Generated with reference pipeline
-      mapping_bias_file:
-        type: string
-        format: uri-reference
-        description: >
-          Generated with reference pipeline
-    required:
-      - container
-      - genome
-      - interval_padding
-      - segmentation_method
-      - fun_segmentation
-      - normaldb
-      - intervals
-      - mapping_bias_file
-
-  purecn_coverage:
-    type: object
-    description: >
-      Configuration for the purecn_coverage rule
-    properties:
-      container:
-        type: string
-        description: >
-          Name or path to container containing purecn executable
-        format: uri-reference
-      intervals:
-        type: string
-        description: Generated with reference pipeline
-        format: uri-reference
-    required:
-      - container
-      - intervals
-
-  reference_rules_create_artifact_file_pindel:
-    type: object
-    description: >
-      Configuration for the reference_rules_create_artifact_file_pindel rule
     properties:
       container:
         type: string
@@ -719,6 +637,18 @@ properties:
         format: uri-reference
     required:
       - intervals
+
+  reference_rules_create_artifact_file_pindel:
+    type: object
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        format: uri-reference
+        description: >
+          Name or path to container containing the svdb executable
 
   svdb_merge:
     type: object
@@ -848,6 +778,7 @@ required:
   - cnvkit_vcf
   - default_container
   - filter_vcf
+  - general_report
   - gatk_collect_allelic_counts
   - gatk_collect_read_counts
   - gatk_denoise_read_counts

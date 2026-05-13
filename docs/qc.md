@@ -2,6 +2,8 @@
 
 This section describes the quality control (QC) steps in the Poppy pipeline. Utilizing the [Hydra-Genetics qc module](https://github.com/hydra-genetics/qc) (v0.4.1), it executes comprehensive metrics generation across sequencing reads and alignment files. Tools such as FastQC, Mosdepth, Picard, and Samtools generate individual metrics that are subsequently aggregated into a single interactive HTML report by MultiQC for easy assessment.
 
+![Quality Control Workflow](static/qc.svg){: .responsive-diagram}
+
 ---
 
 ## Input Files
@@ -80,14 +82,6 @@ All generated logs and metrics arrays (including the Fastp quality metrics gener
     ```
 
 ///
-
----
-
-## DAG
-
-The visualization below indicates the parallel metrics generation feeding into the single MultiQC rule.
-
-![Quality Control Workflow](static/qc.svg){: style="height:45%;width:45%"}
 
 ---
 

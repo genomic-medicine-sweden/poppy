@@ -4,6 +4,8 @@ This section describes the CNV and SV detection steps in the Poppy pipeline, as 
 
 The core rules are provided by the [Hydra‑Genetics cnv_sv](https://github.com/hydra-genetics/cnv_sv) and [reports](https://github.com/hydra-genetics/reports) modules. In addition, Poppy implements several local adaptations (via `workflow/rules/pindel_processing.smk` and `workflow/rules/svdb.smk`) to modify formatting, annotations, and merge behaviors specifically for the myeloid workflow.
 
+![CNV and SV Workflow](static/cnvs.svg){: .responsive-diagram}
+
 ---
 
 ## Input Files
@@ -116,12 +118,6 @@ The filtered CNV/SV results, along with purity and ploidy estimates, are combine
 
 ---
 
-## DAG
-
-The diagram below shows the rule dependencies within the CNV/SV and reporting sequence, including local rules:
-
-## ![CNV and SV Workflow](static/cnvs.svg){: .responsive-diagram}
-
 ## Key Output Files
 
 | Output File                                                     | Description                                    |
@@ -146,7 +142,7 @@ The relevant sections in `config.yaml` governing CNV calling, SVDB merging, Pind
 ```yaml
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
-  normal_reference: "{{REFERENCE_RUNFOLDER}}/reference_files/cnvkit.PoN.cnn"
+  normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 
 gatk_collect_read_counts:
@@ -154,22 +150,23 @@ gatk_collect_read_counts:
 
 gatk_denoise_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: "{{REFERENCE_RUNFOLDER}}/reference_files/gatk.PoN.hdf5"
+  normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/gatk.PoN.hdf5"
 
 purecn:
   container: docker://hydragenetics/purecn:2.2.0
   genome: hg19
+  interval_padding: 100
   segmentation_method: internal
   fun_segmentation: PSCBS
-  normaldb: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_normal_db.rds"
-  intervals: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_targets_intervals.txt"
-  mapping_bias_file: "{{REFERENCE_RUNFOLDER}}/reference_files/purecn_mapping_bias.rds"
+  normaldb: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_normal_db.rds"
+  intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
+  mapping_bias_file: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_mapping_bias.rds"
   extra: "--model betabin --post-optimize"
 
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60"
-  include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
+  include_bed: "/path/to/twist_shortlist_pindel.bed"
 
 svdb_merge:
   container: docker://hydragenetics/svdb:2.6.0
@@ -189,3 +186,5 @@ cnv_html_report:
 ```
 
 See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for comprehensive configurations, including references to the filters applied.
+
+---
