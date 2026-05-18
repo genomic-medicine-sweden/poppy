@@ -1,13 +1,14 @@
-samples: samples_ref.tsv # only samples to include in panels
-units: units_ref.tsv # only units to include in panels
+samples: samples.tsv # only samples to include in normal pool
+units: units.tsv # only units to include in normal pool
 resources_references: "{{POPPY_HOME}}/config/resources_references.yaml"
-resources: "{{POPPY_HOME}}/config/resources.yaml"
 
-default_container: docker://hydragenetics/common:1.10.2
 output: "{{POPPY_HOME}}/config/output_files_references.yaml"
 
+modules:
+  references: "f0aa9bc"
+
 reference:
-  mappability: "{{POPPY_HOME}}/initial_references/ref_data/mappability/access-10kb.hg19.bed"
+  mappability: "FILL_IN.bed" 
 
 bed_to_interval_list:
   container: docker://hydragenetics/gatk4:4.2.2.0
@@ -23,6 +24,10 @@ cnvkit_create_anti_targets:
 
 collect_read_counts:
   container: docker://hydragenetics/gatk4:4.2.2.0
+
+create_background_file:
+  min_dp: 500 # default
+  min_af: 0.015 # default
 
 create_read_count_panel_of_normals:
   container: docker://hydragenetics/gatk4:4.2.2.0
