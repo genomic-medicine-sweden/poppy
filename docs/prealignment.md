@@ -44,7 +44,7 @@ Fastp produces both HTML and JSON QC reports. The JSON report is consumed by [Mu
 
 When a sample has been sequenced over multiple flowcells or lanes, the trimmed FASTQ files are concatenated (`cat`) into a single pair of merged FASTQ files per sample. If a sample was only sequenced on a single lane, this step simply passes through the trimmed file.
 
-The `trimmer_software` setting in `config.yaml` controls which trimmer output is used as input for the merge step. In Poppy this is set to `fastp_pe`.
+The `trimmer_software` setting in `config_static.yaml` controls which trimmer output is used as input for the merge step. In Poppy this is set to `fastp_pe`.
 
 | Item   | Value                                                    |
 | ------ | -------------------------------------------------------- |
@@ -72,7 +72,7 @@ The merged FASTQ files are consumed by the [alignment](alignment.md) module as i
 
 ## Configuration
 
-The relevant sections in `config.yaml`:
+The relevant sections in `config_static.yaml`:
 
 ```yaml
 trimmer_software: "fastp_pe"
@@ -81,6 +81,6 @@ fastp_pe:
   container: "docker://hydragenetics/fastp:0.20.1"
 ```
 
-The `trimmer_software` setting tells the prealignment module to use `fastp_pe` output as input for the merge step. See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+The `trimmer_software` setting tells the prealignment module to use `fastp_pe` output as input for the merge step. See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.
 
 ---

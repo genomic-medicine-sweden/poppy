@@ -24,6 +24,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## Alignment
 
 **Description:** Align reads to the reference genome using BWA‑MEM (Docker image `hydragenetics/bwa_mem:0.7.17`) and marks duplicates using Picard's MarkDuplicates (Docker image `hydragenetics/picard:2.25.0`).
+
 **Key Outputs**
 
 | Output File                                        | Description                          |
@@ -36,6 +37,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## Annotation
 
 **Description:** Annotate VCF files with VEP (Docker image `hydragenetics/vep:111.0`) and/or custom annotations such as artifact and background annotation from the reference pipeline.
+
 **Key Outputs**
 
 | Output File                                                                                                                         | Description                                                                             |
@@ -48,6 +50,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## CNV / SV (cnv_sv)
 
 **Description:** Detect copy‑number and structural variants using CNVkit and GATK. SVDB is used to merge and annotate the SV calls. Pindel is also used on a smaller set of genes to detect SVs.
+
 **Key Outputs**
 
 | Output File                                                                                                     | Description                 |
@@ -60,7 +63,8 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 
 ## Filtering
 
-**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/`).
+**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/filters/`).
+
 **Key Outputs**
 
 | Output File                                         | Description           |
@@ -73,6 +77,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## Pre‑alignment
 
 **Description:** Perform initial QC and trimming (FastQC, Fastp).
+
 **Key Outputs**
 
 | Output File                                        | Description           |
@@ -85,6 +90,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## Reports
 
 **Description:** Generate multi‑QC and HTML reports (MultiQC, custom HTML).
+
 **Key Outputs**
 
 | Output File                          | Description                 |
@@ -97,6 +103,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## SNV / Indels (snv_indels_gms)
 
 **Description:** Call and annotate SNVs/indels using GATK Mutect2, VarDict, and VEP.
+
 **Key Outputs**
 
 | Output File                                                                                                         | Description               |
@@ -109,6 +116,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 ## QC (qc)
 
 **Description:** Comprehensive quality control using FastQC, Mosdepth, Picard, and MultiQC.
+
 **Key Outputs**
 
 | Output File                                                  | Description              |

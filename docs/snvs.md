@@ -178,7 +178,7 @@ The germline SNP VCF feeds into:
 
 ## Configuration
 
-The relevant sections in `config.yaml`:
+The relevant sections in `config_static.yaml` and `config_custom.yaml`:
 
 ```yaml
 bcbio_variation_recall_ensemble:
@@ -212,4 +212,4 @@ filter_vcf:
   somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
 ```
 
-See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.

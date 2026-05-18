@@ -100,19 +100,24 @@ They are also used by multiple downstream modules:
 
 ## Configuration
 
-The relevant sections in `config.yaml`:
+The relevant sections in `config_static.yaml` (for tools/containers) and `config_custom.yaml` (for reference paths):
 
 ```yaml
+reference:
+  fasta: "/path/to/my/reference.fasta"
+  fai: "/path/to/my/reference.fasta.fai"
+  dict: "/path/to/my/reference.dict"
+
 bwa_mem:
-  amb: "/path/to/reference.amb"
-  ann: "/path/to/reference.ann"
-  bwt: "/path/to/reference.bwt"
-  pac: "/path/to/reference.pac"
-  sa: "/path/to/reference.sa"
+  amb: "/path/to/my/reference.amb"
+  ann: "/path/to/my/reference.ann"
+  bwt: "/path/to/my/reference.bwt"
+  pac: "/path/to/my/reference.pac"
+  sa: "/path/to/my/reference.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
 ```
 
-See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.
