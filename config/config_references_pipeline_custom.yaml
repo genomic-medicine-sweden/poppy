@@ -1,2 +1,2 @@
 reference:
-  mappability: "FILL_IN.bed" 
+  mappability: "/path/to/your/mappability.bed" 
