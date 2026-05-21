@@ -98,9 +98,10 @@ All generated logs and metrics arrays (including the Fastp quality metrics gener
 
 ## Configuration
 
-The exact tools executed and parameters passed inside the Poppy pipeline are defined in `config_static.yaml` and `config_custom.yaml`. The key parameters specific to the QC metrics block:
+The exact tools executed and parameters passed inside the Poppy pipeline are defined in `config_static.yaml` (with the reference genome and bedfiles configured in `config_custom.yaml`). The key parameters specific to the QC metrics block:
 
 ```yaml
+# ── config_static.yaml (static tool settings) ────────────────────────────────
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
@@ -146,6 +147,14 @@ picard_collect_hs_metrics:
 
 picard_collect_insert_size_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
+
+# ── config_custom.yaml (user paths) ──────────────────────────────────────────
+reference:
+  fasta: "/path/to/your/reference.fasta"
+  fai: "/path/to/your/reference.fasta.fai"
+  dict: "/path/to/your/reference.dict"
+  design_bed: "/path/to/your/design.bed"              # BED file used by Mosdepth
+  design_intervals: "/path/to/your/design.intervals"  # Interval list used by Picard CollectHsMetrics
 ```
 
 For the comprehensive configuration of Hydra-Genetics QC tools, see the full configuration files (`config_static.yaml` and `config_custom.yaml`).

@@ -72,9 +72,10 @@ The merged FASTQ files are consumed by the [alignment](alignment.md) module as i
 
 ## Configuration
 
-The relevant sections in `config_static.yaml`:
+The relevant sections in `config_static.yaml` (tool parameters and container definitions):
 
 ```yaml
+# ── config_static.yaml (static tool settings) ────────────────────────────────
 trimmer_software: "fastp_pe"
 
 fastp_pe:
