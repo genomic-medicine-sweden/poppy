@@ -12,7 +12,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 | -------------- | ------- |
 | alignment      | v0.5.1  |
 | annotation     | v1.0.0  |
-| cnv_sv         | v3.1.0  |
+| cnv_sv         | v3.1.1  |
 | filtering      | v0.3.0  |
 | prealignment   | v1.2.0  |
 | reports        | v1.1.1  |

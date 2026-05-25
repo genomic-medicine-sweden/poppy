@@ -366,10 +366,7 @@ properties:
           type: string
           format: uri-reference
       ref_genes:
-        type: array
-        items:
-          type: string
-          format: uri-reference
+        type: string
         description: >
           Path to refGene.txt file for gene annotation in CNV reports
       filtered_cnv_vcfs:

@@ -5,14 +5,14 @@ units: "units.tsv"
 output: "{{POPPY_HOME}}/config/output_files.yaml"
 general_report: "{{POPPY_HOME}}/config/output_files.yaml" # Not used but required from reports module v1.1.1
 
-default_container: "docker://hydragenetics/common:1.10.2"
+default_container: "docker://hydragenetics/common:4.0.0"
 
 trimmer_software: "fastp_pe"
 
 modules:
   alignment: v0.5.1
   annotation: v1.0.0
-  cnv_sv: v3.1.0
+  cnv_sv: v3.1.1
   filtering: v0.3.0
   prealignment: v1.2.0
   qc: v0.4.1
@@ -42,15 +42,15 @@ cnv_html_report:
   show_table: true
 
 cnvkit_batch:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 
 cnvkit_call:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
 
 cnvkit_vcf:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
   hom_del_limit: 0.47
   het_del_limit: 1.68
   dup_limit: 2.3
@@ -97,10 +97,15 @@ merge_cnv_json:
   annotations:
     - "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  germline_vcf_tbi: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz.tbi
   filtered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
+  filtered_cnv_vcfs_tbi:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz.tbi
   unfiltered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
+  unfiltered_cnv_vcfs_tbi:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"

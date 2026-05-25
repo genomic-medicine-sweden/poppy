@@ -240,8 +240,7 @@ gatk_collect_allelic_counts:
   SNP_interval: "/path/to/gnomad_SNP_interval.interval_list"
 
 merge_cnv_json:
-  ref_genes:
-    - "/path/to/refGene.txt"
+  ref_genes: "/path/to/refGene.txt"
 
 pindel2vcf:
   refname: "hg19"   # or GRCh38 — the reference genome name used in the VCF header
