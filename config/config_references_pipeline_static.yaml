@@ -7,9 +7,6 @@ output: "{{POPPY_HOME}}/config/output_files_references.yaml"
 modules:
   references: "f0aa9bc"
 
-reference:
-  mappability: "FILL_IN.bed" 
-
 bed_to_interval_list:
   container: docker://hydragenetics/gatk4:4.2.2.0
 
