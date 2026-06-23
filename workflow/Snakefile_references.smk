@@ -101,6 +101,19 @@ use rule purecn_bam_list from references as references_purecn_bam_list with:
     input:
         bam_list=get_bams(),
 
+rule references_tabix_bcftools_merge:
+    input:
+        "references/bcftools_merge/normal_db.vcf.gz",
+    output:
+        "references/bcftools_merge/normal_db.vcf.gz.tbi",
+    log:
+        "references/bcftools_merge/normal_db.vcf.gz.tbi.log",
+    container:
+        config.get("bcftools_merge", {}).get("container", config["default_container"])
+    conda:
+        "rules/envs/purecn.yaml"
+    shell:
+        "tabix -p vcf {input} &> {log}"
 
 use rule bcftools_merge from references as references_bcftools_merge with:
     input:
