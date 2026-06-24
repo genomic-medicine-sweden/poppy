@@ -38,7 +38,7 @@ use rule gatk_denoise_read_counts from cnv_sv as cnv_sv_gatk_denoise_read_counts
         hdf5Tumor="cnv_sv/gatk_collect_read_counts/{sample}_{type}.counts.hdf5",
 
 
-use rule cnvkit_batch from cnv_sv as cnv_sv_cnvkit_batch with:
+use rule cnv_sv_cnvkit_batch from pipeline with:
     input:
         bam="alignment/samtools_merge_bam/{sample}_{type}.bam",
         bai="alignment/samtools_merge_bam/{sample}_{type}.bam.bai",
