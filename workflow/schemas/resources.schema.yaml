@@ -117,6 +117,32 @@ properties:
         type: string
         description: parameters that should be forwarded
 
+  reference_rules_tabix_bcftools_merge:
+    type: object
+    description: parameters for reference_rules_tabix_bcftools_merge
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        description: name or path to docker/singularity container
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
   svdb_merge:
     type: object
     description: resource definitions for svdb_merge_wo_priority

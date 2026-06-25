@@ -118,7 +118,7 @@ properties:
             type: string
             description: tsv file with chr, pos, svtype, median, sd, num_obs of detected variants
 
-  references_tabix_bcftools_merge:
+  reference_rules_tabix_bcftools_merge:
     type: object
     description: rule to create a tabix index for the bcftools_merge normal_db vcf
     properties:
