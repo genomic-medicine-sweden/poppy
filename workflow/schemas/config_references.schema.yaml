@@ -25,6 +25,16 @@ properties:
       path to yaml file containing compute resource configuration
     format: uri-reference
 
+  bcftools_merge:
+    type: object
+    description: config for the bcftools_merge rule
+    properties:
+      container:
+        type: string
+        description: >
+          uri pointing to docker/apptainer image that should be used
+        format: uri-reference
+
   svdb_export:
     type: object
     description: >
