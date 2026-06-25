@@ -37,7 +37,7 @@ rule reference_rules_create_artifact_file_pindel:
     script:
         "../scripts/create_artifact_file_pindel.py"
 
-rule references_tabix_bcftools_merge:
+rule reference_rules_tabix_bcftools_merge:
     input:
         "references/bcftools_merge/normal_db.vcf.gz",
     output:
