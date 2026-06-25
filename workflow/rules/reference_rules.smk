@@ -37,6 +37,7 @@ rule reference_rules_create_artifact_file_pindel:
     script:
         "../scripts/create_artifact_file_pindel.py"
 
+
 rule reference_rules_tabix_bcftools_merge:
     input:
         "references/bcftools_merge/normal_db.vcf.gz",
@@ -57,12 +58,8 @@ rule reference_rules_tabix_bcftools_merge:
         mem_per_cpu=config.get("references_tabix_bcftools_merge", {}).get(
             "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
         ),
-        partition=config.get("references_tabix_bcftools_merge", {}).get(
-            "partition", config["default_resources"]["partition"]
-        ),
-        threads=config.get("references_tabix_bcftools_merge", {}).get(
-            "threads", config["default_resources"]["threads"]
-        ),
+        partition=config.get("references_tabix_bcftools_merge", {}).get("partition", config["default_resources"]["partition"]),
+        threads=config.get("references_tabix_bcftools_merge", {}).get("threads", config["default_resources"]["threads"]),
         time=config.get("references_tabix_bcftools_merge", {}).get("time", config["default_resources"]["time"]),
     message:
         "{rule}: index bcftools merge normal db vcf"
