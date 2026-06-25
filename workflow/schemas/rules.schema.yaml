@@ -2,6 +2,46 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
+  cnv_sv_cnvkit_batch:
+    type: object
+    description: rule to run cnvkit batch on a sample using a pre-built normal reference
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          bam:
+            type: string
+            description: merged bam file for the sample
+          bai:
+            type: string
+            description: bai index for the input bam
+          reference:
+            type: string
+            description: cnvkit normal reference file (.cnn)
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          antitarget_coverage:
+            type: string
+            description: antitarget coverage cnn file
+          bins:
+            type: string
+            description: bin-level copy number segment test file (.cns)
+          regions:
+            type: string
+            description: bin-level log2 copy ratios (.cnr)
+          segments:
+            type: string
+            description: segmented copy number file (.cns)
+          segments_called:
+            type: string
+            description: called copy number segments (.call.cns)
+          target_coverage:
+            type: string
+            description: target coverage cnn file
+
   pindel_processing_add_missing_csq:
     type: object
     description: rule to add any missing CSQ-field to a vep annotated pindel-vcf

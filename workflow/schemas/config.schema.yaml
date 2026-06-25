@@ -238,17 +238,23 @@ properties:
     description: >
       Configuration for the cnvkit_batch rule
     properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
       container:
         type: string
         description: >
           Name or path to container containing cnvkit executable
         format: uri-reference
-      normal_reference:
+      extra:
         type: string
-        description: >
-          Path to cnvkit normal reference file (.cnn), generated with reference pipeline
-        format: uri-reference
-        pattern: "\\.cnn$"
+        description: extra parameters to pass to cnvkit.py batch
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
       method:
         type: string
         description: >
@@ -263,6 +269,15 @@ properties:
           Path to cnvkit normal reference file (.cnn), generated with reference pipeline
         format: uri-reference
         pattern: "\\.cnn$"
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
     required:
       - method
       - normal_reference
