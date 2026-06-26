@@ -106,16 +106,16 @@ cnv_html_report:
   show_table: true
 
 cnvkit_batch:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.13"
   normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn" # created by the ref pipeline
   method: hybrid
   extra: ""
 
 cnvkit_call:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.13"
 
 cnvkit_vcf:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.13"
   hom_del_limit: 0.47
   het_del_limit: 1.68 # changed the value according to our config
   dup_limit: 2.3 # changed the value according to our config

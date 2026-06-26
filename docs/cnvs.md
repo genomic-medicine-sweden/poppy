@@ -26,7 +26,7 @@ Calculates copy number segmentation from targeted sequencing read depths using [
 
 | Item      | Value                                                                                                       |
 | --------- | ----------------------------------------------------------------------------------------------------------- |
-| Container | `hydragenetics/cnvkit:0.9.9`                                                                                |
+| Container | `hydragenetics/cnvkit:0.9.13`                                                                                |
 | Input     | `alignment/samtools_merge_bam/{sample}_{type}.bam`                                                          |
 | Input     | `snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz` |
 | Output    | `cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns`                                                          |
@@ -141,7 +141,7 @@ The relevant sections in `config.yaml` governing CNV calling, SVDB merging, Pind
 
 ```yaml
 cnvkit_batch:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.13"
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 

@@ -12,13 +12,13 @@ bed_to_interval_list:
   container: docker://hydragenetics/gatk4:4.2.2.0
 
 cnvkit_build_normal_reference:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 cnvkit_create_targets:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 cnvkit_create_anti_targets:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 collect_read_counts:
   container: docker://hydragenetics/gatk4:4.2.2.0
