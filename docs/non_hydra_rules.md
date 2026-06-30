@@ -10,6 +10,30 @@ These are custom rules created for Poppy to process the output from Pindel so th
 
 ### :snake: Rule
 
+Pindel requires the insert size in its config to exceed the read length, otherwise it raises a fatal error and the pipeline stops. This becomes a problem for FFPE samples, where the insert size is often shorter than the read length due to DNA fragmentation. This rule reads the Picard insert size metrics and, when `MEDIAN_INSERT_SIZE` falls below the configured `min_insert_size`, replaces both `MEDIAN_INSERT_SIZE` and `MEAN_INSERT_SIZE` with `replace_insert_size`. The adjusted metrics file is then passed to `pindel_generate_config` instead of the raw one.
+
+!!! note
+    Pindel uses the insert size as padding when clustering reads and expanding breakpoint search regions. Setting it to a value above the read length allows the pipeline to proceed, but the result should be interpreted with caution for samples with very short insert sizes. Pindel's own FAQ recommends 500 as a safe default when the true insert size is unknown.
+
+#SNAKEMAKE_RULE_SOURCE__pindel_processing__normalize_pindel_insert_size_metrics#
+
+#### :left_right_arrow: input / output files
+
+#SNAKEMAKE_RULE_TABLE__pindel_processing__normalize_pindel_insert_size_metrics#
+
+### :wrench: Configuration
+
+#### Software settings (`config.yaml`)
+
+#CONFIGSCHEMA__normalize_pindel_insert_size_metrics#
+
+#### Resources settings (`resources.yaml`)
+
+#RESOURCESSCHEMA__normalize_pindel_insert_size_metrics#
+
+
+### :snake: Rule
+
 #SNAKEMAKE_RULE_SOURCE__pindel_processing__pindel_processing_annotation_vep#
 
 #### :left_right_arrow: input / output files
