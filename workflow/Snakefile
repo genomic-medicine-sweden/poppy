@@ -16,13 +16,26 @@ include: "rules/common.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
+generate_report = config.get("generate_final_report", False)
+
+if generate_report:
+    include: "rules/report.smk"
+
 
 report: "report/workflow.rst"
 
 
+def _get_all_outputs():
+    outputs = [compile_output_file_list]
+    if generate_report:
+        sample_types = list({(row.sample, row.type) for row in units.itertuples()})
+        outputs += [f"reports/xlsx/{s}_{t}.xlsx" for s, t in sample_types]
+    return outputs
+
+
 rule all:
     input:
-        compile_output_file_list,
+        _get_all_outputs(),
 
 
 module alignment:
@@ -184,16 +197,18 @@ module qc:
 use rule * from qc as qc_*
 
 
+_maybe_temp = (lambda p: p) if generate_report else temp
+
 use rule mosdepth_bed from qc as qc_mosdepth_bed with:
     output:
-        bed=temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"),
-        bed_csi=temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz.csi"),
-        coverage=temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"),
-        coverage_csi=temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz.csi"),
-        thresholds=temp("qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"),
-        glob=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"),
-        region=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"),
-        summary=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"),
+        bed=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"),
+        bed_csi=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.regions.bed.gz.csi"),
+        coverage=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"),
+        coverage_csi=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz.csi"),
+        thresholds=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"),
+        glob=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"),
+        region=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"),
+        summary=_maybe_temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"),
     params:
         thresholds=config["mosdepth_bed"]["thresholds"],
 
