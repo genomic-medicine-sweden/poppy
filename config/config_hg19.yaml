@@ -214,6 +214,10 @@ picard_collect_insert_size_metrics:
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
 
+normalize_pindel_insert_size_metrics:
+  min_insert_size: 200
+  replace_insert_size: 250
+
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60" #x och B?

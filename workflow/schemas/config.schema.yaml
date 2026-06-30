@@ -506,6 +506,17 @@ properties:
       - extra
       - include_bed
 
+  normalize_pindel_insert_size_metrics:
+    type: object
+    description: Configuration for normalize_pindel_insert_size_metrics rule
+    properties:
+      min_insert_size:
+        type: number
+        description: Minimum allowed insert size before replacement
+      replace_insert_size:
+        type: number
+        description: Insert size value used when below minimum threshold
+
   pindel_processing_add_missing_csq:
     type: object
     description: parameters for pindel_processing_add_missing_csq
