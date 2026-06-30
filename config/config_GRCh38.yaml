@@ -8,6 +8,16 @@ default_container: "docker://hydragenetics/common:1.10.2"
 
 trimmer_software: "fastp_pe"
 
+modules:
+  alignment: v0.5.1
+  annotation: v1.0.0
+  cnv_sv: v3.1.0
+  filtering: v0.3.0
+  prealignment: v1.2.0
+  qc: v0.4.1
+  reports: v1.1.1
+  snv_indels_gms: v0.6.0
+
 reference:
   fasta: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta"
   fai: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.fai"
@@ -322,6 +332,10 @@ picard_collect_insert_size_metrics:
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.0"
+
+normalize_pindel_insert_size_metrics:
+  min_insert_size: 200
+  replace_insert_size: 250
 
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
