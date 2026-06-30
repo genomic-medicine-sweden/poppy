@@ -92,4 +92,3 @@ if __name__ == "__main__":
             f"MEDIAN_INSERT_SIZE was {original_value}; no adjustment needed."
         )
     logging.info(f"Wrote adjusted metrics to {output_path}")
-
