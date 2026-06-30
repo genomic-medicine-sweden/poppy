@@ -56,6 +56,8 @@ Estimates tumor purity and ploidy, and integrates read depth with B-allele frequ
 
 Detects long insertions, deletions, and structural variants for a specific targeted set of myeloid genes using [Pindel](https://github.com/genome/pindel).
 
+Before calling, the Picard insert size metrics are checked by a local rule (`normalize_pindel_insert_size_metrics`). Pindel requires the insert size to exceed the read length; FFPE samples can have insert sizes shorter than read lengths due to DNA fragmentation, which would otherwise cause Pindel to crash. If the measured `MEDIAN_INSERT_SIZE` is below the configured threshold (`min_insert_size`), it is replaced with a safe fallback value (`replace_insert_size`) before being passed to `pindel_generate_config`.
+
 | Item      | Value                                                       |
 | --------- | ----------------------------------------------------------- |
 | Container | `hydragenetics/pindel:0.2.5b9`                              |
@@ -162,6 +164,10 @@ purecn:
   intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
   mapping_bias_file: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_mapping_bias.rds"
   extra: "--model betabin --post-optimize"
+
+normalize_pindel_insert_size_metrics:
+  min_insert_size: 200
+  replace_insert_size: 250
 
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
