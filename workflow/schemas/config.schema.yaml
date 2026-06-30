@@ -366,7 +366,7 @@ properties:
           type: string
           format: uri-reference
       ref_genes:
-        type: array
+        type: string
         items:
           type: string
           format: uri-reference
