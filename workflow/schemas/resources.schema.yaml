@@ -14,7 +14,10 @@ properties:
         description: default memory used per cpu for a rule
       partition:
         type: string
-        description: default partition to use on the cluser for a rule
+        description: default partition to use on the cluster for a rule
+      queue:
+        type: string
+        description: default cluster queue for a rule
       threads:
         type: integer
         description: default number of threads that will be used by a rule
@@ -35,6 +38,9 @@ properties:
       partition:
         type: string
         description: partition to use on cluster
+      queue:
+        type: string
+        description: queue to use on cluster
       threads:
         type: integer
         description: number of threads to be available
@@ -56,6 +62,9 @@ properties:
       partition:
         type: string
         description: partition to use on cluster
+      queue:
+        type: string
+        description: queue to use on cluster
       threads:
         type: integer
         description: number of threads to be available
@@ -76,6 +85,9 @@ properties:
       partition:
         type: string
         description: partition to use on cluster
+      queue:
+        type: string
+        description: queue to use on cluster
       threads:
         type: integer
         description: number of threads to be available
@@ -96,6 +108,9 @@ properties:
       partition:
         type: string
         description: partition to use on cluster
+      queue:
+        type: string
+        description: queue to use on cluster
       threads:
         type: integer
         description: number of threads to be available
@@ -117,6 +132,50 @@ properties:
         type: string
         description: parameters that should be forwarded
 
+  report_tabix_vcf:
+    type: object
+    description: resource definitions for report_tabix_vcf (standalone mode only)
+    properties:
+      queue:
+        type: string
+        description: queue to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+
+  report_mosdepth:
+    type: object
+    description: resource definitions for report_mosdepth (standalone mode only)
+    properties:
+      queue:
+        type: string
+        description: queue to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+
+  report_bedtools_intersect:
+    type: object
+    description: resource definitions for report_bedtools_intersect
+    properties:
+      queue:
+        type: string
+        description: queue to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+
+  results_report:
+    type: object
+    description: resource definitions for report_xlsx
+    properties:
+      queue:
+        type: string
+        description: queue to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+
   svdb_merge:
     type: object
     description: resource definitions for svdb_merge_wo_priority
@@ -130,6 +189,9 @@ properties:
       partition:
         type: string
         description: partition to use on cluster
+      queue:
+        type: string
+        description: queue to use on cluster
       threads:
         type: integer
         description: number of threads to be available
