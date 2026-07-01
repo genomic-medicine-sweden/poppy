@@ -34,10 +34,16 @@ mem, time) live in `config/resources_report.yaml`, which is referenced from
 | `report_cnv.cnvkit_cns` | path pattern | Path pattern for CNVkit `.cns` file; supports `{sample}`, `{type}`, `{tc_method}` |
 | `report_cnv.gatk_seg` | path pattern | Path pattern for GATK ModelSegments `.seg` file |
 | `report_cnv.scatter_png` | `null` | Path pattern for CNVkit scatter PNG to embed; null to skip |
-| `report_igv.enabled` | `false` | When true, generates IGV screenshots (standalone mode only) |
-| `report_igv.genome` | `hg38` | IGV genome name or path to a `.genome` file |
-| `report_igv.padding` | `40` | Base pairs to show on each side of each variant |
-| `report_igv.container` | `default_container` | Container image providing IGV with `xvfb-run` |
+| `bamsnap.enabled` | `false` | When true, runs bamsnap and adds a bamsnap sheet + combined PDF to the report |
+| `bamsnap.margin` | `50` | Base pairs to show on each side of each variant position |
+| `bamsnap.extra` | see config | Extra arguments passed to bamsnap |
+| `bamsnap.container` | `default_container` | Container image providing the bamsnap executable |
+| `bamsnap_create_pos_list.af` | `0.05` | Minimum allele frequency for a PASS variant to be included in snapshots |
+| `bamsnap_create_pos_list.container` | `default_container` | Container image providing pysam |
+| `bamsnap_samtools_view_dedup.container` | `default_container` | Container image providing samtools (deduplication step) |
+| `bamsnap_downsample_bam.max_reads` | `6000000` | Downsample BAM to this many reads before running bamsnap |
+| `bamsnap_downsample_bam.container` | `default_container` | Container image providing samtools (downsampling step) |
+| `bamsnap_pdf.container` | `default_container` | Container image providing Python with Pillow (PDF generation) |
 | `report_mosdepth.container` | `default_container` | Container for re-running mosdepth in standalone mode |
 
 `sequenceid` is derived automatically from the `flowcell` column in `units.tsv` in both
@@ -119,7 +125,11 @@ temporary.
 
 ## Output
 
-One Excel workbook per sample/type pair: `reports/xlsx/{sample}_{type}.xlsx`
+| File | When |
+|------|------|
+| `results/report/{sample}_{type}.xlsx` | Always |
+| `results/bamsnap/{sample}_{type}/` | `bamsnap.enabled: true` |
+| `results/bamsnap/{sample}_{type}.pdf` | `bamsnap.enabled: true` |
 
 ### Sheets
 
@@ -139,8 +149,7 @@ One Excel workbook per sample/type pair: `reports/xlsx/{sample}_{type}.xlsx`
 | **Hotspot Coverage** | Per-base coverage across hotspot regions | `results_report_xlsx.hotspot_bed` set |
 | **GATK CNV** | GATK ModelSegments copy-number calls | `report_cnv.tc_method` set |
 | **CNVkit** | CNVkit copy-number calls | `report_cnv.tc_method` set |
-
-| **IGV** | Per-variant IGV screenshots | `report_igv.enabled: true` (standalone only) |
+| **bamsnap** | Per-variant BAM screenshots with variant details; all PNGs also combined into a PDF | `bamsnap.enabled: true` |
 
 ## Resource overrides
 

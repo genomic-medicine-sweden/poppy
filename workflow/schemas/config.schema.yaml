@@ -577,7 +577,7 @@ properties:
   bamsnap:
     type: object
     description: >
-      Settings for the bamsnap screenshot sheet (standalone mode only).
+      Settings for the bamsnap screenshot sheet.
       Set enabled: true to generate per-variant BAM screenshots with bamsnap.
     properties:
       enabled:
@@ -599,7 +599,7 @@ properties:
   bamsnap_create_pos_list:
     type: object
     description: >
-      Settings for the bamsnap position list creation rule (standalone mode only).
+      Settings for the bamsnap position list creation rule.
     properties:
       af:
         type: string
@@ -612,7 +612,7 @@ properties:
   bamsnap_samtools_view_dedup:
     type: object
     description: >
-      Settings for the BAM deduplication step before bamsnap (standalone mode only).
+      Settings for the BAM deduplication step before bamsnap.
     properties:
       extra:
         type: string
@@ -625,7 +625,7 @@ properties:
   bamsnap_downsample_bam:
     type: object
     description: >
-      Settings for the BAM downsampling step before bamsnap (standalone mode only).
+      Settings for the BAM downsampling step before bamsnap.
     properties:
       max_reads:
         type: integer
@@ -639,6 +639,17 @@ properties:
       container:
         type: string
         description: Container image providing samtools
+        format: uri-reference
+
+  bamsnap_pdf:
+    type: object
+    description: >
+      Settings for the bamsnap PDF generation rule.
+      Combines all per-variant bamsnap PNGs into a single multi-page PDF.
+    properties:
+      container:
+        type: string
+        description: Container image providing Python with Pillow
         format: uri-reference
 
   mosdepth_bed:

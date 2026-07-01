@@ -70,9 +70,9 @@ report_cnv:
   # Optional whole-genome scatter plot PNG to embed in the CNVkit sheet.
   scatter_png: null  # e.g. "cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.scatter.png"
 
-# BAM snapshot sheet (standalone mode only).
-# Set enabled: true to generate per-variant BAM screenshots with bamsnap
-# and add a "bamsnap" sheet to the Excel report linking to the HTML output.
+# BAM snapshot sheet (integrated and standalone mode).
+# Set enabled: true to generate per-variant BAM screenshots with bamsnap,
+# add a "bamsnap" sheet to the Excel report, and produce a combined PDF.
 bamsnap:
   enabled: false
   margin: "50"            # bp on each side of the variant

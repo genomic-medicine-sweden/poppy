@@ -85,8 +85,19 @@ if not _integrated:
             "reports/xlsx/{sample}_{type}.xlsx",
         output:
             "results/report/{sample}_{type}.xlsx",
+        log:
+            "results/report/{sample}_{type}.xlsx.log",
+        container:
+            config["default_container"]
+        threads: config["default_resources"]["threads"]
+        resources:
+            mem_mb=config["default_resources"]["mem_mb"],
+            mem_per_cpu=config["default_resources"]["mem_per_cpu"],
+            partition=config["default_resources"]["partition"],
+            threads=config["default_resources"]["threads"],
+            time=config["default_resources"]["time"],
         shell:
-            "cp {input} {output}"
+            "cp {input} {output} 2>{log}"
 
     rule report_tabix_vcf:
         """Create tabix index for VCF files in results/vcf/ if missing."""
@@ -279,6 +290,15 @@ if _bamsnap_cfg.get("enabled", False):
             "bamsnap/bamsnap/{sample}_{type}.log",
         wildcard_constraints:
             sample="(HD829).*",
+        container:
+            config["default_container"]
+        threads: config["default_resources"]["threads"]
+        resources:
+            mem_mb=config["default_resources"]["mem_mb"],
+            mem_per_cpu=config["default_resources"]["mem_per_cpu"],
+            partition=config["default_resources"]["partition"],
+            threads=config["default_resources"]["threads"],
+            time=config["default_resources"]["time"],
         shell:
             "mkdir -p {output.results_dir} 2>{log}"
 
@@ -291,14 +311,14 @@ if _bamsnap_cfg.get("enabled", False):
         log:
             "bamsnap/bamsnap/{sample}_{type}.pdf.log",
         container:
-            config.get("results_report", {}).get("container", config["default_container"])
-        threads: 1
+            config.get("bamsnap_pdf", {}).get("container", config["default_container"])
+        threads: config.get("bamsnap_pdf", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            mem_mb=config.get("results_report", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-            mem_per_cpu=config.get("results_report", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
-            partition=config.get("results_report", {}).get("partition", config["default_resources"]["partition"]),
-            threads=1,
-            time=config.get("results_report", {}).get("time", config["default_resources"]["time"]),
+            mem_mb=config.get("bamsnap_pdf", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("bamsnap_pdf", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("bamsnap_pdf", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("bamsnap_pdf", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("bamsnap_pdf", {}).get("time", config["default_resources"]["time"]),
         script:
             "../scripts/report_bamsnap_pdf.py"
 
@@ -308,8 +328,19 @@ if _bamsnap_cfg.get("enabled", False):
             "bamsnap/bamsnap/{sample}_{type}/",
         output:
             directory("results/bamsnap/{sample}_{type}/"),
+        log:
+            "results/bamsnap/{sample}_{type}.log",
+        container:
+            config["default_container"]
+        threads: config["default_resources"]["threads"]
+        resources:
+            mem_mb=config["default_resources"]["mem_mb"],
+            mem_per_cpu=config["default_resources"]["mem_per_cpu"],
+            partition=config["default_resources"]["partition"],
+            threads=config["default_resources"]["threads"],
+            time=config["default_resources"]["time"],
         shell:
-            "cp -r {input} {output}"
+            "cp -r {input} {output} 2>{log}"
 
     rule report_copy_bamsnap_pdf:
         """Copy bamsnap PDF to results/bamsnap/ (standalone mode)."""
@@ -317,8 +348,19 @@ if _bamsnap_cfg.get("enabled", False):
             "bamsnap/bamsnap/{sample}_{type}.pdf",
         output:
             "results/bamsnap/{sample}_{type}.pdf",
+        log:
+            "results/bamsnap/{sample}_{type}.pdf.log",
+        container:
+            config["default_container"]
+        threads: config["default_resources"]["threads"]
+        resources:
+            mem_mb=config["default_resources"]["mem_mb"],
+            mem_per_cpu=config["default_resources"]["mem_per_cpu"],
+            partition=config["default_resources"]["partition"],
+            threads=config["default_resources"]["threads"],
+            time=config["default_resources"]["time"],
         shell:
-            "cp {input} {output}"
+            "cp {input} {output} 2>{log}"
 
 
 if _hotspot_bed:
