@@ -1,6 +1,7 @@
 # Report add-on configuration for GMS-Poppy.
 #
-# Provide this file alongside the main genome config in BOTH run modes:
+# Provide this file alongside the main genome config in BOTH run modes.
+# resources_report.yaml is referenced below and loaded automatically.
 #
 #   Integrated (runs report at end of main pipeline):
 #     snakemake --snakefile workflow/Snakefile \
@@ -18,6 +19,7 @@
 # Triggers integrated mode when provided to the main Snakefile.
 # Has no effect when provided to Snakefile_report (always runs standalone).
 generate_final_report: true
+resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
 
 results_report_xlsx:
   wanted_transcripts: null  # path to gene -> preferred-transcript TSV, or null
@@ -43,6 +45,12 @@ results_report_xlsx:
     "NM_000546.6(TP53):c.672G>A":   ["chr17",   7674859, "C", "T"]
     "NM_000546.6(TP53):c.993G>A":   ["chr17",   7673535, "C", "T"]
 
+  # Hotspot coverage sheet.
+  # Set to a BED file of hotspot regions to add a "Hotspot Coverage" sheet
+  # showing mosdepth per-base coverage across those regions.
+  # Set to null to skip the sheet.
+  hotspot_bed: null   # e.g. "/path/to/hotspot_regions.bed"
+
 # Uncomment to enable panel sub-sheets (CLL / Myeloid / Hotspot).
 # The corresponding filtered VCFs must already exist (produced by
 # bcftools_filter_include_region in the main pipeline).
@@ -50,13 +58,6 @@ results_report_xlsx:
 #   cll:     "/path/to/cll.bed"
 #   myeloid: "/path/to/myeloid.bed"
 #   hotspot: "/path/to/hotspot.bed"
-
-# Hotspot coverage sheet.
-# Set hotspot_bed to a BED file of hotspot regions to add a "Hotspot Coverage"
-# sheet showing mosdepth per-base coverage across those regions.
-# Set to null to skip the sheet.
-results_report_xlsx:
-  hotspot_bed: null   # e.g. "/path/to/hotspot_regions.bed"
 
 # CNV sheets (GATK + CNVkit).
 # Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology").
@@ -78,14 +79,9 @@ report_igv:
   padding: 40             # bp on each side of the variant
   container: "docker://ghcr.io/igvteam/igv:2.17.4"
 
-# Per-rule resource overrides. Queue is inherited from default_resources.queue
-# in resources.yaml if not set here.
+# Container for re-running mosdepth in standalone mode.
+# Threads and other resources are set in resources_report.yaml.
 report_mosdepth:
-  threads: 4
   container: "docker://hydragenetics/mosdepth:0.3.2"
 
-report_bedtools_intersect:
-  threads: 1
 
-results_report:
-  threads: 1

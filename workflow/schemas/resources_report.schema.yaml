@@ -1,0 +1,166 @@
+$schema: http://json-schema.org/draft-04/schema#
+description: Resource settings for the Poppy report add-on rules
+type: object
+properties:
+  default_resources:
+    type: object
+    description: Default resources applied to all report rules unless overridden
+    properties:
+      mem_mb:
+        type: integer
+        description: default memory used for a rule
+      mem_per_cpu:
+        type: integer
+        description: default memory used per cpu for a rule
+      partition:
+        type: string
+        description: default partition to use on the cluster for a rule
+      threads:
+        type: integer
+        description: default number of threads that will be used by a rule
+      time:
+        type: string
+        description: default max execution time for a rule
+
+  report_tabix_vcf:
+    type: object
+    description: resource definitions for report_tabix_vcf (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  report_mosdepth:
+    type: object
+    description: resource definitions for report_mosdepth (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  report_bedtools_intersect:
+    type: object
+    description: resource definitions for report_bedtools_intersect
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  report_bedtools_intersect_hotspot:
+    type: object
+    description: resource definitions for report_bedtools_intersect_hotspot
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  report_igv_batch:
+    type: object
+    description: resource definitions for report_igv_batch (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  report_igv:
+    type: object
+    description: resource definitions for report_igv (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  results_report:
+    type: object
+    description: resource definitions for report_xlsx
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+required:
+  - default_resources

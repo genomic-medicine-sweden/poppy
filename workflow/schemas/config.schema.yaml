@@ -110,6 +110,35 @@ properties:
       Path to resources.yaml file
     format: uri-reference
 
+  resources_report:
+    type: string
+    description: >
+      Path to resources_report.yaml file containing per-rule resource overrides
+      (threads, mem_mb, mem_per_cpu, partition, time) for the report add-on rules
+    format: uri-reference
+
+  sequenceid:
+    type: string
+    description: >
+      Sequencing run identifier embedded in the report Version sheet.
+      When not set, it is derived automatically from the flowcell column in units.tsv.
+
+  poppy_version:
+    type: string
+    description: >
+      Pipeline version string shown in the report Version sheet (e.g. "2.0.0").
+      Typically set in the main Snakefile via config["poppy_version"].
+
+  bcftools_filter_include_region:
+    type: object
+    description: >
+      Optional panel BED files used to filter variants to a sub-panel.
+      Each key is a panel name (e.g. cll, myeloid, hotspot); value is the path to
+      the corresponding BED file. When set, a matching sub-sheet is added to the report.
+    additionalProperties:
+      type: string
+      format: uri-reference
+
   samples:
     type: string
     description: >
@@ -433,6 +462,27 @@ properties:
           items: {}
           minItems: 4
           maxItems: 4
+      hotspot_bed:
+        type: [string, "null"]
+        description: >
+          Path to a BED file of hotspot regions. When set, adds a Hotspot Coverage
+          sheet showing mosdepth per-base coverage across those regions.
+          Set to null to skip.
+        format: uri-reference
+
+  report_tabix_vcf:
+    type: object
+    description: >
+      Resource overrides for the report_tabix_vcf rule (standalone mode only).
+      Indexes VCF files in results/vcf/ that are missing a .tbi index.
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: Container image providing tabix
+        format: uri-reference
 
   report_mosdepth:
     type: object
@@ -447,12 +497,6 @@ properties:
         description: >
           Name or path to container containing the mosdepth executable
         format: uri-reference
-      queue:
-        type: string
-        description: Cluster queue to submit the job to
-      threads:
-        type: integer
-        description: Number of threads to allocate
 
   report_bedtools_intersect:
     type: object
@@ -470,12 +514,6 @@ properties:
       extra:
         type: string
         description: Extra arguments to pass to bedtools intersect
-      queue:
-        type: string
-        description: Cluster queue to submit the job to
-      threads:
-        type: integer
-        description: Number of threads to allocate
 
   results_report:
     type: object
@@ -490,12 +528,87 @@ properties:
         description: >
           Name or path to container for the report_xlsx rule
         format: uri-reference
-      queue:
-        type: string
-        description: Cluster queue to submit the job to
-      threads:
+
+  report_bedtools_intersect_hotspot:
+    type: object
+    description: >
+      Container and extra-argument overrides for the hotspot coverage bedtools intersect rule.
+      Active only when results_report_xlsx.hotspot_bed is set.
+    properties:
+      benchmark_repeats:
         type: integer
-        description: Number of threads to allocate
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: >
+          Name or path to container containing the bedtools executable
+        format: uri-reference
+      extra:
+        type: string
+        description: Extra arguments to pass to bedtools intersect
+
+  report_cnv:
+    type: object
+    description: >
+      Settings for the CNV sheets (GATK CNV and CNVkit).
+      Set tc_method to enable; leave null to skip CNV sheets entirely.
+    properties:
+      tc_method:
+        type: [string, "null"]
+        description: >
+          Tumour-content method used (e.g. "purecn" or "pathology").
+          Set to null to disable CNV sheets.
+      cnvkit_cns:
+        type: string
+        description: >
+          Path pattern for CNVkit .cns file.
+          Supports {sample}, {type}, {tc_method} placeholders.
+      gatk_seg:
+        type: string
+        description: >
+          Path pattern for GATK ModelSegments .seg file.
+          Supports {sample}, {type}, {tc_method} placeholders.
+      scatter_png:
+        type: [string, "null"]
+        description: >
+          Path pattern for a CNVkit scatter plot PNG to embed in the CNVkit sheet.
+          Supports {sample}, {type}, {tc_method} placeholders. Set to null to skip.
+
+  report_igv:
+    type: object
+    description: >
+      Settings for the IGV screenshot sheet (standalone mode only).
+      Set enabled: true to generate per-variant IGV screenshots.
+    properties:
+      enabled:
+        type: boolean
+        description: When true, generate IGV screenshots for each PASS variant
+        default: false
+      genome:
+        type: string
+        description: IGV genome name or path to a .genome file (e.g. "hg38")
+      padding:
+        type: integer
+        description: Base pairs to show on each side of the variant position
+      container:
+        type: string
+        description: >
+          Container image providing IGV with xvfb-run (e.g. docker://ghcr.io/igvteam/igv:2.17.4)
+        format: uri-reference
+
+  report_igv_batch:
+    type: object
+    description: >
+      Resource overrides for the report_igv_batch rule (standalone mode only).
+      Creates an IGV batch script listing all PASS variants.
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: Container image providing tabix/bcftools for reading VCFs
+        format: uri-reference
 
   mosdepth_bed:
     type: object

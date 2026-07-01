@@ -5,34 +5,68 @@ Generates per-sample Excel reports from a Poppy run. Runs in two modes:
 - **Integrated** — report is produced at the end of the main pipeline run
 - **Standalone** — run separately after the main pipeline has completed
 
-Report-specific settings (non-coding regions, synonymous positions, resource
-overrides) live in a dedicated `config/config_report.yaml`. This file is
-provided alongside the main genome config in both modes.
+Report-specific settings (non-coding regions, synonymous positions, optional sheets)
+live in `config/config_report.yaml`. Per-rule resource settings (threads, partition,
+mem, time) live in `config/resources_report.yaml`, which is referenced from
+`config_report.yaml` and loaded automatically — no extra `--configfile` needed.
 
 ## Configuration files
 
 | File | Purpose |
 |------|---------|
 | `config/config_GRCh38.yaml` | Main pipeline settings (reference paths, tools, filters) |
-| `config/config_report.yaml` | Report settings: regions, positions, thresholds, resources |
+| `config/resources.yaml` | Default resource settings for the main pipeline |
+| `config/config_report.yaml` | Report settings: regions, positions, optional sheets, containers |
+| `config/resources_report.yaml` | Per-rule resource overrides (threads, mem, partition, time) for the report rules |
 
 ### config_report.yaml keys
 
 | Key | Default | Description |
 |-----|---------|-------------|
 | `generate_final_report` | `true` | Triggers integrated mode when provided to the main Snakefile |
+| `resources_report` | auto | Path to `resources_report.yaml`; set via `{{POPPY_HOME}}` template — loaded automatically |
 | `results_report_xlsx.wanted_transcripts` | `null` | Path to gene → preferred-transcript TSV, or null |
 | `results_report_xlsx.non_coding_regions` | pre-filled | Regions shown in the Intron sheet (genome-build specific) |
 | `results_report_xlsx.synonymous_positions` | pre-filled | Positions shown in the Synonymous sheet (genome-build specific) |
+| `results_report_xlsx.hotspot_bed` | `null` | BED file of hotspot regions; enables the Hotspot Coverage sheet |
+| `bcftools_filter_include_region` | unset | Map of panel name → BED path; enables CLL/Myeloid/Hotspot variant sub-sheets |
+| `report_cnv.tc_method` | `null` | Tumour-content method (e.g. `purecn`); enables GATK CNV and CNVkit sheets |
+| `report_cnv.cnvkit_cns` | path pattern | Path pattern for CNVkit `.cns` file; supports `{sample}`, `{type}`, `{tc_method}` |
+| `report_cnv.gatk_seg` | path pattern | Path pattern for GATK ModelSegments `.seg` file |
+| `report_cnv.scatter_png` | `null` | Path pattern for CNVkit scatter PNG to embed; null to skip |
+| `report_igv.enabled` | `false` | When true, generates IGV screenshots (standalone mode only) |
+| `report_igv.genome` | `hg38` | IGV genome name or path to a `.genome` file |
+| `report_igv.padding` | `40` | Base pairs to show on each side of each variant |
+| `report_igv.container` | `default_container` | Container image providing IGV with `xvfb-run` |
+| `report_mosdepth.container` | `default_container` | Container for re-running mosdepth in standalone mode |
 
-`sequenceid` is derived automatically from the `flowcell` column in `units.tsv`.
+`sequenceid` is derived automatically from the `flowcell` column in `units.tsv` in both
+integrated and standalone modes. Override by setting `sequenceid:` explicitly in config.
 
 Coordinates in `config_report.yaml` are **GRCh38**. For hg19 runs, replace
 with liftover equivalents before use.
 
+### resources_report.yaml keys
+
+Per-rule overrides for `threads`, `mem_mb`, `mem_per_cpu`, `partition`, and `time`.
+All values fall back to `default_resources` if not set for a specific rule.
+Adjust `partition` and memory to match your cluster:
+
+```yaml
+default_resources:
+  threads: 1
+  time: "01:00:00"
+  mem_mb: 6144
+  mem_per_cpu: 6144
+  partition: low
+
+report_mosdepth:
+  threads: 4
+```
+
 ### Optional panel sub-sheets
 
-Uncomment in `config_report.yaml` to add CLL, Myeloid, and/or Hotspot sheets.
+Uncomment in `config_report.yaml` to add CLL, Myeloid, and/or Hotspot variant sheets.
 The corresponding filtered VCFs must already exist (produced by
 `bcftools_filter_include_region` in the main pipeline).
 
@@ -45,18 +79,17 @@ bcftools_filter_include_region:
 
 ## Integrated mode
 
-Provide `config_report.yaml` alongside the main config when running the main
-pipeline. The `generate_final_report: true` key in that file triggers the
-report rules automatically. Mosdepth outputs are kept non-temporary so the
-report can consume them without re-running.
+Provide `config_report.yaml` and `resources_report.yaml` alongside the main configs
+when running the main pipeline. The `generate_final_report: true` key triggers the
+report rules automatically. Mosdepth outputs are kept non-temporary so the report
+can consume them without re-running.
 
 ```bash
 snakemake \
   --snakefile /path/to/poppy/workflow/Snakefile \
   --configfile config/config_GRCh38.yaml \
   --configfile config/config_report.yaml \
-  --profile profiles/grid_engine \
-  -j 100
+  --profile profiles/grid_engine
 ```
 
 ## Standalone mode
@@ -77,13 +110,8 @@ snakemake \
   --snakefile /path/to/poppy_report/workflow/Snakefile_report \
   --configfile config/config_GRCh38.yaml \
   --configfile config/config_report.yaml \
-  --profile profiles/grid_engine \
-  -j 4
+  --profile profiles/grid_engine
 ```
-
-`config_report.yaml` can be omitted if you do not need the non-coding or
-synonymous sheets and are happy with default resource settings; all keys
-have safe fallback defaults.
 
 In standalone mode `report_mosdepth` re-runs mosdepth from `results/bam/`
 into `qc/mosdepth_report/` since the main pipeline's mosdepth outputs are
@@ -95,21 +123,29 @@ One Excel workbook per sample/type pair: `reports/xlsx/{sample}_{type}.xlsx`
 
 ### Sheets
 
-| Sheet | Content |
-|-------|---------|
-| **Overview** | Run metadata, coverage summary, duplication rate, breadth of coverage at configured thresholds, links to all other sheets |
-| **SNVs** | All somatic SNV/indel calls; pre-filtered to PASS + AF ≥ 2 % by default |
-| **Pindel** | Structural variants from Pindel; pre-filtered to PASS by default |
-| **Intron** | Intron and non-coding variants in regions defined by `non_coding_regions` |
-| **Synonymous** | Synonymous variants at positions defined by `synonymous_positions` |
-| **Low Coverage** | Regions with coverage below the first configured threshold |
-| **Coverage** | Average coverage per exon from the coding-exon BED |
-| **QCI** | Empty template for manual QCI entry |
-| **CLL / Myeloid / Hotspot** | Panel-specific variant sheets (only when `bcftools_filter_include_region` is configured) |
-| **Known variants** | Pre-defined expected variants for the HD829 control sample only |
+| Sheet | Content | When |
+|-------|---------|------|
+| **Overview** | Run metadata, coverage summary, duplication rate, breadth of coverage at configured thresholds | Always |
+| **SNVs** | All somatic SNV/indel calls; pre-filtered to PASS + AF ≥ 2 % by default | Always |
+| **Pindel** | Structural variants from Pindel; pre-filtered to PASS by default | Always |
+| **Intron** | Intron and non-coding variants in regions defined by `non_coding_regions` | Always |
+| **Synonymous** | Synonymous variants at positions defined by `synonymous_positions` | Always |
+| **Low Coverage** | Regions with coverage below the first configured threshold | Always |
+| **Coverage** | Average coverage per exon from the coding-exon BED | Always |
+| **QCI** | Empty template for manual QCI entry | Always |
+| **Version** | Pipeline version, reference, VEP databases, filter files, tool containers | Always |
+| **Known variants** | Pre-defined expected variants for the HD829 control sample | HD829 only |
+| **CLL / Myeloid / Hotspot** | Panel-specific variant sheets | `bcftools_filter_include_region` configured |
+| **Hotspot Coverage** | Per-base coverage across hotspot regions | `results_report_xlsx.hotspot_bed` set |
+| **GATK CNV** | GATK ModelSegments copy-number calls | `report_cnv.tc_method` set |
+| **CNVkit** | CNVkit copy-number calls | `report_cnv.tc_method` set |
+
+| **IGV** | Per-variant IGV screenshots | `report_igv.enabled: true` (standalone only) |
 
 ## Resource overrides
 
-Per-rule thread counts and queue assignments are set in `config_report.yaml`
-under `report_mosdepth`, `report_bedtools_intersect`, and `results_report`.
-The cluster queue defaults to `default_resources.queue` from `resources.yaml`.
+Per-rule resource settings (`threads`, `mem_mb`, `mem_per_cpu`, `partition`, `time`)
+are set in `resources_report.yaml`, which is loaded automatically via the
+`resources_report` key in `config_report.yaml`. Container paths for rule-specific
+tools are set in `config_report.yaml`. All values fall back to `default_resources`
+if not set for a specific rule.

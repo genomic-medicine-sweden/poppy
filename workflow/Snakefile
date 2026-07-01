@@ -20,6 +20,8 @@ include: "rules/pindel_processing.smk"
 generate_report = config.get("generate_final_report", False)
 
 if generate_report:
+    if config.get("resources_report"):
+        config = load_resources(config, config["resources_report"])
 
     include: "rules/report.smk"
 

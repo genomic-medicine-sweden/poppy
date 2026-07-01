@@ -76,7 +76,9 @@ def _get_optional_inputs(wildcards):
     return d
 
 
-rule report_tabix_vcf:
+if not _integrated:
+
+    rule report_tabix_vcf:
         """Create tabix index for VCF files in results/vcf/ if missing."""
         input:
             "results/vcf/{vcf_file}.vcf.gz",
@@ -86,14 +88,15 @@ rule report_tabix_vcf:
             "results/vcf/{vcf_file}.vcf.gz.tbi.log",
         container:
             config["default_container"]
-        threads: 1
+        threads: config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            queue=config.get("report_tabix_vcf", {}).get("queue", config["default_resources"].get("queue", "development.q")),
+            mem_mb=config.get("report_tabix_vcf", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_tabix_vcf", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("report_tabix_vcf", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_tabix_vcf", {}).get("time", config["default_resources"]["time"]),
         shell:
             "tabix -p vcf {input} &> {log}"
-
-
-if not _integrated:
 
     rule report_mosdepth:
         """
@@ -126,7 +129,11 @@ if not _integrated:
             config.get("report_mosdepth", {}).get("container", config["default_container"])
         threads: config.get("report_mosdepth", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            queue=config.get("report_mosdepth", {}).get("queue", config["default_resources"].get("queue", "development.q")),
+            mem_mb=config.get("report_mosdepth", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_mosdepth", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("report_mosdepth", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("report_mosdepth", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_mosdepth", {}).get("time", config["default_resources"]["time"]),
         params:
             prefix="qc/mosdepth_report/{sample}_{type}",
             thresholds=config["mosdepth_bed"]["thresholds"],
@@ -140,6 +147,58 @@ if not _integrated:
                 {params.prefix} \
                 {input.bam} &>{log}
             """
+
+if not _integrated and _igv_cfg.get("enabled", False):
+
+    rule report_igv_batch:
+        """Create an IGV batch script for all PASS SNV and Pindel variants."""
+        input:
+            vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz",
+            vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
+            pindel="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz",
+            pindel_tbi="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi",
+            bam="results/bam/{sample}_{type}.bam",
+        output:
+            batch="reports/igv/{sample}_{type}/igv_batch.txt",
+        log:
+            "reports/igv/{sample}_{type}/igv_batch.log",
+        container:
+            config["default_container"]
+        threads: config.get("report_igv_batch", {}).get("threads", config["default_resources"]["threads"])
+        resources:
+            mem_mb=config.get("report_igv_batch", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_igv_batch", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("report_igv_batch", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("report_igv_batch", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_igv_batch", {}).get("time", config["default_resources"]["time"]),
+        params:
+            genome=_igv_cfg.get("genome", "hg38"),
+            padding=_igv_cfg.get("padding", 40),
+            snapshot_dir=lambda wildcards: (f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"),
+        script:
+            "../scripts/report_makebatfile.py"
+
+    rule report_igv:
+        """Run IGV headlessly to produce SVG screenshots for each PASS variant."""
+        input:
+            batch="reports/igv/{sample}_{type}/igv_batch.txt",
+            bam="results/bam/{sample}_{type}.bam",
+            bai="results/bam/{sample}_{type}.bam.bai",
+        output:
+            done=touch("reports/igv/{sample}_{type}/done.txt"),
+        log:
+            "reports/igv/{sample}_{type}/igv.log",
+        container:
+            _igv_cfg.get("container", config["default_container"])
+        threads: config.get("report_igv", {}).get("threads", config["default_resources"]["threads"])
+        resources:
+            mem_mb=config.get("report_igv", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_igv", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("report_igv", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("report_igv", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_igv", {}).get("time", config["default_resources"]["time"]),
+        shell:
+            "xvfb-run --auto-servernum igv -b {input.batch} &> {log}"
 
 
 if _hotspot_bed:
@@ -163,61 +222,19 @@ if _hotspot_bed:
             config.get("report_bedtools_intersect_hotspot", {}).get("container", config["default_container"])
         threads: config.get("report_bedtools_intersect_hotspot", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            queue=config.get("report_bedtools_intersect_hotspot", {}).get(
-                "queue", config["default_resources"].get("queue", "development.q")
+            mem_mb=config.get("report_bedtools_intersect_hotspot", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_bedtools_intersect_hotspot", {}).get(
+                "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
             ),
+            partition=config.get("report_bedtools_intersect_hotspot", {}).get(
+                "partition", config["default_resources"]["partition"]
+            ),
+            threads=config.get("report_bedtools_intersect_hotspot", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_bedtools_intersect_hotspot", {}).get("time", config["default_resources"]["time"]),
         params:
             extra="-wb " + config.get("report_bedtools_intersect_hotspot", {}).get("extra", ""),
         wrapper:
             "v1.32.0/bio/bedtools/intersect"
-
-
-if not _integrated and _igv_cfg.get("enabled", False):
-
-    rule report_igv_batch:
-        """Create an IGV batch script for all PASS SNV and Pindel variants."""
-        input:
-            vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz",
-            vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
-            pindel="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz",
-            pindel_tbi="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi",
-            bam="results/bam/{sample}_{type}.bam",
-        output:
-            batch="reports/igv/{sample}_{type}/igv_batch.txt",
-        log:
-            "reports/igv/{sample}_{type}/igv_batch.log",
-        container:
-            config["default_container"]
-        threads: 1
-        resources:
-            queue=config["default_resources"].get("queue", "development.q"),
-        params:
-            genome=_igv_cfg.get("genome", "hg38"),
-            padding=_igv_cfg.get("padding", 40),
-            snapshot_dir=lambda wildcards: (f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"),
-        script:
-            "../scripts/report_makebatfile.py"
-
-
-if not _integrated and _igv_cfg.get("enabled", False):
-
-    rule report_igv:
-        """Run IGV headlessly to produce SVG screenshots for each PASS variant."""
-        input:
-            batch="reports/igv/{sample}_{type}/igv_batch.txt",
-            bam="results/bam/{sample}_{type}.bam",
-            bai="results/bam/{sample}_{type}.bam.bai",
-        output:
-            done=touch("reports/igv/{sample}_{type}/done.txt"),
-        log:
-            "reports/igv/{sample}_{type}/igv.log",
-        container:
-            _igv_cfg.get("container", config["default_container"])
-        threads: 1
-        resources:
-            queue=config["default_resources"].get("queue", "development.q"),
-        shell:
-            "xvfb-run --auto-servernum igv -b {input.batch} &> {log}"
 
 
 rule report_bedtools_intersect:
@@ -239,7 +256,11 @@ rule report_bedtools_intersect:
         config.get("report_bedtools_intersect", {}).get("container", config["default_container"])
     threads: config.get("report_bedtools_intersect", {}).get("threads", config["default_resources"]["threads"])
     resources:
-        queue=config.get("report_bedtools_intersect", {}).get("queue", config["default_resources"].get("queue", "development.q")),
+        mem_mb=config.get("report_bedtools_intersect", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+        mem_per_cpu=config.get("report_bedtools_intersect", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+        partition=config.get("report_bedtools_intersect", {}).get("partition", config["default_resources"]["partition"]),
+        threads=config.get("report_bedtools_intersect", {}).get("threads", config["default_resources"]["threads"]),
+        time=config.get("report_bedtools_intersect", {}).get("time", config["default_resources"]["time"]),
     params:
         extra=config.get("report_bedtools_intersect", {}).get("extra", ""),
     wrapper:
@@ -287,7 +308,11 @@ rule report_xlsx:
         config.get("results_report", {}).get("container", config["default_container"])
     threads: config.get("results_report", {}).get("threads", config["default_resources"]["threads"])
     resources:
-        queue=config.get("results_report", {}).get("queue", config["default_resources"].get("queue", "development.q")),
+        mem_mb=config.get("results_report", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+        mem_per_cpu=config.get("results_report", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+        partition=config.get("results_report", {}).get("partition", config["default_resources"]["partition"]),
+        threads=config.get("results_report", {}).get("threads", config["default_resources"]["threads"]),
+        time=config.get("results_report", {}).get("time", config["default_resources"]["time"]),
     params:
         sample=lambda wildcards: wildcards.sample,
         sample_type=lambda wildcards: wildcards.type,
