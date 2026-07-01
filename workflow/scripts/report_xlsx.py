@@ -80,11 +80,10 @@ if wanted_transcripts_file:
 # Feature flags: keys are only present in snakemake.input when enabled
 has_hotspot_cov = hasattr(snakemake.input, "hotspot_perbase")
 has_cnv         = hasattr(snakemake.input, "cnvkit_cns")
-has_igv         = hasattr(snakemake.input, "igv_done")
+has_bamsnap     = hasattr(snakemake.input, "bamsnap_dir")
 
-cnv_tc_method    = snakemake.params.cnv_tc_method
-igv_snapshot_dir = snakemake.params.igv_snapshot_dir
-containers       = snakemake.params.containers
+cnv_tc_method = snakemake.params.cnv_tc_method
+containers    = snakemake.params.containers
 
 # Optional panels: present in snakemake.input only if configured in config
 configured_panels = snakemake.params.panels  # list of panel names, e.g. ["cll", "myeloid"]
@@ -404,8 +403,8 @@ if has_hotspot_cov:
 if has_cnv:
     worksheet_gatk_cnv = workbook.add_worksheet("GATK CNV")
     worksheet_cnvkit    = workbook.add_worksheet("CNVkit")
-if has_igv:
-    worksheet_igv = workbook.add_worksheet("IGV")
+if has_bamsnap:
+    worksheet_bamsnap = workbook.add_worksheet("bamsnap")
 worksheet_version = workbook.add_worksheet("Version")
 
 empty_list = ["", "", "", "", "", ""]
@@ -453,8 +452,8 @@ if has_cnv:
     worksheet_overview.write_url(i,     0, "internal:'GATK CNV'!A1", string=f"GATK CNV ({cnv_tc_method})")
     worksheet_overview.write_url(i + 1, 0, "internal:'CNVkit'!A1",   string=f"CNVkit ({cnv_tc_method})")
     i += 2
-if has_igv:
-    worksheet_overview.write_url(i, 0, "internal:'IGV'!A1", string="IGV screenshots")
+if has_bamsnap:
+    worksheet_overview.write_url(i, 0, "internal:'bamsnap'!A1", string="BAM snapshots")
     i += 1
 worksheet_overview.write_url(i, 0, "internal:'Version'!A1", string="Software versions")
 i += 2
@@ -791,36 +790,30 @@ if has_cnv:
         )
 
 
-# --- IGV screenshots sheet --------------------------------------------------
+# --- bamsnap sheet ----------------------------------------------------------
 
-if has_igv:
-    logging.debug("IGV sheet")
-    worksheet_igv.set_column(0, 5, 14)
-    worksheet_igv.write(0, 0, "IGV Screenshots", fmt_heading)
-    worksheet_igv.write_row(1, 0, empty_list, fmt_line)
-    worksheet_igv.write(2, 0, f"Sample: {sample}")
-    igv_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF", "Screenshot"]
-    for col, h in enumerate(igv_headers):
-        worksheet_igv.write(4, col, h, fmt_table_heading)
-    row = 5
+if has_bamsnap:
+    logging.debug("bamsnap sheet")
+    bamsnap_dir = str(snakemake.input.bamsnap_dir)
+    worksheet_bamsnap.set_column(0, 5, 14)
+    worksheet_bamsnap.write(0, 0, "BAM Snapshots", fmt_heading)
+    worksheet_bamsnap.write_row(1, 0, empty_list, fmt_line)
+    worksheet_bamsnap.write(2, 0, f"Sample: {sample}")
+    worksheet_bamsnap.write(3, 0, f"Directory: {bamsnap_dir}")
+    index_html = os.path.join(os.path.abspath(bamsnap_dir), "index.html")
+    if os.path.exists(index_html):
+        worksheet_bamsnap.write_url(4, 0, f"file://{index_html}", string="Open bamsnap index")
+    else:
+        worksheet_bamsnap.write(4, 0, "No snapshots generated (no PASS variants above AF threshold)")
+    bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF"]
+    for col, h in enumerate(bamsnap_headers):
+        worksheet_bamsnap.write(6, col, h, fmt_table_heading)
+    row = 7
     for record in snv_table["data"]:
-        gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
-        worksheet_igv.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
-        name = f"{gene}_{chrom}_{pos}".replace("/", "_").replace(" ", "_")
-        img_path = os.path.join(igv_snapshot_dir, f"{name}.svg")
-        if os.path.exists(img_path):
-            worksheet_igv.set_row(row, 120)
-            worksheet_igv.insert_image(row, 6, img_path, {"x_scale": 0.5, "y_scale": 0.5})
-        row += 1
-    for record in pindel_table["data"]:
-        gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[9]
-        worksheet_igv.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
-        name = f"{gene}_{chrom}_{pos}".replace("/", "_").replace(" ", "_")
-        img_path = os.path.join(igv_snapshot_dir, f"{name}.svg")
-        if os.path.exists(img_path):
-            worksheet_igv.set_row(row, 120)
-            worksheet_igv.insert_image(row, 6, img_path, {"x_scale": 0.5, "y_scale": 0.5})
-        row += 1
+        if record[0] == "PASS":
+            gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
+            worksheet_bamsnap.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
+            row += 1
 
 
 # --- Version sheet ----------------------------------------------------------

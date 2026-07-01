@@ -102,9 +102,9 @@ properties:
         type: string
         description: max execution time
 
-  report_igv_batch:
+  bamsnap_create_pos_list:
     type: object
-    description: resource definitions for report_igv_batch (standalone mode only)
+    description: resource definitions for report_bamsnap_create_pos_list (standalone mode only)
     properties:
       mem_mb:
         type: integer
@@ -122,9 +122,49 @@ properties:
         type: string
         description: max execution time
 
-  report_igv:
+  bamsnap_samtools_view_dedup:
     type: object
-    description: resource definitions for report_igv (standalone mode only)
+    description: resource definitions for report_bamsnap_samtools_view_dedup (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  bamsnap_downsample_bam:
+    type: object
+    description: resource definitions for report_bamsnap_downsample_bam (standalone mode only)
+    properties:
+      mem_mb:
+        type: integer
+        description: max memory in MB to be available
+      mem_per_cpu:
+        type: integer
+        description: memory in MB used per cpu
+      partition:
+        type: string
+        description: partition to use on cluster
+      threads:
+        type: integer
+        description: number of threads to be available
+      time:
+        type: string
+        description: max execution time
+
+  bamsnap:
+    type: object
+    description: resource definitions for report_bamsnap (standalone mode only)
     properties:
       mem_mb:
         type: integer

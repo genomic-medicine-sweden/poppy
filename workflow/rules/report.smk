@@ -28,7 +28,7 @@ _mosdepth_dir = "qc/mosdepth_bed" if _integrated else "qc/mosdepth_report"
 
 _hotspot_bed = config.get("results_report_xlsx", {}).get("hotspot_bed")
 _cnv_cfg = config.get("report_cnv", {})
-_igv_cfg = config.get("report_igv", {})
+_bamsnap_cfg = config.get("bamsnap", {})
 
 
 def _get_panel_vcfs(wildcards):
@@ -51,7 +51,7 @@ def _get_panel_vcfs(wildcards):
 
 
 def _get_optional_inputs(wildcards):
-    """Return dict of optional inputs gated by config: hotspot, CNV, IGV."""
+    """Return dict of optional inputs gated by config: hotspot, CNV, bamsnap."""
     d = {}
     s, t = wildcards.sample, wildcards.type
 
@@ -69,9 +69,9 @@ def _get_optional_inputs(wildcards):
         if scatter:
             d["cnv_scatter"] = scatter.format(**fmt)
 
-    # IGV screenshots
-    if not _integrated and _igv_cfg.get("enabled", False):
-        d["igv_done"] = f"reports/igv/{s}_{t}/done.txt"
+    # bamsnap screenshots
+    if not _integrated and _bamsnap_cfg.get("enabled", False):
+        d["bamsnap_dir"] = f"bamsnap/bamsnap/{s}_{t}/"
 
     return d
 
@@ -148,57 +148,126 @@ if not _integrated:
                 {input.bam} &>{log}
             """
 
-if not _integrated and _igv_cfg.get("enabled", False):
+if not _integrated and _bamsnap_cfg.get("enabled", False):
 
-    rule report_igv_batch:
-        """Create an IGV batch script for all PASS SNV and Pindel variants."""
+    rule report_bamsnap_create_pos_list:
+        """Create BED file of PASS variants (above AF threshold) for bamsnap."""
         input:
             vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz",
-            vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
-            pindel="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz",
-            pindel_tbi="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi",
-            bam="results/bam/{sample}_{type}.bam",
+            tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
         output:
-            batch="reports/igv/{sample}_{type}/igv_batch.txt",
+            bed=temp("bamsnap/create_pos_list/{sample}_{type}.pos.bed"),
         log:
-            "reports/igv/{sample}_{type}/igv_batch.log",
+            "bamsnap/create_pos_list/{sample}_{type}.pos.bed.log",
         container:
-            config["default_container"]
-        threads: config.get("report_igv_batch", {}).get("threads", config["default_resources"]["threads"])
+            config.get("bamsnap_create_pos_list", {}).get("container", config["default_container"])
+        threads: config.get("bamsnap_create_pos_list", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            mem_mb=config.get("report_igv_batch", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-            mem_per_cpu=config.get("report_igv_batch", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
-            partition=config.get("report_igv_batch", {}).get("partition", config["default_resources"]["partition"]),
-            threads=config.get("report_igv_batch", {}).get("threads", config["default_resources"]["threads"]),
-            time=config.get("report_igv_batch", {}).get("time", config["default_resources"]["time"]),
+            mem_mb=config.get("bamsnap_create_pos_list", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("bamsnap_create_pos_list", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("bamsnap_create_pos_list", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("bamsnap_create_pos_list", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("bamsnap_create_pos_list", {}).get("time", config["default_resources"]["time"]),
         params:
-            genome=_igv_cfg.get("genome", "hg38"),
-            padding=_igv_cfg.get("padding", 40),
-            snapshot_dir=lambda wildcards: (f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"),
+            af=config.get("bamsnap_create_pos_list", {}).get("af", "0.05"),
         script:
-            "../scripts/report_makebatfile.py"
+            "../scripts/report_create_pos_list.py"
 
-    rule report_igv:
-        """Run IGV headlessly to produce SVG screenshots for each PASS variant."""
+    rule report_bamsnap_samtools_view_dedup:
+        """Remove duplicate reads from BAM before bamsnap."""
         input:
-            batch="reports/igv/{sample}_{type}/igv_batch.txt",
             bam="results/bam/{sample}_{type}.bam",
             bai="results/bam/{sample}_{type}.bam.bai",
         output:
-            done=touch("reports/igv/{sample}_{type}/done.txt"),
+            bam=temp("bamsnap/samtools_view_dedup/{sample}_{type}.bam"),
         log:
-            "reports/igv/{sample}_{type}/igv.log",
+            "bamsnap/samtools_view_dedup/{sample}_{type}.bam.log",
         container:
-            _igv_cfg.get("container", config["default_container"])
-        threads: config.get("report_igv", {}).get("threads", config["default_resources"]["threads"])
+            config.get("bamsnap_samtools_view_dedup", {}).get("container", config["default_container"])
+        threads: config.get("bamsnap_samtools_view_dedup", {}).get("threads", config["default_resources"]["threads"])
         resources:
-            mem_mb=config.get("report_igv", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-            mem_per_cpu=config.get("report_igv", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
-            partition=config.get("report_igv", {}).get("partition", config["default_resources"]["partition"]),
-            threads=config.get("report_igv", {}).get("threads", config["default_resources"]["threads"]),
-            time=config.get("report_igv", {}).get("time", config["default_resources"]["time"]),
+            mem_mb=config.get("bamsnap_samtools_view_dedup", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("bamsnap_samtools_view_dedup", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("bamsnap_samtools_view_dedup", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("bamsnap_samtools_view_dedup", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("bamsnap_samtools_view_dedup", {}).get("time", config["default_resources"]["time"]),
+        params:
+            extra=config.get("bamsnap_samtools_view_dedup", {}).get("extra", ""),
         shell:
-            "xvfb-run --auto-servernum igv -b {input.batch} &> {log}"
+            "samtools view -@ {threads} -F 1024 {params.extra} -b {input.bam} > {output.bam} 2>{log}"
+
+    rule report_bamsnap_downsample_bam:
+        """Downsample deduped BAM to limit bamsnap runtime."""
+        input:
+            bam="bamsnap/samtools_view_dedup/{sample}_{type}.bam",
+        output:
+            bam=temp("bamsnap/downsample_bam/{sample}_{type}.bam"),
+            bai=temp("bamsnap/downsample_bam/{sample}_{type}.bam.bai"),
+        log:
+            "bamsnap/downsample_bam/{sample}_{type}.bam.log",
+        container:
+            config.get("bamsnap_downsample_bam", {}).get("container", config["default_container"])
+        threads: config.get("bamsnap_downsample_bam", {}).get("threads", config["default_resources"]["threads"])
+        resources:
+            mem_mb=config.get("bamsnap_downsample_bam", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("bamsnap_downsample_bam", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("bamsnap_downsample_bam", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("bamsnap_downsample_bam", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("bamsnap_downsample_bam", {}).get("time", config["default_resources"]["time"]),
+        params:
+            filter_reads=config.get("bamsnap_downsample_bam", {}).get("filter_reads", "-F2060"),
+            max_reads=config.get("bamsnap_downsample_bam", {}).get("max_reads", 2500000),
+            float_precision=config.get("bamsnap_downsample_bam", {}).get("float_precision", 3),
+        shell:
+            """
+            count=$(samtools view {params.filter_reads} -c {input.bam} 2>>{log})
+            if [ "$count" -gt {params.max_reads} ]; then
+                fraction=$(python3 -c "print(round({params.max_reads}/$count, {params.float_precision}))")
+                samtools view --subsample $fraction -b {input.bam} > {output.bam} 2>>{log}
+            else
+                cp {input.bam} {output.bam}
+            fi
+            samtools index {output.bam} >> {log} 2>&1
+            """
+
+    rule report_bamsnap:
+        """Run bamsnap to generate per-variant BAM screenshots."""
+        input:
+            pos_list="bamsnap/create_pos_list/{sample}_{type}.pos.bed",
+            bam="bamsnap/downsample_bam/{sample}_{type}.bam",
+            bai="bamsnap/downsample_bam/{sample}_{type}.bam.bai",
+            fasta=config["reference"]["fasta"],
+        output:
+            results_dir=temp(directory("bamsnap/bamsnap/{sample}_{type}/")),
+        log:
+            "bamsnap/bamsnap/{sample}_{type}.log",
+        wildcard_constraints:
+            sample="(?!HD829).*",
+        container:
+            _bamsnap_cfg.get("container", config["default_container"])
+        threads: config.get("bamsnap", {}).get("threads", config["default_resources"]["threads"])
+        resources:
+            mem_mb=config.get("bamsnap", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("bamsnap", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("bamsnap", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("bamsnap", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("bamsnap", {}).get("time", config["default_resources"]["time"]),
+        params:
+            margin=_bamsnap_cfg.get("margin", "50"),
+            extra=_bamsnap_cfg.get("extra", "-show_soft_clipped"),
+        shell:
+            "bamsnap -bam {input.bam} -ref {input.fasta} -out {output.results_dir} -process {threads} -margin {params.margin} -bed {input.pos_list} {params.extra} &>{log}"
+
+    rule report_bamsnap_hd829:
+        """Create empty bamsnap output directory for HD829 control sample."""
+        output:
+            results_dir=temp(directory("bamsnap/bamsnap/{sample}_{type}/")),
+        log:
+            "bamsnap/bamsnap/{sample}_{type}.log",
+        wildcard_constraints:
+            sample="(HD829).*",
+        shell:
+            "mkdir -p {output.results_dir} 2>{log}"
 
 
 if _hotspot_bed:
@@ -279,7 +348,7 @@ rule report_xlsx:
       Hotspot Coverage  (hotspot_bed configured)
       GATK CNV          (report_cnv.tc_method configured)
       CNVkit            (report_cnv.tc_method configured)
-      IGV               (report_igv.enabled: true)
+      bamsnap           (bamsnap.enabled: true, standalone only)
     """
     input:
         unpack(_get_panel_vcfs),
@@ -331,9 +400,6 @@ rule report_xlsx:
         synonymous_positions=config.get("results_report_xlsx", {}).get("synonymous_positions", {}),
         panels=list(config.get("bcftools_filter_include_region", {}).keys()),
         cnv_tc_method=_cnv_cfg.get("tc_method"),
-        igv_snapshot_dir=lambda wildcards: (
-            f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots" if _igv_cfg.get("enabled", False) else ""
-        ),
         containers={
             k: c
             for k, c in {

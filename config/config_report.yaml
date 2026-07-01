@@ -70,14 +70,24 @@ report_cnv:
   # Optional whole-genome scatter plot PNG to embed in the CNVkit sheet.
   scatter_png: null  # e.g. "cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.scatter.png"
 
-# IGV screenshot sheet.
-# Set enabled: true to generate per-variant IGV screenshots and embed them.
-# Requires an IGV container with xvfb-run available.
-report_igv:
+# BAM snapshot sheet (standalone mode only).
+# Set enabled: true to generate per-variant BAM screenshots with bamsnap
+# and add a "bamsnap" sheet to the Excel report linking to the HTML output.
+bamsnap:
   enabled: false
-  genome: "hg38"          # IGV genome name (or path to .genome file)
-  padding: 40             # bp on each side of the variant
-  container: "docker://ghcr.io/igvteam/igv:2.17.4"
+  margin: "50"            # bp on each side of the variant
+  extra: "-coverage_vaf 0.05 -show_soft_clipped -read_thickness 2 -read_gap_height 1"
+  container: "docker://hydragenetics/bamsnap:0.2.19"
+
+bamsnap_create_pos_list:
+  af: "0.05"              # minimum allele frequency to include a variant
+
+bamsnap_samtools_view_dedup:
+  container: "docker://hydragenetics/common:3.1.1.2"
+
+bamsnap_downsample_bam:
+  container: "docker://hydragenetics/common:3.1.1.2"
+  max_reads: 6000000      # downsample to this many reads before running bamsnap
 
 # Container for re-running mosdepth in standalone mode.
 # Threads and other resources are set in resources_report.yaml.

@@ -574,40 +574,71 @@ properties:
           Path pattern for a CNVkit scatter plot PNG to embed in the CNVkit sheet.
           Supports {sample}, {type}, {tc_method} placeholders. Set to null to skip.
 
-  report_igv:
+  bamsnap:
     type: object
     description: >
-      Settings for the IGV screenshot sheet (standalone mode only).
-      Set enabled: true to generate per-variant IGV screenshots.
+      Settings for the bamsnap screenshot sheet (standalone mode only).
+      Set enabled: true to generate per-variant BAM screenshots with bamsnap.
     properties:
       enabled:
         type: boolean
-        description: When true, generate IGV screenshots for each PASS variant
+        description: When true, run bamsnap and add a bamsnap sheet to the Excel report
         default: false
-      genome:
+      margin:
         type: string
-        description: IGV genome name or path to a .genome file (e.g. "hg38")
-      padding:
-        type: integer
         description: Base pairs to show on each side of the variant position
+      extra:
+        type: string
+        description: Extra arguments to pass to bamsnap
       container:
         type: string
         description: >
-          Container image providing IGV with xvfb-run (e.g. docker://ghcr.io/igvteam/igv:2.17.4)
+          Container image providing the bamsnap executable
         format: uri-reference
 
-  report_igv_batch:
+  bamsnap_create_pos_list:
     type: object
     description: >
-      Resource overrides for the report_igv_batch rule (standalone mode only).
-      Creates an IGV batch script listing all PASS variants.
+      Settings for the bamsnap position list creation rule (standalone mode only).
     properties:
-      benchmark_repeats:
-        type: integer
-        description: Number of times to repeat the benchmark
+      af:
+        type: string
+        description: Minimum allele frequency for a PASS variant to be included
       container:
         type: string
-        description: Container image providing tabix/bcftools for reading VCFs
+        description: Container image providing pysam
+        format: uri-reference
+
+  bamsnap_samtools_view_dedup:
+    type: object
+    description: >
+      Settings for the BAM deduplication step before bamsnap (standalone mode only).
+    properties:
+      extra:
+        type: string
+        description: Extra arguments to pass to samtools view
+      container:
+        type: string
+        description: Container image providing samtools
+        format: uri-reference
+
+  bamsnap_downsample_bam:
+    type: object
+    description: >
+      Settings for the BAM downsampling step before bamsnap (standalone mode only).
+    properties:
+      max_reads:
+        type: integer
+        description: Downsample to this many reads before running bamsnap
+      filter_reads:
+        type: string
+        description: samtools view flags used when counting reads for downsampling
+      float_precision:
+        type: integer
+        description: Decimal places used when computing the subsample fraction
+      container:
+        type: string
+        description: Container image providing samtools
         format: uri-reference
 
   mosdepth_bed:
