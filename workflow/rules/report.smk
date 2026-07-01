@@ -25,6 +25,7 @@ __license__ = "GPL-3"
 # In standalone mode it is not, so we fall back to qc/mosdepth_report/.
 _integrated = globals().get("generate_report", False)
 _mosdepth_dir = "qc/mosdepth_bed" if _integrated else "qc/mosdepth_report"
+_bam_dir = "alignment/samtools_merge_bam" if _integrated else "results/bam"
 
 _hotspot_bed = config.get("results_report_xlsx", {}).get("hotspot_bed")
 _cnv_cfg = config.get("report_cnv", {})
@@ -70,7 +71,7 @@ def _get_optional_inputs(wildcards):
             d["cnv_scatter"] = scatter.format(**fmt)
 
     # bamsnap screenshots
-    if not _integrated and _bamsnap_cfg.get("enabled", False):
+    if _bamsnap_cfg.get("enabled", False):
         d["bamsnap_dir"] = f"bamsnap/bamsnap/{s}_{t}/"
 
     return d
@@ -148,7 +149,7 @@ if not _integrated:
                 {input.bam} &>{log}
             """
 
-if not _integrated and _bamsnap_cfg.get("enabled", False):
+if _bamsnap_cfg.get("enabled", False):
 
     rule report_bamsnap_create_pos_list:
         """Create BED file of PASS variants (above AF threshold) for bamsnap."""
@@ -176,8 +177,8 @@ if not _integrated and _bamsnap_cfg.get("enabled", False):
     rule report_bamsnap_samtools_view_dedup:
         """Remove duplicate reads from BAM before bamsnap."""
         input:
-            bam="results/bam/{sample}_{type}.bam",
-            bai="results/bam/{sample}_{type}.bam.bai",
+            bam=f"{_bam_dir}/{{sample}}_{{type}}.bam",
+            bai=f"{_bam_dir}/{{sample}}_{{type}}.bam.bai",
         output:
             bam=temp("bamsnap/samtools_view_dedup/{sample}_{type}.bam"),
         log:
@@ -348,7 +349,7 @@ rule report_xlsx:
       Hotspot Coverage  (hotspot_bed configured)
       GATK CNV          (report_cnv.tc_method configured)
       CNVkit            (report_cnv.tc_method configured)
-      bamsnap           (bamsnap.enabled: true, standalone only)
+      bamsnap           (bamsnap.enabled: true)
     """
     input:
         unpack(_get_panel_vcfs),
