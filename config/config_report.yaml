@@ -89,6 +89,9 @@ bamsnap_downsample_bam:
   container: "docker://hydragenetics/common:3.1.1.2"
   max_reads: 6000000      # downsample to this many reads before running bamsnap
 
+bamsnap_pdf:
+  container: "docker://hydragenetics/bamsnap:0.2.19"  # Pillow at /usr/local/lib/python3.9
+
 # Container for re-running mosdepth in standalone mode.
 # Threads and other resources are set in resources_report.yaml.
 report_mosdepth:
