@@ -404,7 +404,8 @@ if has_cnv:
     worksheet_gatk_cnv = workbook.add_worksheet("GATK CNV")
     worksheet_cnvkit    = workbook.add_worksheet("CNVkit")
 if has_bamsnap:
-    worksheet_bamsnap = workbook.add_worksheet("bamsnap")
+    worksheet_bamsnap       = workbook.add_worksheet("bamsnap")
+    worksheet_screenshots   = workbook.add_worksheet("Screenshots")
 worksheet_version = workbook.add_worksheet("Version")
 
 empty_list = ["", "", "", "", "", ""]
@@ -453,8 +454,9 @@ if has_cnv:
     worksheet_overview.write_url(i + 1, 0, "internal:'CNVkit'!A1",   string=f"CNVkit ({cnv_tc_method})")
     i += 2
 if has_bamsnap:
-    worksheet_overview.write_url(i, 0, "internal:'bamsnap'!A1", string="BAM snapshots")
-    i += 1
+    worksheet_overview.write_url(i,     0, "internal:'bamsnap'!A1",       string="BAM snapshots")
+    worksheet_overview.write_url(i + 1, 0, "internal:'Screenshots'!A1",   string="BAM screenshots (images)")
+    i += 2
 worksheet_overview.write_url(i, 0, "internal:'Version'!A1", string="Software versions")
 i += 2
 
@@ -785,16 +787,24 @@ if has_cnv:
 # --- bamsnap sheet ----------------------------------------------------------
 
 if has_bamsnap:
+    import struct
+
+    def _png_size(path):
+        """Return (width, height) in pixels by reading the PNG IHDR chunk."""
+        with open(path, "rb") as f:
+            f.read(16)  # signature (8) + IHDR length (4) + IHDR type (4)
+            w = struct.unpack(">I", f.read(4))[0]
+            h = struct.unpack(">I", f.read(4))[0]
+        return w, h
+
     logging.debug("bamsnap sheet")
     bamsnap_dir = str(snakemake.input.bamsnap_dir)
-    # BAM basename without .bam extension — bamsnap uses this to name the PNG files
-    bam_basename = f"{sample}_{sample_type}"
     worksheet_bamsnap.set_column(0, 5, 14)
     worksheet_bamsnap.write(0, 0, "BAM Snapshots", fmt_heading)
     worksheet_bamsnap.write_row(1, 0, empty_list, fmt_line)
     worksheet_bamsnap.write(2, 0, f"Sample: {sample}")
     worksheet_bamsnap.write(3, 0, f"Snapshots directory: {os.path.abspath(bamsnap_dir)}")
-    bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF", "Screenshot"]
+    bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF"]
     for col, h in enumerate(bamsnap_headers):
         worksheet_bamsnap.write(5, col, h, fmt_table_heading)
     row = 6
@@ -802,14 +812,30 @@ if has_bamsnap:
         if record[0] == "PASS":
             gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
             worksheet_bamsnap.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
-            # bamsnap names images: {bamsnap_dir}/bamsnap_images/{chrom}_{pos}.png
-            png_path = os.path.join(bamsnap_dir, "bamsnap_images", f"{chrom}_{pos}.png")
-            if os.path.exists(png_path):
-                worksheet_bamsnap.set_row(row, 120)
-                worksheet_bamsnap.insert_image(row, 6, png_path, {"x_scale": 0.5, "y_scale": 0.5})
-            else:
-                logging.debug(f"bamsnap PNG not found: {png_path}")
             row += 1
+
+    logging.debug("Screenshots sheet")
+    scale = 0.5
+    img_row = 0
+    worksheet_screenshots.set_column(0, 0, 120)
+    worksheet_screenshots.write(img_row, 0, "BAM Screenshots", fmt_heading)
+    img_row += 2
+    for record in snv_table["data"]:
+        if record[0] == "PASS":
+            gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
+            png_path = os.path.join(bamsnap_dir, "bamsnap_images", f"{chrom}_{pos}.png")
+            worksheet_screenshots.write(img_row, 0, f"{gene}  {chrom}:{pos}  {ref}>{alt}  AF={af}", fmt_bold)
+            img_row += 1
+            if os.path.exists(png_path):
+                _, h = _png_size(png_path)
+                row_height_pts = h * scale * 0.75  # pixels → Excel points (96 dpi)
+                worksheet_screenshots.set_row(img_row, row_height_pts)
+                worksheet_screenshots.insert_image(img_row, 0, png_path, {"x_scale": scale, "y_scale": scale})
+                img_row += 1
+            else:
+                worksheet_screenshots.write(img_row, 0, "Image not available")
+                img_row += 1
+            img_row += 1  # blank separator between variants
 
 
 # --- Version sheet ----------------------------------------------------------
