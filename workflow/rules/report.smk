@@ -319,8 +319,10 @@ if _bamsnap_cfg.get("enabled", False):
             partition=config.get("bamsnap_pdf", {}).get("partition", config["default_resources"]["partition"]),
             threads=config.get("bamsnap_pdf", {}).get("threads", config["default_resources"]["threads"]),
             time=config.get("bamsnap_pdf", {}).get("time", config["default_resources"]["time"]),
-        script:
-            "../scripts/report_bamsnap_pdf.py"
+        params:
+            script=workflow.basedir + "/scripts/report_bamsnap_pdf.py",
+        shell:
+            "python3.9 {params.script} {input.bamsnap_dir} {output.pdf} >{log} 2>&1"
 
     rule report_copy_bamsnap:
         """Copy bamsnap output directory to results/bamsnap/ (standalone mode)."""
