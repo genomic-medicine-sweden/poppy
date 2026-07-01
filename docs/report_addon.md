@@ -149,7 +149,8 @@ temporary.
 | **Hotspot Coverage** | Per-base coverage across hotspot regions | `results_report_xlsx.hotspot_bed` set |
 | **GATK CNV** | GATK ModelSegments copy-number calls | `report_cnv.tc_method` set |
 | **CNVkit** | CNVkit copy-number calls | `report_cnv.tc_method` set |
-| **bamsnap** | Per-variant BAM screenshots with variant details; all PNGs also combined into a PDF | `bamsnap.enabled: true` |
+| **bamsnap** | Variant table (gene, chr, pos, ref, alt, AF) for PASS variants with AF ≥ `bamsnap_create_pos_list.af`; includes applied filter criteria | `bamsnap.enabled: true` |
+| **Screenshots** | BAM snapshot images for each variant in the bamsnap table, one per row with label and blank separator; images scaled to 50 % | `bamsnap.enabled: true` |
 
 ## Resource overrides
 
