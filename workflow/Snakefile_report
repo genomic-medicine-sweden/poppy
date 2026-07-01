@@ -65,9 +65,12 @@ include: "rules/report.smk"
 
 
 def get_report_outputs():
-    """Return one xlsx per unique (sample, type) pair."""
+    """Return results/ paths for all (sample, type) pairs."""
     sample_types = list({(row.sample, row.type) for row in units.itertuples()})
-    return [f"reports/xlsx/{s}_{t}.xlsx" for s, t in sample_types]
+    outputs = [f"results/report/{s}_{t}.xlsx" for s, t in sample_types]
+    if config.get("bamsnap", {}).get("enabled", False):
+        outputs += [f"results/bamsnap/{s}_{t}/" for s, t in sample_types]
+    return outputs
 
 
 rule all:

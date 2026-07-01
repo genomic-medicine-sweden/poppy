@@ -79,6 +79,15 @@ def _get_optional_inputs(wildcards):
 
 if not _integrated:
 
+    rule report_copy_xlsx:
+        """Copy Excel report to results/report/ (standalone mode)."""
+        input:
+            "reports/xlsx/{sample}_{type}.xlsx",
+        output:
+            "results/report/{sample}_{type}.xlsx",
+        shell:
+            "cp {input} {output}"
+
     rule report_tabix_vcf:
         """Create tabix index for VCF files in results/vcf/ if missing."""
         input:
@@ -149,6 +158,7 @@ if not _integrated:
                 {input.bam} &>{log}
             """
 
+
 if _bamsnap_cfg.get("enabled", False):
 
     rule report_bamsnap_create_pos_list:
@@ -188,7 +198,9 @@ if _bamsnap_cfg.get("enabled", False):
         threads: config.get("bamsnap_samtools_view_dedup", {}).get("threads", config["default_resources"]["threads"])
         resources:
             mem_mb=config.get("bamsnap_samtools_view_dedup", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-            mem_per_cpu=config.get("bamsnap_samtools_view_dedup", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            mem_per_cpu=config.get("bamsnap_samtools_view_dedup", {}).get(
+                "mem_per_cpu", config["default_resources"]["mem_per_cpu"]
+            ),
             partition=config.get("bamsnap_samtools_view_dedup", {}).get("partition", config["default_resources"]["partition"]),
             threads=config.get("bamsnap_samtools_view_dedup", {}).get("threads", config["default_resources"]["threads"]),
             time=config.get("bamsnap_samtools_view_dedup", {}).get("time", config["default_resources"]["time"]),
@@ -224,11 +236,11 @@ if _bamsnap_cfg.get("enabled", False):
             count=$(samtools view {params.filter_reads} -c {input.bam} 2>>{log})
             if [ "$count" -gt {params.max_reads} ]; then
                 fraction=$(python3 -c "print(round({params.max_reads}/$count, {params.float_precision}))")
-                samtools view --subsample $fraction -b {input.bam} > {output.bam} 2>>{log}
+                samtools view --subsample $fraction -b {input.bam} >{output.bam} 2>>{log}
             else
                 cp {input.bam} {output.bam}
             fi
-            samtools index {output.bam} >> {log} 2>&1
+            samtools index {output.bam} >>{log} 2>&1
             """
 
     rule report_bamsnap:
@@ -239,7 +251,7 @@ if _bamsnap_cfg.get("enabled", False):
             bai="bamsnap/downsample_bam/{sample}_{type}.bam.bai",
             fasta=config["reference"]["fasta"],
         output:
-            results_dir=temp(directory("bamsnap/bamsnap/{sample}_{type}/")),
+            results_dir=directory("bamsnap/bamsnap/{sample}_{type}/"),
         log:
             "bamsnap/bamsnap/{sample}_{type}.log",
         wildcard_constraints:
@@ -262,13 +274,22 @@ if _bamsnap_cfg.get("enabled", False):
     rule report_bamsnap_hd829:
         """Create empty bamsnap output directory for HD829 control sample."""
         output:
-            results_dir=temp(directory("bamsnap/bamsnap/{sample}_{type}/")),
+            results_dir=directory("bamsnap/bamsnap/{sample}_{type}/"),
         log:
             "bamsnap/bamsnap/{sample}_{type}.log",
         wildcard_constraints:
             sample="(HD829).*",
         shell:
             "mkdir -p {output.results_dir} 2>{log}"
+
+    rule report_copy_bamsnap:
+        """Copy bamsnap output directory to results/bamsnap/ (standalone mode)."""
+        input:
+            "bamsnap/bamsnap/{sample}_{type}/",
+        output:
+            directory("results/bamsnap/{sample}_{type}/"),
+        shell:
+            "cp -r {input} {output}"
 
 
 if _hotspot_bed:

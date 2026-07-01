@@ -787,24 +787,28 @@ if has_cnv:
 if has_bamsnap:
     logging.debug("bamsnap sheet")
     bamsnap_dir = str(snakemake.input.bamsnap_dir)
+    # BAM basename without .bam extension — bamsnap uses this to name the PNG files
+    bam_basename = f"{sample}_{sample_type}"
     worksheet_bamsnap.set_column(0, 5, 14)
     worksheet_bamsnap.write(0, 0, "BAM Snapshots", fmt_heading)
     worksheet_bamsnap.write_row(1, 0, empty_list, fmt_line)
     worksheet_bamsnap.write(2, 0, f"Sample: {sample}")
-    worksheet_bamsnap.write(3, 0, f"Directory: {bamsnap_dir}")
-    index_html = os.path.join(os.path.abspath(bamsnap_dir), "index.html")
-    if os.path.exists(index_html):
-        worksheet_bamsnap.write_url(4, 0, f"file://{index_html}", string="Open bamsnap index")
-    else:
-        worksheet_bamsnap.write(4, 0, "No snapshots generated (no PASS variants above AF threshold)")
-    bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF"]
+    worksheet_bamsnap.write(3, 0, f"Snapshots directory: {os.path.abspath(bamsnap_dir)}")
+    bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF", "Screenshot"]
     for col, h in enumerate(bamsnap_headers):
-        worksheet_bamsnap.write(6, col, h, fmt_table_heading)
-    row = 7
+        worksheet_bamsnap.write(5, col, h, fmt_table_heading)
+    row = 6
     for record in snv_table["data"]:
         if record[0] == "PASS":
             gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
             worksheet_bamsnap.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
+            # bamsnap names images: {bamsnap_dir}/bamsnap_images/{chrom}_{pos}.png
+            png_path = os.path.join(bamsnap_dir, "bamsnap_images", f"{chrom}_{pos}.png")
+            if os.path.exists(png_path):
+                worksheet_bamsnap.set_row(row, 120)
+                worksheet_bamsnap.insert_image(row, 6, png_path, {"x_scale": 0.5, "y_scale": 0.5})
+            else:
+                logging.debug(f"bamsnap PNG not found: {png_path}")
             row += 1
 
 
