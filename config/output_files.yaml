@@ -32,6 +32,6 @@ files:
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
 
-  - name: CNV HTML report, purecn TC
-    input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
-    output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html
+  # - name: CNV HTML report, purecn TC
+  #   input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
+  #   output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html
