@@ -5,7 +5,7 @@ units: "units.tsv"
 output: "/clinical/dev/cgg-cancer/poppy/poppy_v2.0.0_insertsize/config/output_files.yaml"
 general_report: "/clinical/dev/cgg-cancer/poppy/poppy_v2.0.0_insertsize/config/output_files.yaml"
 
-default_container: "docker://hydragenetics/common:4.4.0"
+default_container: "docker://hydragenetics/common:4.0.0"
 
 trimmer_software: "fastp_pe"
 

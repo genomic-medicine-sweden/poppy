@@ -16,9 +16,11 @@ include: "rules/common.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
+
 generate_report = config.get("generate_final_report", False)
 
 if generate_report:
+
     include: "rules/report.smk"
 
 
@@ -198,6 +200,7 @@ use rule * from qc as qc_*
 
 
 _maybe_temp = (lambda p: p) if generate_report else temp
+
 
 use rule mosdepth_bed from qc as qc_mosdepth_bed with:
     output:

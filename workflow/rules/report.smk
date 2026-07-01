@@ -27,8 +27,8 @@ _integrated = globals().get("generate_report", False)
 _mosdepth_dir = "qc/mosdepth_bed" if _integrated else "qc/mosdepth_report"
 
 _hotspot_bed = config.get("results_report_xlsx", {}).get("hotspot_bed")
-_cnv_cfg     = config.get("report_cnv", {})
-_igv_cfg     = config.get("report_igv", {})
+_cnv_cfg = config.get("report_cnv", {})
+_igv_cfg = config.get("report_igv", {})
 
 
 def _get_panel_vcfs(wildcards):
@@ -57,20 +57,14 @@ def _get_optional_inputs(wildcards):
 
     # Hotspot coverage sheet
     if _hotspot_bed:
-        d["hotspot_perbase"] = (
-            f"{_mosdepth_dir}/{s}_{t}.mosdepth.per-base.hotspot.txt"
-        )
+        d["hotspot_perbase"] = f"{_mosdepth_dir}/{s}_{t}.mosdepth.per-base.hotspot.txt"
 
     # CNV sheets (GATK + CNVkit)
     tc = _cnv_cfg.get("tc_method")
     if tc:
         fmt = dict(sample=s, type=t, tc_method=tc)
-        d["cnvkit_cns"] = _cnv_cfg.get(
-            "cnvkit_cns", "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.cns"
-        ).format(**fmt)
-        d["gatk_seg"] = _cnv_cfg.get(
-            "gatk_seg", "cnv_sv/gatk_model_segments/{sample}_{type}.{tc_method}.seg"
-        ).format(**fmt)
+        d["cnvkit_cns"] = _cnv_cfg.get("cnvkit_cns", "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.cns").format(**fmt)
+        d["gatk_seg"] = _cnv_cfg.get("gatk_seg", "cnv_sv/gatk_model_segments/{sample}_{type}.{tc_method}.seg").format(**fmt)
         scatter = _cnv_cfg.get("scatter_png")
         if scatter:
             d["cnv_scatter"] = scatter.format(**fmt)
@@ -82,8 +76,7 @@ def _get_optional_inputs(wildcards):
     return d
 
 
-if not _integrated:
-    rule report_tabix_vcf:
+rule report_tabix_vcf:
         """Create tabix index for VCF files in results/vcf/ if missing."""
         input:
             "results/vcf/{vcf_file}.vcf.gz",
@@ -96,9 +89,11 @@ if not _integrated:
         threads: 1
         resources:
             queue=config.get("report_tabix_vcf", {}).get("queue", config["default_resources"].get("queue", "development.q")),
-            threads=1,
         shell:
             "tabix -p vcf {input} &> {log}"
+
+
+if not _integrated:
 
     rule report_mosdepth:
         """
@@ -120,10 +115,6 @@ if not _integrated:
             glob=temp("qc/mosdepth_report/{sample}_{type}.mosdepth.global.dist.txt"),
             region=temp("qc/mosdepth_report/{sample}_{type}.mosdepth.region.dist.txt"),
             summary=temp("qc/mosdepth_report/{sample}_{type}.mosdepth.summary.txt"),
-        params:
-            prefix="qc/mosdepth_report/{sample}_{type}",
-            thresholds=config["mosdepth_bed"]["thresholds"],
-            extra=config.get("mosdepth_bed", {}).get("extra", ""),
         log:
             "qc/mosdepth_report/{sample}_{type}.mosdepth.log",
         benchmark:
@@ -136,7 +127,10 @@ if not _integrated:
         threads: config.get("report_mosdepth", {}).get("threads", config["default_resources"]["threads"])
         resources:
             queue=config.get("report_mosdepth", {}).get("queue", config["default_resources"].get("queue", "development.q")),
-            threads=config.get("report_mosdepth", {}).get("threads", config["default_resources"]["threads"]),
+        params:
+            prefix="qc/mosdepth_report/{sample}_{type}",
+            thresholds=config["mosdepth_bed"]["thresholds"],
+            extra=config.get("mosdepth_bed", {}).get("extra", ""),
         shell:
             """
             mosdepth \
@@ -149,6 +143,7 @@ if not _integrated:
 
 
 if _hotspot_bed:
+
     rule report_bedtools_intersect_hotspot:
         """Intersect mosdepth per-base output with hotspot BED for coverage sheet."""
         input:
@@ -156,11 +151,7 @@ if _hotspot_bed:
             coverage_csi=f"{_mosdepth_dir}/{{sample}}_{{type}}.per-base.bed.gz.csi",
             right=_hotspot_bed,
         output:
-            results=temp(
-                f"{_mosdepth_dir}/{{sample}}_{{type}}.mosdepth.per-base.hotspot.txt"
-            ),
-        params:
-            extra="-wb " + config.get("report_bedtools_intersect_hotspot", {}).get("extra", ""),
+            results=temp(f"{_mosdepth_dir}/{{sample}}_{{type}}.mosdepth.per-base.hotspot.txt"),
         log:
             f"{_mosdepth_dir}/{{sample}}_{{type}}.mosdepth.per-base.hotspot.log",
         benchmark:
@@ -169,24 +160,20 @@ if _hotspot_bed:
                 config.get("report_bedtools_intersect_hotspot", {}).get("benchmark_repeats", 1),
             )
         container:
-            config.get("report_bedtools_intersect_hotspot", {}).get(
-                "container", config["default_container"]
-            )
-        threads: config.get("report_bedtools_intersect_hotspot", {}).get(
-            "threads", config["default_resources"]["threads"]
-        )
+            config.get("report_bedtools_intersect_hotspot", {}).get("container", config["default_container"])
+        threads: config.get("report_bedtools_intersect_hotspot", {}).get("threads", config["default_resources"]["threads"])
         resources:
             queue=config.get("report_bedtools_intersect_hotspot", {}).get(
                 "queue", config["default_resources"].get("queue", "development.q")
             ),
-            threads=config.get("report_bedtools_intersect_hotspot", {}).get(
-                "threads", config["default_resources"]["threads"]
-            ),
+        params:
+            extra="-wb " + config.get("report_bedtools_intersect_hotspot", {}).get("extra", ""),
         wrapper:
             "v1.32.0/bio/bedtools/intersect"
 
 
 if not _integrated and _igv_cfg.get("enabled", False):
+
     rule report_igv_batch:
         """Create an IGV batch script for all PASS SNV and Pindel variants."""
         input:
@@ -197,12 +184,6 @@ if not _integrated and _igv_cfg.get("enabled", False):
             bam="results/bam/{sample}_{type}.bam",
         output:
             batch="reports/igv/{sample}_{type}/igv_batch.txt",
-        params:
-            genome=_igv_cfg.get("genome", "hg38"),
-            padding=_igv_cfg.get("padding", 40),
-            snapshot_dir=lambda wildcards: (
-                f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"
-            ),
         log:
             "reports/igv/{sample}_{type}/igv_batch.log",
         container:
@@ -210,9 +191,15 @@ if not _integrated and _igv_cfg.get("enabled", False):
         threads: 1
         resources:
             queue=config["default_resources"].get("queue", "development.q"),
-            threads=1,
+        params:
+            genome=_igv_cfg.get("genome", "hg38"),
+            padding=_igv_cfg.get("padding", 40),
+            snapshot_dir=lambda wildcards: (f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"),
         script:
             "../scripts/report_makebatfile.py"
+
+
+if not _integrated and _igv_cfg.get("enabled", False):
 
     rule report_igv:
         """Run IGV headlessly to produce SVG screenshots for each PASS variant."""
@@ -229,7 +216,6 @@ if not _integrated and _igv_cfg.get("enabled", False):
         threads: 1
         resources:
             queue=config["default_resources"].get("queue", "development.q"),
-            threads=1,
         shell:
             "xvfb-run --auto-servernum igv -b {input.batch} &> {log}"
 
@@ -242,8 +228,6 @@ rule report_bedtools_intersect:
         right=config["reference"]["design_bed"],
     output:
         results=temp(f"{_mosdepth_dir}/{{sample}}_{{type}}.mosdepth.per-base.exon_bed.txt"),
-    params:
-        extra=config.get("report_bedtools_intersect", {}).get("extra", ""),
     log:
         f"{_mosdepth_dir}/{{sample}}_{{type}}.mosdepth.per-base.exon_bed.log",
     benchmark:
@@ -256,7 +240,8 @@ rule report_bedtools_intersect:
     threads: config.get("report_bedtools_intersect", {}).get("threads", config["default_resources"]["threads"])
     resources:
         queue=config.get("report_bedtools_intersect", {}).get("queue", config["default_resources"].get("queue", "development.q")),
-        threads=config.get("report_bedtools_intersect", {}).get("threads", config["default_resources"]["threads"]),
+    params:
+        extra=config.get("report_bedtools_intersect", {}).get("extra", ""),
     wrapper:
         "v1.32.0/bio/bedtools/intersect"
 
@@ -303,7 +288,6 @@ rule report_xlsx:
     threads: config.get("results_report", {}).get("threads", config["default_resources"]["threads"])
     resources:
         queue=config.get("results_report", {}).get("queue", config["default_resources"].get("queue", "development.q")),
-        threads=config.get("results_report", {}).get("threads", config["default_resources"]["threads"]),
     params:
         sample=lambda wildcards: wildcards.sample,
         sample_type=lambda wildcards: wildcards.type,
@@ -323,27 +307,24 @@ rule report_xlsx:
         panels=list(config.get("bcftools_filter_include_region", {}).keys()),
         cnv_tc_method=_cnv_cfg.get("tc_method"),
         igv_snapshot_dir=lambda wildcards: (
-            f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots"
-            if _igv_cfg.get("enabled", False)
-            else ""
+            f"reports/igv/{wildcards.sample}_{wildcards.type}/snapshots" if _igv_cfg.get("enabled", False) else ""
         ),
         containers={
             k: c
             for k, c in {
-                "bwa-mem2":       config.get("bwa_mem2", {}).get("container")
-                                  or config.get("bwa_mem", {}).get("container"),
-                "samtools":       config.get("samtools_sort", {}).get("container")
-                                  or config.get("samtools_stats", {}).get("container"),
-                "picard":         config.get("picard_collect_duplication_metrics", {}).get("container"),
-                "gatk mutect2":   config.get("gatk_mutect2", {}).get("container"),
-                "vardict":        config.get("vardict", {}).get("container"),
-                "pindel":         config.get("pindel_call", {}).get("container"),
-                "vep":            config.get("vep", {}).get("container"),
+                "bwa-mem2": config.get("bwa_mem2", {}).get("container") or config.get("bwa_mem", {}).get("container"),
+                "samtools": config.get("samtools_sort", {}).get("container")
+                or config.get("samtools_stats", {}).get("container"),
+                "picard": config.get("picard_collect_duplication_metrics", {}).get("container"),
+                "gatk mutect2": config.get("gatk_mutect2", {}).get("container"),
+                "vardict": config.get("vardict", {}).get("container"),
+                "pindel": config.get("pindel_call", {}).get("container"),
+                "vep": config.get("vep", {}).get("container"),
                 "bcbio ensemble": config.get("bcbio_variation_recall_ensemble", {}).get("container"),
-                "mosdepth":       config.get("mosdepth_bed", {}).get("container")
-                                  or config.get("report_mosdepth", {}).get("container"),
-                "bedtools":       config.get("report_bedtools_intersect", {}).get("container"),
-                "report":         config.get("results_report", {}).get("container"),
+                "mosdepth": config.get("mosdepth_bed", {}).get("container")
+                or config.get("report_mosdepth", {}).get("container"),
+                "bedtools": config.get("report_bedtools_intersect", {}).get("container"),
+                "report": config.get("results_report", {}).get("container"),
             }.items()
             if c
         },
