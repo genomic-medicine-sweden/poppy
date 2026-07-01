@@ -282,6 +282,26 @@ if _bamsnap_cfg.get("enabled", False):
         shell:
             "mkdir -p {output.results_dir} 2>{log}"
 
+    rule report_bamsnap_pdf:
+        """Combine per-variant bamsnap PNGs into a single PDF."""
+        input:
+            bamsnap_dir="bamsnap/bamsnap/{sample}_{type}/",
+        output:
+            pdf="bamsnap/bamsnap/{sample}_{type}.pdf",
+        log:
+            "bamsnap/bamsnap/{sample}_{type}.pdf.log",
+        container:
+            config.get("results_report", {}).get("container", config["default_container"])
+        threads: 1
+        resources:
+            mem_mb=config.get("results_report", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("results_report", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("results_report", {}).get("partition", config["default_resources"]["partition"]),
+            threads=1,
+            time=config.get("results_report", {}).get("time", config["default_resources"]["time"]),
+        script:
+            "../scripts/report_bamsnap_pdf.py"
+
     rule report_copy_bamsnap:
         """Copy bamsnap output directory to results/bamsnap/ (standalone mode)."""
         input:
@@ -290,6 +310,15 @@ if _bamsnap_cfg.get("enabled", False):
             directory("results/bamsnap/{sample}_{type}/"),
         shell:
             "cp -r {input} {output}"
+
+    rule report_copy_bamsnap_pdf:
+        """Copy bamsnap PDF to results/bamsnap/ (standalone mode)."""
+        input:
+            "bamsnap/bamsnap/{sample}_{type}.pdf",
+        output:
+            "results/bamsnap/{sample}_{type}.pdf",
+        shell:
+            "cp {input} {output}"
 
 
 if _hotspot_bed:

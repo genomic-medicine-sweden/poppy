@@ -28,6 +28,10 @@ files:
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
     output: cnv/{sample}/{sample}_{type}.pathology.svdb_query.vcf.gz
 
+  - name: Excel report
+    input: reports/xlsx/{sample}_{type}.xlsx
+    output: report/{sample}_{type}.xlsx
+
   - name: CNV HTML report, pathology TC
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html

@@ -70,6 +70,7 @@ def get_report_outputs():
     outputs = [f"results/report/{s}_{t}.xlsx" for s, t in sample_types]
     if config.get("bamsnap", {}).get("enabled", False):
         outputs += [f"results/bamsnap/{s}_{t}/" for s, t in sample_types]
+        outputs += [f"results/bamsnap/{s}_{t}.pdf" for s, t in sample_types]
     return outputs
 
 
