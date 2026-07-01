@@ -543,9 +543,6 @@ def _write_panel_sheet(ws, panel_name, panel_data, snv_filters):
     cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
     ws.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
                           {"type": "formula", "criteria": cond, "format": fmt_orange})
-    ws.autofilter(area)
-    ws.filter_column("A", "Filter != PASS")
-    ws.filter_column("I", "AF >= 0.02")
     for row_data in tbl["data"]:
         hidden = not (row_data[0] == "PASS" and float(row_data[8]) >= 0.02)
         if hidden:
@@ -583,9 +580,6 @@ worksheet_snv.add_table(area, {"columns": snv_table["headers"], "style": "Table 
 cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
 worksheet_snv.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
                                  {"type": "formula", "criteria": cond, "format": fmt_orange})
-worksheet_snv.autofilter(area)
-worksheet_snv.filter_column("A", "Filter != PASS")
-worksheet_snv.filter_column("I", "AF >= 0.02")
 for row_data in snv_table["data"]:
     if not (row_data[0] == "PASS" and float(row_data[8]) >= 0.02):
         worksheet_snv.set_row(i, options={"hidden": True})
@@ -619,8 +613,6 @@ worksheet_pindel.add_table(area, {"columns": pindel_table["headers"], "style": "
 cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
 worksheet_pindel.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
                                     {"type": "formula", "criteria": cond, "format": fmt_orange})
-worksheet_pindel.autofilter(area)
-worksheet_pindel.filter_column("A", "Filter != PASS")
 for row_data in pindel_table["data"]:
     if row_data[0] != "PASS":
         worksheet_pindel.set_row(i, options={"hidden": True})
