@@ -84,6 +84,7 @@ has_bamsnap     = hasattr(snakemake.input, "bamsnap_dir")
 
 cnv_tc_method = snakemake.params.cnv_tc_method
 containers    = snakemake.params.containers
+bamsnap_af    = snakemake.params.bamsnap_af
 
 # Optional panels: present in snakemake.input only if configured in config
 configured_panels = snakemake.params.panels  # list of panel names, e.g. ["cll", "myeloid"]
@@ -804,6 +805,7 @@ if has_bamsnap:
     worksheet_bamsnap.write_row(1, 0, empty_list, fmt_line)
     worksheet_bamsnap.write(2, 0, f"Sample: {sample}")
     worksheet_bamsnap.write(3, 0, f"Snapshots directory: {os.path.abspath(bamsnap_dir)}")
+    worksheet_bamsnap.write(4, 0, f"Filters applied: PASS variants with AF ≥ {bamsnap_af}")
     bamsnap_headers = ["Gene", "Chr", "Pos", "Ref", "Alt", "AF"]
     for col, h in enumerate(bamsnap_headers):
         worksheet_bamsnap.write(5, col, h, fmt_table_heading)
@@ -811,8 +813,9 @@ if has_bamsnap:
     for record in snv_table["data"]:
         if record[0] == "PASS":
             gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
-            worksheet_bamsnap.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
-            row += 1
+            if float(af) >= bamsnap_af:
+                worksheet_bamsnap.write_row(row, 0, [gene, chrom, pos, ref, alt, af])
+                row += 1
 
     logging.debug("Screenshots sheet")
     scale = 0.5
@@ -820,9 +823,13 @@ if has_bamsnap:
     worksheet_screenshots.set_column(0, 0, 120)
     worksheet_screenshots.write(img_row, 0, "BAM Screenshots", fmt_heading)
     img_row += 2
+    worksheet_screenshots.write(img_row, 0, f"Filters applied: PASS variants with AF ≥ {bamsnap_af}")
+    img_row += 2
     for record in snv_table["data"]:
         if record[0] == "PASS":
             gene, chrom, pos, ref, alt, af = record[3], record[4], record[5], record[6], record[7], record[8]
+            if float(af) < bamsnap_af:
+                continue
             png_path = os.path.join(bamsnap_dir, "bamsnap_images", f"{chrom}_{pos}.png")
             worksheet_screenshots.write(img_row, 0, f"{gene}  {chrom}:{pos}  {ref}>{alt}  AF={af}", fmt_bold)
             img_row += 1

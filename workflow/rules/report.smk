@@ -495,6 +495,7 @@ rule report_xlsx:
         synonymous_positions=config.get("results_report_xlsx", {}).get("synonymous_positions", {}),
         panels=list(config.get("bcftools_filter_include_region", {}).keys()),
         cnv_tc_method=_cnv_cfg.get("tc_method"),
+        bamsnap_af=float(config.get("bamsnap_create_pos_list", {}).get("af", "0.05")),
         containers={
             k: c
             for k, c in {
