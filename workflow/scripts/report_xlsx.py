@@ -32,11 +32,13 @@ import logging
 import sys
 
 logging.basicConfig(
-    format="{asctime} - {levelname} - {message}",
-    style="{",
+    filename=snakemake.log[0],
+    filemode="w",
+    format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M",
-    level=logging.INFO,
+    level=logging.DEBUG,
 )
+sys.stderr = open(snakemake.log[0], "a")
 
 
 # ---------------------------------------------------------------------------
