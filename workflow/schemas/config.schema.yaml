@@ -473,8 +473,8 @@ properties:
   report_tabix_vcf:
     type: object
     description: >
-      Resource overrides for the report_tabix_vcf rule (standalone mode only).
-      Indexes VCF files in results/vcf/ that are missing a .tbi index.
+      Resource overrides for the report_tabix_vcf rule.
+      Creates .tbi indexes for VCF files in results/vcf/ in both integrated and standalone modes.
     properties:
       benchmark_repeats:
         type: integer

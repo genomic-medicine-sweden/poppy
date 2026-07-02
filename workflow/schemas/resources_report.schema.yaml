@@ -24,7 +24,7 @@ properties:
 
   report_tabix_vcf:
     type: object
-    description: resource definitions for report_tabix_vcf (standalone mode only)
+    description: resource definitions for report_tabix_vcf
     properties:
       mem_mb:
         type: integer
