@@ -77,27 +77,6 @@ def _get_optional_inputs(wildcards):
     return d
 
 
-rule report_tabix_vcf:
-    """Create tabix index for VCF files in results/vcf/ if missing."""
-    input:
-        "results/vcf/{vcf_file}.vcf.gz",
-    output:
-        "results/vcf/{vcf_file}.vcf.gz.tbi",
-    log:
-        "results/vcf/{vcf_file}.vcf.gz.tbi.log",
-    container:
-        config["default_container"]
-    threads: config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"])
-    resources:
-        mem_mb=config.get("report_tabix_vcf", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
-        mem_per_cpu=config.get("report_tabix_vcf", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
-        partition=config.get("report_tabix_vcf", {}).get("partition", config["default_resources"]["partition"]),
-        threads=config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"]),
-        time=config.get("report_tabix_vcf", {}).get("time", config["default_resources"]["time"]),
-    shell:
-        "tabix -p vcf {input} &> {log}"
-
-
 if not _integrated:
 
     rule report_copy_xlsx:
@@ -119,6 +98,26 @@ if not _integrated:
             time=config["default_resources"]["time"],
         shell:
             "cp {input} {output} 2>{log}"
+
+    rule report_tabix_vcf:
+        """Create tabix index for VCF files in results/vcf/ if missing."""
+        input:
+            "results/vcf/{vcf_file}.vcf.gz",
+        output:
+            "results/vcf/{vcf_file}.vcf.gz.tbi",
+        log:
+            "results/vcf/{vcf_file}.vcf.gz.tbi.log",
+        container:
+            config["default_container"]
+        threads: config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"])
+        resources:
+            mem_mb=config.get("report_tabix_vcf", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
+            mem_per_cpu=config.get("report_tabix_vcf", {}).get("mem_per_cpu", config["default_resources"]["mem_per_cpu"]),
+            partition=config.get("report_tabix_vcf", {}).get("partition", config["default_resources"]["partition"]),
+            threads=config.get("report_tabix_vcf", {}).get("threads", config["default_resources"]["threads"]),
+            time=config.get("report_tabix_vcf", {}).get("time", config["default_resources"]["time"]),
+        shell:
+            "tabix -p vcf {input} &> {log}"
 
     rule report_mosdepth:
         """
