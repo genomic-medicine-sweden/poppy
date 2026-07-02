@@ -16,10 +16,6 @@ files:
     input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz
     output: vcf/{sample}_{type}.filter.somatic.vcf.gz
 
-  - name: SNV ensemble soft filtered VCF file index
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz.tbi
-    output: vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi
-
   - name: Caller-specific VCF file
     input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
     output: vcf/{sample}_{type}.{caller}.vcf.gz
@@ -27,10 +23,6 @@ files:
   - name: Pindel VCF file
     input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz
     output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz
-
-  - name: Pindel VCF file index
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz.tbi
-    output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi
 
   - name: SVDB CNV VCF file
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
