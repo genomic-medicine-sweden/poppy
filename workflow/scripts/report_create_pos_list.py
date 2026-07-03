@@ -6,6 +6,8 @@ Used as input to bamsnap to generate per-variant BAM screenshots.
 
 import logging
 
+from pysam import VariantFile
+
 logging.basicConfig(
     filename=snakemake.log[0],
     filemode="w",
@@ -13,8 +15,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M",
     level=logging.DEBUG,
 )
-
-from pysam import VariantFile
 
 af_threshold = float(snakemake.params.af)
 vcf = VariantFile(snakemake.input.vcf)

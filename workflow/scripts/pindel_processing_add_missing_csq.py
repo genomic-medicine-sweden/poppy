@@ -43,7 +43,12 @@ def add_missing_annotation(vcf_in, vcf_out, field="CSQ"):
             for variant in variants:
                 field_value = variant.info.get(field, None)
                 if field_value is None:
-                    logger.info(f"Field {field} is missing in variant {variant.chrom}:{variant.pos}. Adding it now.")
+                    logger.info(
+                        "Field %s is missing in variant %s:%s. Adding it now.",
+                        field,
+                        variant.chrom,
+                        variant.pos,
+                    )
                     blank_csq = [""] * nb_annot
                     variant.info.update({"CSQ": "|".join(blank_csq)})
                     print(f"{variant.info[field]}")

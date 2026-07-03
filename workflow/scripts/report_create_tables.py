@@ -256,7 +256,10 @@ def create_known_variants_table(vcf_input, pindel_input, sequenceid):
         ["GATA2",  "G200Vfs*18",  "c.599del",     "chr3",  128485998, "AC",     "A",     "COSM1418772", "COSV62003348",  0.3027],
         ["IDH1",   "R132C",       "c.394C>T",     "chr2",  208248389, "G",      "A",     "COSM28747",   "COSV61615256",  0.0442],
         ["IDH2",   "R172K",       "c.515G>A",     "chr15", 90088606,  "C",      "T",     "COSM33733",   "COSV57468734",  0.0262],
-        ["JAK2",   "F537-K539>L", "c.1611_1616del","chr9", 5070021,   "TTCACAA","T",     "COSM24437",   "COSV67579858",  0.0401],
+        [
+            "JAK2", "F537-K539>L", "c.1611_1616del", "chr9", 5070021,
+            "TTCACAA", "T", "COSM24437", "COSV67579858", 0.0401,
+        ],
         ["JAK2",   "V617F",       "c.1849G>T",    "chr9",  5073770,   "G",      "T",     "COSM12600",   "COSV67569051",  0.0419],
         ["KRAS",   "G13D",        "c.38G>A",      "chr12", 25245347,  "C",      "T",     "COSM532",     "COSV55497388",  0.3604],
         ["NPM1",   "W288Cfs*12",  "c.860_863dup", "chr5",  171410539, "C",      "CTCTG", "COSM17559",   "COSV51542664",  0.0389],

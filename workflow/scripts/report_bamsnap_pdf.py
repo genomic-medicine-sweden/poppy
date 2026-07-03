@@ -5,6 +5,8 @@ import os
 import sys
 import traceback
 
+from PIL import Image, ImageDraw
+
 bamsnap_dir = sys.argv[1]
 output_pdf = sys.argv[2]
 
@@ -14,9 +16,7 @@ logging.basicConfig(
 )
 
 logging.info(f"bamsnap_dir = {bamsnap_dir}")
-logging.info(f"output_pdf  = {output_pdf}")
-
-from PIL import Image, ImageDraw
+logging.info(f"output_pdf = {output_pdf}")
 
 
 def _sort_key(path):

@@ -24,12 +24,14 @@ from report_create_tables import (
 from datetime import date
 from operator import itemgetter
 import gzip
+import logging
 import os
+from pysam import VariantFile
+import struct
 import subprocess
+import sys
 import xlsxwriter
 import yaml
-import logging
-import sys
 
 logging.basicConfig(
     filename=snakemake.log[0],
@@ -79,12 +81,12 @@ if wanted_transcripts_file:
 
 # Feature flags: keys are only present in snakemake.input when enabled
 has_hotspot_cov = hasattr(snakemake.input, "hotspot_perbase")
-has_cnv         = hasattr(snakemake.input, "cnvkit_cns")
-has_bamsnap     = hasattr(snakemake.input, "bamsnap_dir")
+has_cnv = hasattr(snakemake.input, "cnvkit_cns")
+has_bamsnap = hasattr(snakemake.input, "bamsnap_dir")
 
 cnv_tc_method = snakemake.params.cnv_tc_method
-containers    = snakemake.params.containers
-bamsnap_af    = snakemake.params.bamsnap_af
+containers = snakemake.params.containers
+bamsnap_af = snakemake.params.bamsnap_af
 
 # Optional panels: present in snakemake.input only if configured in config
 configured_panels = snakemake.params.panels  # list of panel names, e.g. ["cll", "myeloid"]
@@ -113,7 +115,6 @@ synonymous_positions = snakemake.params.synonymous_positions
 # ---------------------------------------------------------------------------
 
 logging.info("Building SNV table")
-from pysam import VariantFile
 for x in VariantFile(vcf).header.records:
     if x.key == "VEP":
         vep_line = x.value
@@ -285,7 +286,7 @@ if has_hotspot_cov:
     hotspot_rows = []
     for (chrom, start, end, name), depths in sorted(regions.items()):
         mean_cov = sum(depths) / len(depths) if depths else 0
-        min_cov  = min(depths) if depths else 0
+        min_cov = min(depths) if depths else 0
         pct_above = sum(1 for d in depths if d >= thresholds[0]) / len(depths) * 100 if depths else 0
         hotspot_rows.append([chrom, start, end, name, round(mean_cov, 1), min_cov, round(pct_above, 1)])
 
@@ -306,9 +307,9 @@ if has_hotspot_cov:
 # CNV data (optional)
 # ---------------------------------------------------------------------------
 
-gatk_cnv_table  = None
-cnvkit_table    = None
-cnvkit_scatter  = getattr(snakemake.input, "cnv_scatter", None)
+gatk_cnv_table = None
+cnvkit_table = None
+cnvkit_scatter = getattr(snakemake.input, "cnv_scatter", None)
 
 if has_cnv:
     logging.info("Building CNV tables")
@@ -403,10 +404,10 @@ if has_hotspot_cov:
     worksheet_hotspot_cov = workbook.add_worksheet("Hotspot Coverage")
 if has_cnv:
     worksheet_gatk_cnv = workbook.add_worksheet("GATK CNV")
-    worksheet_cnvkit    = workbook.add_worksheet("CNVkit")
+    worksheet_cnvkit = workbook.add_worksheet("CNVkit")
 if has_bamsnap:
-    worksheet_bamsnap       = workbook.add_worksheet("bamsnap")
-    worksheet_screenshots   = workbook.add_worksheet("Screenshots")
+    worksheet_bamsnap = workbook.add_worksheet("bamsnap")
+    worksheet_screenshots = workbook.add_worksheet("Screenshots")
 worksheet_version = workbook.add_worksheet("Version")
 
 empty_list = ["", "", "", "", "", ""]
@@ -437,12 +438,17 @@ if is_hd829:
     i += 1
 else:
     for panel in panels:
-        worksheet_overview.write_url(i, 0, f"internal:'{panel.upper()}'!A1", string=f"{panel.upper()} panel variants")
+        worksheet_overview.write_url(
+            i,
+            0,
+            "internal:'{}'!A1".format(panel.upper()),
+            string="{} panel variants".format(panel.upper()),
+        )
         i += 1
-worksheet_overview.write_url(i,     0, "internal:'SNVs'!A1",         string="SNVs identified")
-worksheet_overview.write_url(i + 1, 0, "internal:'Pindel'!A1",       string="Pindel results")
-worksheet_overview.write_url(i + 2, 0, "internal:'Intron'!A1",       string="Intron and non-coding variants")
-worksheet_overview.write_url(i + 3, 0, "internal:'Synonymous'!A1",   string="Synonymous variants")
+worksheet_overview.write_url(i, 0, "internal:'SNVs'!A1", string="SNVs identified")
+worksheet_overview.write_url(i + 1, 0, "internal:'Pindel'!A1", string="Pindel results")
+worksheet_overview.write_url(i + 2, 0, "internal:'Intron'!A1", string="Intron and non-coding variants")
+worksheet_overview.write_url(i + 3, 0, "internal:'Synonymous'!A1", string="Synonymous variants")
 worksheet_overview.write_url(i + 4, 0, "internal:'Low Coverage'!A1", string="Low Coverage regions")
 worksheet_overview.write_url(i + 5, 0, "internal:'Coverage'!A1",     string="Coverage")
 worksheet_overview.write_url(i + 6, 0, "internal:'QCI'!A1",          string="QCI")
@@ -451,12 +457,12 @@ if has_hotspot_cov:
     worksheet_overview.write_url(i, 0, "internal:'Hotspot Coverage'!A1", string="Hotspot coverage")
     i += 1
 if has_cnv:
-    worksheet_overview.write_url(i,     0, "internal:'GATK CNV'!A1", string=f"GATK CNV ({cnv_tc_method})")
-    worksheet_overview.write_url(i + 1, 0, "internal:'CNVkit'!A1",   string=f"CNVkit ({cnv_tc_method})")
+    worksheet_overview.write_url(i, 0, "internal:'GATK CNV'!A1", string=f"GATK CNV ({cnv_tc_method})")
+    worksheet_overview.write_url(i + 1, 0, "internal:'CNVkit'!A1", string=f"CNVkit ({cnv_tc_method})")
     i += 2
 if has_bamsnap:
-    worksheet_overview.write_url(i,     0, "internal:'bamsnap'!A1",       string="BAM snapshots")
-    worksheet_overview.write_url(i + 1, 0, "internal:'Screenshots'!A1",   string="BAM screenshots (images)")
+    worksheet_overview.write_url(i, 0, "internal:'bamsnap'!A1", string="BAM snapshots")
+    worksheet_overview.write_url(i + 1, 0, "internal:'Screenshots'!A1", string="BAM screenshots (images)")
     i += 2
 worksheet_overview.write_url(i, 0, "internal:'Version'!A1", string="Software versions")
 i += 2
@@ -506,7 +512,7 @@ def _add_table(ws, start_row, table, col_set=None):
     n_cols = len(table["headers"])
     col_end = columns_to_letter(n_cols)
     n_rows = max(len(table["data"]), 1)
-    area = f"A{start_row}:{col_end}{start_row + n_rows}"
+    area = "A{}:{}{}".format(start_row, col_end, start_row + n_rows)
     ws.add_table(area, {"data": table["data"], "columns": table["headers"], "style": "Table Style Light 1"})
     return start_row + n_rows + 1
 
@@ -541,17 +547,20 @@ def _write_panel_sheet(ws, panel_name, panel_data, snv_filters):
     n_cols = len(tbl["headers"])
     col_end = columns_to_letter(n_cols)
     n_rows = max(len(tbl["data"]), 1)
-    area = f"A{i}:{col_end}{i + n_rows}"
+    area = "A{}:{}{}".format(i, col_end, i + n_rows)
     ws.add_table(area, {"columns": tbl["headers"], "style": "Table Style Light 1"})
-    cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
-    ws.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
-                          {"type": "formula", "criteria": cond, "format": fmt_orange})
+    cond = '=LEFT($A{}, 4)<>"PASS"'.format(i + 1)
+    ws.conditional_format(
+        "A{}:{}{}".format(i + 1, col_end, i + n_rows),
+        {"type": "formula", "criteria": cond, "format": fmt_orange},
+    )
     for row_data in tbl["data"]:
         hidden = not (row_data[0] == "PASS" and float(row_data[8]) >= 0.02)
         if hidden:
             ws.set_row(i, options={"hidden": True})
         ws.write_row(i, 0, row_data)
         i += 1
+
 
 if not is_hd829:
     for panel_name, panel_data in panels.items():
@@ -578,11 +587,13 @@ i += 3
 n_cols = len(snv_table["headers"])
 col_end = columns_to_letter(n_cols)
 n_rows = max(len(snv_table["data"]), 1)
-area = f"A{i}:{col_end}{i + n_rows}"
+area = "A{}:{}{}".format(i, col_end, i + n_rows)
 worksheet_snv.add_table(area, {"columns": snv_table["headers"], "style": "Table Style Light 1"})
-cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
-worksheet_snv.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
-                                 {"type": "formula", "criteria": cond, "format": fmt_orange})
+cond = '=LEFT($A{}, 4)<>"PASS"'.format(i + 1)
+worksheet_snv.conditional_format(
+    "A{}:{}{}".format(i + 1, col_end, i + n_rows),
+    {"type": "formula", "criteria": cond, "format": fmt_orange},
+)
 for row_data in snv_table["data"]:
     if not (row_data[0] == "PASS" and float(row_data[8]) >= 0.02):
         worksheet_snv.set_row(i, options={"hidden": True})
@@ -611,11 +622,13 @@ i += len(filters_pindel) + 3
 n_cols = len(pindel_table["headers"])
 col_end = columns_to_letter(n_cols)
 n_rows = max(len(pindel_table["data"]), 1)
-area = f"A{i}:{col_end}{i + n_rows}"
+area = "A{}:{}{}".format(i, col_end, i + n_rows)
 worksheet_pindel.add_table(area, {"columns": pindel_table["headers"], "style": "Table Style Light 1"})
-cond = f'=LEFT($A{i + 1}, 4)<>"PASS"'
-worksheet_pindel.conditional_format(f"A{i + 1}:{col_end}{i + n_rows}",
-                                    {"type": "formula", "criteria": cond, "format": fmt_orange})
+cond = '=LEFT($A{}, 4)<>"PASS"'.format(i + 1)
+worksheet_pindel.conditional_format(
+    "A{}:{}{}".format(i + 1, col_end, i + n_rows),
+    {"type": "formula", "criteria": cond, "format": fmt_orange},
+)
 for row_data in pindel_table["data"]:
     if row_data[0] != "PASS":
         worksheet_pindel.set_row(i, options={"hidden": True})
@@ -640,7 +653,7 @@ for gene, vals in non_coding_regions.items():
 i += 3
 n_cols = len(snv_table["headers"])
 col_end = columns_to_letter(n_cols)
-area = f"A{i}:{col_end}{i + max(len(intron_table), 1)}"
+area = "A{}:{}{}".format(i, col_end, i + max(len(intron_table), 1))
 worksheet_intron.add_table(area, {"data": intron_table, "columns": snv_table["headers"],
                                   "style": "Table Style Light 1"})
 
@@ -659,7 +672,7 @@ for c_name, vals in synonymous_positions.items():
 i += 3
 n_cols = len(snv_table["headers"])
 col_end = columns_to_letter(n_cols)
-area = f"A{i}:{col_end}{i + max(len(synonymous_table), 1)}"
+area = "A{}:{}{}".format(i, col_end, i + max(len(synonymous_table), 1))
 worksheet_syno.add_table(area, {"data": synonymous_table, "columns": snv_table["headers"],
                                 "style": "Table Style Light 1"})
 
@@ -675,7 +688,7 @@ worksheet_lowcov.write(2, 0, f"Sample: {sample}")
 worksheet_lowcov.write(3, 0, f"Gene regions with coverage lower than {thresholds[0]}x.")
 n_cols = len(lowcov_table["headers"])
 col_end = columns_to_letter(n_cols)
-area = f"A6:{col_end}{6 + max(len(lowcov_table['data']), 1)}"
+area = "A6:{}{}".format(col_end, 6 + max(len(lowcov_table["data"]), 1))
 worksheet_lowcov.add_table(area, {"data": lowcov_table["data"], "columns": lowcov_table["headers"],
                                   "style": "Table Style Light 1"})
 
@@ -691,7 +704,7 @@ worksheet_cov.write(2, 0, f"Sample: {sample}")
 worksheet_cov.write(3, 0, "Average coverage of each region in exon-bedfile")
 n_cols = len(regionscov_table["headers"])
 col_end = columns_to_letter(n_cols)
-area = f"A6:{col_end}{6 + max(len(regionscov_table['data']), 1)}"
+area = "A6:{}{}".format(col_end, 6 + max(len(regionscov_table["data"]), 1))
 worksheet_cov.add_table(area, {"data": regionscov_table["data"], "columns": regionscov_table["headers"],
                                "style": "Table Style Light 1"})
 
@@ -725,7 +738,7 @@ if has_hotspot_cov:
     n_cols = len(hotspot_table["headers"])
     col_end = columns_to_letter(n_cols)
     n_rows = max(len(hotspot_table["data"]), 1)
-    area = f"A6:{col_end}{6 + n_rows}"
+    area = "A6:{}{}".format(col_end, 6 + n_rows)
     worksheet_hotspot_cov.add_table(
         area,
         {"data": hotspot_table["data"], "columns": hotspot_table["headers"],
@@ -733,7 +746,7 @@ if has_hotspot_cov:
     )
     fmt_red_bg = workbook.add_format({"bg_color": "#FFCCCC"})
     worksheet_hotspot_cov.conditional_format(
-        f"F7:F{6 + n_rows}",
+        "F7:F{}".format(6 + n_rows),
         {"type": "cell", "criteria": "<", "value": thresholds[0], "format": fmt_red_bg},
     )
 
@@ -748,7 +761,7 @@ if has_cnv:
     n_cols = len(gatk_cnv_table["headers"])
     col_end = columns_to_letter(n_cols)
     n_rows = max(len(gatk_cnv_table["data"]), 1)
-    area = f"A6:{col_end}{6 + n_rows}"
+    area = "A6:{}{}".format(col_end, 6 + n_rows)
     worksheet_gatk_cnv.add_table(
         area,
         {"data": gatk_cnv_table["data"], "columns": gatk_cnv_table["headers"],
@@ -757,11 +770,11 @@ if has_cnv:
     fmt_dup = workbook.add_format({"bg_color": "#FFDDC1"})
     fmt_del = workbook.add_format({"bg_color": "#C1E1FF"})
     worksheet_gatk_cnv.conditional_format(
-        f"F7:F{6 + n_rows}",
+        "F7:F{}".format(6 + n_rows),
         {"type": "cell", "criteria": "==", "value": '"+1"', "format": fmt_dup},
     )
     worksheet_gatk_cnv.conditional_format(
-        f"F7:F{6 + n_rows}",
+        "F7:F{}".format(6 + n_rows),
         {"type": "cell", "criteria": "==", "value": '"-1"', "format": fmt_del},
     )
 
@@ -773,7 +786,7 @@ if has_cnv:
     n_cols = len(cnvkit_table["headers"])
     col_end = columns_to_letter(n_cols)
     n_rows = max(len(cnvkit_table["data"]), 1)
-    area = f"A6:{col_end}{6 + n_rows}"
+    area = "A6:{}{}".format(col_end, 6 + n_rows)
     worksheet_cnvkit.add_table(
         area,
         {"data": cnvkit_table["data"], "columns": cnvkit_table["headers"],
@@ -788,8 +801,6 @@ if has_cnv:
 # --- bamsnap sheet ----------------------------------------------------------
 
 if has_bamsnap:
-    import struct
-
     def _png_size(path):
         """Return (width, height) in pixels by reading the PNG IHDR chunk."""
         with open(path, "rb") as f:
@@ -831,7 +842,12 @@ if has_bamsnap:
             if float(af) < bamsnap_af:
                 continue
             png_path = os.path.join(bamsnap_dir, "bamsnap_images", f"{chrom}_{pos}.png")
-            worksheet_screenshots.write(img_row, 0, f"{gene}  {chrom}:{pos}  {ref}>{alt}  AF={af}", fmt_bold)
+            worksheet_screenshots.write(
+                img_row,
+                0,
+                "{}  {}:{}  {}>{}  AF={}".format(gene, chrom, pos, ref, alt, af),
+                fmt_bold,
+            )
             img_row += 1
             if os.path.exists(png_path):
                 _, h = _png_size(png_path)

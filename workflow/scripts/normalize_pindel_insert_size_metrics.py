@@ -84,11 +84,11 @@ if __name__ == "__main__":
 
     if changed:
         logging.info(
-            f"MEDIAN_INSERT_SIZE was below {min_insert_size} ({original_value}); "
-            f"adjusted to {replace_insert_size} for pindel input."
+            "MEDIAN_INSERT_SIZE was below %s (%s); adjusted to %s for pindel input.",
+            min_insert_size,
+            original_value,
+            replace_insert_size,
         )
     else:
-        logging.info(
-            f"MEDIAN_INSERT_SIZE was {original_value}; no adjustment needed."
-        )
+        logging.info("MEDIAN_INSERT_SIZE was %s; no adjustment needed.", original_value)
     logging.info(f"Wrote adjusted metrics to {output_path}")
