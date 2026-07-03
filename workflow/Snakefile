@@ -17,8 +17,6 @@ include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
 
 
-generate_report = config.get("generate_final_report", False)
-
 if generate_report:
     if config.get("resources_report"):
         config = load_resources(config, config["resources_report"])
@@ -27,14 +25,6 @@ if generate_report:
 
 
 report: "report/workflow.rst"
-
-
-def _get_all_outputs():
-    outputs = [compile_output_file_list]
-    if generate_report:
-        sample_types = list({(row.sample, row.type) for row in units.itertuples()})
-        outputs += [f"reports/xlsx/{s}_{t}.xlsx" for s, t in sample_types]
-    return outputs
 
 
 rule all:

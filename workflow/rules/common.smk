@@ -141,3 +141,13 @@ def get_vcfs_for_svdb_merge(wildcards, add_suffix=False):
 
 
 generate_copy_rules(output_spec)
+
+generate_report = config.get("generate_final_report", False)
+
+
+def _get_all_outputs():
+    outputs = [compile_output_file_list]
+    if generate_report:
+        sample_types = list({(row.sample, row.type) for row in units.itertuples()})
+        outputs += [f"reports/xlsx/{s}_{t}.xlsx" for s, t in sample_types]
+    return outputs
