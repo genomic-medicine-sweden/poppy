@@ -174,6 +174,7 @@ if not _integrated:
 if _bamsnap_cfg.get("enabled", False):
 
     if _integrated:
+
         ruleorder: report_bamsnap_downsample_bam > alignment_samtools_index
 
     rule report_bamsnap_create_pos_list:
