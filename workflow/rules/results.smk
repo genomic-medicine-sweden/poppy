@@ -45,35 +45,28 @@ def generate_copy_rules(output_spec):
         time = config.get("_copy", {}).get("time", config["default_resources"]["time"])
         copy_container = config.get("_copy", {}).get("container", config["default_container"])
 
-        # Use concatenation (not f-strings) to avoid Python 3.12+ f-string
-        # multi-token behaviour breaking the Snakemake parser.
+        # Use % formatting (not f-strings) to avoid Python 3.12+ f-string
+        # multi-token behaviour breaking the Snakemake parser when building
+        # the dynamically-generated rule code string.
+        func_args = (
+            "input, output, params, wildcards, threads, resources, "
+            "log, version, rule, conda_env, container_img, singularity_args, use_singularity, "
+            "env_modules, bench_record, jobid, is_shell, bench_iteration, cleanup_scripts, "
+            "shadow_dir, edit_notebook, conda_base_path, basedir, runtime_sourcecache_path, "
+            "__is_snakemake_rule_func=True"
+        )
         rule_code = "\n".join(
             [
-                '@workflow.rule(name="' + rule_name + '")',
-                '@workflow.input("' + str(input_file) + '")',
-                '@workflow.output("' + str(output_file) + '")',
-                '@workflow.log("logs/' + rule_name + "_" + output_file.name + '.log")',
-                '@workflow.container("' + copy_container + '")',
-                '@workflow.resources(time="'
-                + str(time)
-                + '", threads='
-                + str(threads)
-                + ', mem_mb="'
-                + str(mem_mb)
-                + '", mem_per_cpu='
-                + str(mem_per_cpu)
-                + ', partition="'
-                + partition
-                + '")',
+                '@workflow.rule(name="%s")' % rule_name,
+                '@workflow.input("%s")' % input_file,
+                '@workflow.output("%s")' % output_file,
+                '@workflow.log("logs/%s_%s.log")' % (rule_name, output_file.name),
+                '@workflow.container("%s")' % copy_container,
+                '@workflow.resources(time="%s", threads=%s, mem_mb="%s", mem_per_cpu=%s, partition="%s")'
+                % (time, threads, mem_mb, mem_per_cpu, partition),
                 '@workflow.shellcmd("cp -r {input} {output}")',
                 "@workflow.run\n",
-                "def __rule_"
-                + rule_name
-                + "(input, output, params, wildcards, threads, resources, "
-                "log, version, rule, conda_env, container_img, singularity_args, use_singularity, "
-                "env_modules, bench_record, jobid, is_shell, bench_iteration, cleanup_scripts, "
-                "shadow_dir, edit_notebook, conda_base_path, basedir, runtime_sourcecache_path, "
-                "__is_snakemake_rule_func=True):",
+                "def __rule_%s(%s):" % (rule_name, func_args),
                 '\tshell("(cp -r {input[0]} {output[0]}) &> {log}", bench_record=bench_record, '
                 "bench_iteration=bench_iteration)\n\n",
             ]
