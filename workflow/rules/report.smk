@@ -98,27 +98,28 @@ rule report_tabix_vcf:
         "tabix -p vcf {input} &> {log}"
 
 
-if not _integrated:
+rule report_copy_xlsx:
+    """Copy Excel report to results/report/."""
+    input:
+        "reports/xlsx/{sample}_{type}.xlsx",
+    output:
+        "results/report/{sample}_{type}.xlsx",
+    log:
+        "results/report/{sample}_{type}.xlsx.log",
+    container:
+        config["default_container"]
+    threads: config["default_resources"]["threads"]
+    resources:
+        mem_mb=config["default_resources"]["mem_mb"],
+        mem_per_cpu=config["default_resources"]["mem_per_cpu"],
+        partition=config["default_resources"]["partition"],
+        threads=config["default_resources"]["threads"],
+        time=config["default_resources"]["time"],
+    shell:
+        "cp {input} {output} 2>{log}"
 
-    rule report_copy_xlsx:
-        """Copy Excel report to results/report/ (standalone mode)."""
-        input:
-            "reports/xlsx/{sample}_{type}.xlsx",
-        output:
-            "results/report/{sample}_{type}.xlsx",
-        log:
-            "results/report/{sample}_{type}.xlsx.log",
-        container:
-            config["default_container"]
-        threads: config["default_resources"]["threads"]
-        resources:
-            mem_mb=config["default_resources"]["mem_mb"],
-            mem_per_cpu=config["default_resources"]["mem_per_cpu"],
-            partition=config["default_resources"]["partition"],
-            threads=config["default_resources"]["threads"],
-            time=config["default_resources"]["time"],
-        shell:
-            "cp {input} {output} 2>{log}"
+
+if not _integrated:
 
     rule report_mosdepth:
         """

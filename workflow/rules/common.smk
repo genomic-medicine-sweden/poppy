@@ -149,5 +149,5 @@ def _get_all_outputs():
     outputs = [compile_output_file_list]
     if generate_report:
         sample_types = list({(row.sample, row.type) for row in units.itertuples()})
-        outputs += [f"reports/xlsx/{s}_{t}.xlsx" for s, t in sample_types]
+        outputs += [f"results/report/{s}_{t}.xlsx" for s, t in sample_types]
     return outputs

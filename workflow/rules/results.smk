@@ -45,18 +45,31 @@ def generate_copy_rules(output_spec):
         time = config.get("_copy", {}).get("time", config["default_resources"]["time"])
         copy_container = config.get("_copy", {}).get("container", config["default_container"])
 
+        # Use concatenation (not f-strings) to avoid Python 3.12+ f-string
+        # multi-token behaviour breaking the Snakemake parser.
         rule_code = "\n".join(
             [
-                f'@workflow.rule(name="{rule_name}")',
-                f'@workflow.input("{input_file}")',
-                f'@workflow.output("{output_file}")',
-                f'@workflow.log("logs/{rule_name}_{output_file.name}.log")',
-                f'@workflow.container("{copy_container}")',
-                f'@workflow.resources(time="{time}", threads={threads}, mem_mb="{mem_mb}", '
-                f'mem_per_cpu={mem_per_cpu}, partition="{partition}")',
+                '@workflow.rule(name="' + rule_name + '")',
+                '@workflow.input("' + str(input_file) + '")',
+                '@workflow.output("' + str(output_file) + '")',
+                '@workflow.log("logs/' + rule_name + "_" + output_file.name + '.log")',
+                '@workflow.container("' + copy_container + '")',
+                '@workflow.resources(time="'
+                + str(time)
+                + '", threads='
+                + str(threads)
+                + ', mem_mb="'
+                + str(mem_mb)
+                + '", mem_per_cpu='
+                + str(mem_per_cpu)
+                + ', partition="'
+                + partition
+                + '")',
                 '@workflow.shellcmd("cp -r {input} {output}")',
                 "@workflow.run\n",
-                f"def __rule_{rule_name}(input, output, params, wildcards, threads, resources, "
+                "def __rule_"
+                + rule_name
+                + "(input, output, params, wildcards, threads, resources, "
                 "log, version, rule, conda_env, container_img, singularity_args, use_singularity, "
                 "env_modules, bench_record, jobid, is_shell, bench_iteration, cleanup_scripts, "
                 "shadow_dir, edit_notebook, conda_base_path, basedir, runtime_sourcecache_path, "
