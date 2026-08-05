@@ -207,8 +207,8 @@ if _bamsnap_cfg.get("enabled", False):
     rule report_bamsnap_samtools_view_dedup:
         """Remove duplicate reads from BAM before bamsnap."""
         input:
-            bam=f"{_bam_dir}/{sample}_{type}.bam",
-            bai=f"{_bam_dir}/{sample}_{type}.bam.bai",
+            bam=_bam_dir + "/{sample}_{type}.bam",
+            bai=_bam_dir + "/{sample}_{type}.bam.bai",
         output:
             bam=temp("bamsnap/samtools_view_dedup/{sample}_{type}.bam"),
         log:
@@ -379,16 +379,16 @@ if _hotspot_bed:
     rule report_bedtools_intersect_hotspot:
         """Intersect mosdepth per-base output with hotspot BED for coverage sheet."""
         input:
-            left=f"{_mosdepth_dir}/{sample}_{type}.per-base.bed.gz",
-            coverage_csi=f"{_mosdepth_dir}/{sample}_{type}.per-base.bed.gz.csi",
+            left=_mosdepth_dir + "/{sample}_{type}.per-base.bed.gz",
+            coverage_csi=_mosdepth_dir + "/{sample}_{type}.per-base.bed.gz.csi",
             right=_hotspot_bed,
         output:
-            results=temp(f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.hotspot.txt"),
+            results=temp(_mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.hotspot.txt"),
         log:
-            f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.hotspot.log",
+            _mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.hotspot.log",
         benchmark:
             repeat(
-                f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.hotspot.benchmark.tsv",
+                _mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.hotspot.benchmark.tsv",
                 config.get("report_bedtools_intersect_hotspot", {}).get("benchmark_repeats", 1),
             )
         container:
@@ -413,16 +413,16 @@ if _hotspot_bed:
 rule report_bedtools_intersect:
     """Intersect mosdepth per-base output with exon bed for low-coverage analysis."""
     input:
-        left=f"{_mosdepth_dir}/{sample}_{type}.per-base.bed.gz",
-        coverage_csi=f"{_mosdepth_dir}/{sample}_{type}.per-base.bed.gz.csi",
+        left=_mosdepth_dir + "/{sample}_{type}.per-base.bed.gz",
+        coverage_csi=_mosdepth_dir + "/{sample}_{type}.per-base.bed.gz.csi",
         right=config["reference"]["design_bed"],
     output:
-        results=temp(f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.exon_bed.txt"),
+        results=temp(_mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.exon_bed.txt"),
     log:
-        f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.exon_bed.log",
+        _mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.exon_bed.log",
     benchmark:
         repeat(
-            f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.exon_bed.benchmark.tsv",
+            _mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.exon_bed.benchmark.tsv",
             config.get("report_bedtools_intersect", {}).get("benchmark_repeats", 1),
         )
     container:
@@ -463,10 +463,10 @@ rule report_xlsx:
         pindel_tbi="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi",
         bedfile=config["reference"]["design_bed"],
         pindelbed=config["pindel_call"]["include_bed"],
-        mosdepth_summary=f"{_mosdepth_dir}/{sample}_{type}.mosdepth.summary.txt",
-        mosdepth_perbase=f"{_mosdepth_dir}/{sample}_{type}.mosdepth.per-base.exon_bed.txt",
-        mosdepth_regions=f"{_mosdepth_dir}/{sample}_{type}.regions.bed.gz",
-        mosdepth_thresholds=f"{_mosdepth_dir}/{sample}_{type}.thresholds.bed.gz",
+        mosdepth_summary=_mosdepth_dir + "/{sample}_{type}.mosdepth.summary.txt",
+        mosdepth_perbase=_mosdepth_dir + "/{sample}_{type}.mosdepth.per-base.exon_bed.txt",
+        mosdepth_regions=_mosdepth_dir + "/{sample}_{type}.regions.bed.gz",
+        mosdepth_thresholds=_mosdepth_dir + "/{sample}_{type}.thresholds.bed.gz",
         picard_dupl="qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt",
     output:
         xlsx="reports/xlsx/{sample}_{type}.xlsx",
