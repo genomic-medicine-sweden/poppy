@@ -20,34 +20,27 @@ source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
 --profile $POPPY_HOME/profiles/grid_engine/ \
---configfiles \
-$POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
-$POPPY_HOME/config/config_<GENOME>.yaml \
+--configfile \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
+$POPPY_HOME/config/config_references_pipeline_static.yaml \
+$POPPY_HOME/config/config_references_pipeline_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
-Using the config files available in the pipeline repository provides sane defaults. If, for example, you want to change the path to the reference genome fasta file and corresponding index, create a new config file (`local_config.yaml`):
+## Configuration files
 
-```yaml
-reference:
-   fasta: /path/to/my/reference.fasta
-   fai: /path/to/my/reference.fasta.fai
-```
+The pipeline uses four configuration files, split into **static** (shipped with the repo, rarely need changing) and **custom** (must be adapted to your local environment):
 
-You can add the local config files to your command:
+| Config file | Purpose |
+|---|---|
+| `config/config_static.yaml` | Tool versions, container definitions, algorithm parameters |
+| `config/config_custom.yaml` | **User-supplied** local paths (genome, BED files, VEP cache, etc.) |
+| `config/config_references_pipeline_static.yaml` | Reference pipeline tool versions and default algorithm parameters |
+| `config/config_references_pipeline_custom.yaml` | **User-supplied** paths specific to the reference pipeline (e.g., mappability BED file) |
 
-```
---configfiles config/config.yaml config/config_references.yaml local_config.yaml
-```
-
-Or you can add all configs to the profile. The order of the configs matters, as the latter will override the settings:
-
-```yaml
-config-files:
-   - $POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
-   - $POPPY_HOME/config/config_<GENOME>.yaml
-   - local_config.yaml
-```
+!!! warning
+    Before running either the references pipeline or the main pipeline, you must replace all example paths in **`config_custom.yaml`** and **`config_references_pipeline_custom.yaml`** with the actual paths on your local system.
 
 ### Output files
 

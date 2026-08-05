@@ -23,7 +23,7 @@ Pindel requires the insert size in its config to exceed the read length, otherwi
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__normalize_pindel_insert_size_metrics#
 
@@ -42,7 +42,7 @@ Pindel requires the insert size in its config to exceed the read length, otherwi
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__pindel_processing_annotation_vep#
 
@@ -63,7 +63,7 @@ There are instances where the VEP annotation is not added to a variant. This rul
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__pindel_processing_add_missing_csq#
 
@@ -82,7 +82,7 @@ There are instances where the VEP annotation is not added to a variant. This rul
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__pindel_processing_fix_af#
 
@@ -101,7 +101,7 @@ There are instances where the VEP annotation is not added to a variant. This rul
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__pindel_processing_artifact_annotation#
 
@@ -123,7 +123,7 @@ Since when running `svdb --merge` with the priority flag set, svdb cuts off the 
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__svdb_merge#
 
@@ -147,7 +147,7 @@ Software used specifically to create the reference-files for Poppy.
 
 ### :wrench: Configuration
 
-#### Software settings (`config.yaml`)
+#### Software settings (`config_static.yaml` / `config_custom.yaml`)
 
 #CONFIGSCHEMA__reference_rules_create_artifact_file_pindel#
 

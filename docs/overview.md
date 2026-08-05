@@ -60,7 +60,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 
 ## Filtering
 
-**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/`).
+**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/filters/`).
 **Key Outputs**
 
 | Output File                                         | Description           |
