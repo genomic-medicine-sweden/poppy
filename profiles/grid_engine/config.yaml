@@ -1,7 +1,7 @@
 #/path/to/singularity_cache Adjust as needed
 jobs: 100
 cores: 20
-drmaa: "  -V -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
+drmaa: "  -V -cwd -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
 printshellcmds: True
 use-singularity: True
 singularity-prefix: "/clinical/dev/cgg-cancer/poppy/singularity_cache/"
