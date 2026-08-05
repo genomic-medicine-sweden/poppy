@@ -5,7 +5,7 @@ reference:
   dict: "reference/hg19.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
-  skip_chrs:
+  skip_contigs:
     - "chrM"
 
 bcftools_annotate:

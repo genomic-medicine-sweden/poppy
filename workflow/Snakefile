@@ -16,6 +16,7 @@ ruleorder: snv_indels_bgzip > annotation_bgzip_vcf
 ruleorder: cnv_sv_bgzip > annotation_bgzip_vcf
 ruleorder: cnv_sv_tabix > annotation_tabix_vcf
 
+
 include: "rules/common.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
@@ -89,9 +90,11 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
     wildcard_constraints:
         tc_method="pathology|purecn",
 
+
 use rule cnvkit_vcf from cnv_sv as cnv_sv_cnvkit_vcf with:
     wildcard_constraints:
         tc_method="pathology|purecn",
+
 
 use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
     input:
