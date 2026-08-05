@@ -37,7 +37,7 @@ Utilizes GATK tools (`CollectReadCounts`, `DenoiseReadCounts`, and `ModelSegment
 
 | Item      | Value                                               |
 | --------- | --------------------------------------------------- |
-| Container | `hydragenetics/gatk4:4.1.9.0`                       |
+| Container | `hydragenetics/gatk4:4.6.2.0`                       |
 | Input     | `alignment/samtools_merge_bam/{sample}_{type}.bam`  |
 | Output    | `cnv_sv/gatk_model_segments/{sample}_{type}.cr.seg` |
 
@@ -83,7 +83,7 @@ The structural variant calls from CNVkit and GATK CNV are aggregated into a sing
 
 | Item      | Value                                                      |
 | --------- | ---------------------------------------------------------- |
-| Container | `hydragenetics/svdb:2.6.0`                                 |
+| Container | `hydragenetics/svdb:2.10.2`                                |
 | Output    | `cnv_sv/svdb_merge/{sample}_{type}.{tc_method}.merged.vcf` |
 
 ### 7. SVDB Query — Database Annotation
@@ -148,22 +148,25 @@ cnvkit_batch:
   method: hybrid
 
 gatk_collect_read_counts:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  container: "docker://hydragenetics/gatk4:4.6.2.0"
 
 gatk_denoise_read_counts:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  container: "docker://hydragenetics/gatk4:4.6.2.0"
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/gatk.PoN.hdf5"
 
 purecn:
   container: docker://hydragenetics/purecn:2.2.0
-  genome: hg19
   interval_padding: 100
   segmentation_method: internal
   fun_segmentation: PSCBS
+  extra: "--model betabin --post-optimize"
   normaldb: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_normal_db.rds"
   intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
   mapping_bias_file: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_mapping_bias.rds"
-  extra: "--model betabin --post-optimize"
+
+# ── config_custom.yaml (user paths) ──────────────────────────────────────────
+purecn:
+  genome: hg19  # or GRCh38
 
 normalize_pindel_insert_size_metrics:
   min_insert_size: 200
@@ -172,10 +175,14 @@ normalize_pindel_insert_size_metrics:
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60"
-  include_bed: "/path/to/twist_shortlist_pindel.bed"
+  include_bed: "/path/to/twist_shortlist_pindel.bed"  # config_custom.yaml
+
+filter_vcf:
+  cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
+  cnv_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv_report.yaml"
 
 svdb_merge:
-  container: docker://hydragenetics/svdb:2.6.0
+  container: docker://hydragenetics/svdb:2.10.2
   tc_method:
     - name: purecn
       cnv_caller:
@@ -189,7 +196,21 @@ svdb_merge:
 cnv_html_report:
   cytobands: false
   show_table: true
+
+compile_xlsx_report:
+  filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"
+
+deepsomatic_t_only:
+  container: "docker://google/deepsomatic:1.8.0"
+  model: "WGS_TUMOR_ONLY"
+
+whatshap_phase:
+  container: "docker://hydragenetics/whatshap:2.8"
 ```
+
+`config_hard_filter_cnv_report.yaml` defines the hard filters applied when producing the CNV report table (separate from the pipeline-level `config_hard_filter_cnv.yaml`). `compile_xlsx_report_filters.yaml` controls which VEP fields and columns are included in the Excel report. `table_filter.yaml` is an optional user-supplied filter applied to the CNV JSON merge step — leave it empty (`{}`) to apply no additional filters.
+
+`deepsomatic_t_only` and `whatshap_phase` are provided by the [reports module v2.0.0](https://github.com/hydra-genetics/reports).
 
 See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for comprehensive configurations, including references to the filters applied.
 
