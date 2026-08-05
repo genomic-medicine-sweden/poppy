@@ -1,0 +1,39 @@
+---
+reference:
+  fasta: "/path/to/your/reference.fasta"
+  fai: "/path/to/your/reference.fasta.fai"
+  dict: "/path/to/your/reference.dict"
+  design_bed: "/path/to/your/design.bed"
+  design_intervals: "/path/to/your/design.intervals"
+  skip_chrs:
+    - "chrM"
+  #skip_contigs:
+
+bcftools_annotate:
+  annotation_db: "/path/to/gnomad_annotation.vcf.gz"  # e.g. small_exac_common_3.hg38.vcf.gz
+
+bwa_mem:
+  amb: "/path/to/your/reference.amb"
+  ann: "/path/to/your/reference.ann"
+  bwt: "/path/to/your/reference.bwt"
+  pac: "/path/to/your/reference.pac"
+  sa: "/path/to/your/reference.sa"
+
+gatk_collect_allelic_counts:
+  SNP_interval: "/path/to/gnomad_SNP_interval.interval_list"
+
+merge_cnv_json:
+  ref_genes: "/path/to/refGene.txt"
+
+pindel_call:
+  include_bed: "/path/to/your/pindel_regions.bed"
+
+pindel2vcf:
+  refname: "GRCh38"  # the reference genome name used in the VCF header
+  refdate: "2023"    # date of the reference genome
+
+purecn:
+  genome: hg38  # or hg19
+
+vep:
+  vep_cache: "/path/to/vep_cache"

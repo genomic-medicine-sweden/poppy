@@ -1,37 +1,37 @@
 samples: samples_ref.tsv # only samples to include in panels
 units: units_ref.tsv # only units to include in panels
 resources_references: "{{POPPY_HOME}}/config/resources_references.yaml"
-resources: "{{POPPY_HOME}}/config/resources.yaml"
 
-default_container: docker://hydragenetics/common:1.10.2
+default_container: docker://hydragenetics/common:4.1.1
 output: "{{POPPY_HOME}}/config/output_files_references.yaml"
 
-reference:
-  mappability: "{{POPPY_HOME}}/initial_references/ref_data/mappability/access-10kb.hg19.bed"
+modules:
+  references: "v1.0.1"
 
 bed_to_interval_list:
-  container: docker://hydragenetics/gatk4:4.2.2.0
+  container: docker://hydragenetics/gatk4:4.6.2.0
 
 cnvkit_build_normal_reference:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 cnvkit_create_targets:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 cnvkit_create_anti_targets:
-  container: docker://hydragenetics/cnvkit:0.9.9
+  container: docker://hydragenetics/cnvkit:0.9.13
 
 collect_read_counts:
-  container: docker://hydragenetics/gatk4:4.2.2.0
+  container: docker://hydragenetics/gatk4:4.6.2.0
 
 create_read_count_panel_of_normals:
-  container: docker://hydragenetics/gatk4:4.2.2.0
+  container: docker://hydragenetics/gatk4:4.6.2.0
 
 preprocess_intervals:
-  container: docker://hydragenetics/gatk4:4.2.2.0
+  container: docker://hydragenetics/gatk4:4.6.2.0
 
 purecn_interval_file:
   container: docker://hydragenetics/purecn:2.2.0
+  genome: hg38
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
@@ -41,7 +41,7 @@ purecn_normal_db:
   container: docker://hydragenetics/purecn:2.2.0
 
 svdb_build:
-  container: docker://hydragenetics/svdb:2.6.0
+  container: docker://hydragenetics/svdb:2.10.2
 
 svdb_export:
-  container: docker://hydragenetics/svdb:2.6.0
+  container: docker://hydragenetics/svdb:2.10.2

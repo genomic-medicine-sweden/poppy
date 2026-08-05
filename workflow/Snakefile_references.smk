@@ -2,6 +2,9 @@ include: "rules/common_references.smk"
 include: "rules/reference_rules.smk"
 
 
+ruleorder: snv_indels_gatk_mutect2_gvcf > annotation_tabix_vcf
+
+
 rule all:
     input:
         compile_output_file_list,
@@ -45,12 +48,17 @@ use rule cnvkit_batch from cnv_sv as cnv_sv_cnvkit_batch with:
         reference="references/cnvkit_build_normal_reference/cnvkit.PoN.cnn",
 
 
+use rule tabix from snv_indels as references_tabix with:
+    wildcard_constraints:
+        file="^references/bcftools_merge/.+",
+
+
 module references:
     snakefile:
         github(
             repo="hydra-genetics/references",
             path="workflow/Snakefile",
-            tag="f0aa9bc",
+            tag=config["modules"]["references"],
         )
     config:
         config
@@ -115,7 +123,7 @@ use rule purecn_coverage from references as references_purecn_coverage with:
         bam_files=get_bams(),
         bai_files=get_bais(),
     params:
-        intervals="references/purecn_interval_file/targets_intervals.txt",
+        intervals=lambda wildcards, input: input.intervals,
         extra=config.get("purecn_coverage", {}).get("extra", ""),
 
 

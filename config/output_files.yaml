@@ -5,7 +5,7 @@ files:
     output: bam/{sample}_{type}.bam
 
   - name: Alignment BAM file index
-    input: null
+    input: alignment/samtools_merge_bam/{sample}_{type}.bam.bai
     output: bam/{sample}_{type}.bam.bai
 
   - name: MultiQC
@@ -32,6 +32,11 @@ files:
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
 
-  - name: CNV HTML report, purecn TC
-    input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
-    output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html
+  # - name: "XLSX Variants Report"
+  #   input: "reports/xlsx_reports/{sample}_{type}_combined_report.xlsx"
+  #   output: "reports/{sample}_{type}_combined_report.xlsx"
+  #   types:
+  #     - T
+  # - name: CNV HTML report, purecn TC
+  #   input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
+  #   output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html

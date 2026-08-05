@@ -1,0 +1,100 @@
+# Report add-on configuration for GMS-Poppy.
+#
+# Provide this file alongside the main genome config in BOTH run modes.
+# resources_report.yaml is referenced below and loaded automatically.
+#
+#   Integrated (runs report at end of main pipeline):
+#     snakemake --snakefile workflow/Snakefile \
+#       --configfile config/config_GRCh38.yaml \
+#       --configfile config/config_report.yaml
+#
+#   Standalone (run after main pipeline has completed):
+#     snakemake --snakefile workflow/Snakefile_report \
+#       --configfile config/config_GRCh38.yaml \
+#       --configfile config/config_report.yaml
+#
+# Coordinates below are for GRCh38 (chr-prefixed).
+# For hg19 runs, replace with liftover equivalents.
+
+# Triggers integrated mode when provided to the main Snakefile.
+# Has no effect when provided to Snakefile_report (always runs standalone).
+generate_final_report: true
+resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
+
+results_report_xlsx:
+  wanted_transcripts: null  # path to gene -> preferred-transcript TSV, or null
+
+  # Regions shown in the Intron/non-coding sheet. [chrom, start, end, description]
+  non_coding_regions:
+    TERC:    ["chr3",  169764300, 169766000, "entire gene + promotor"]
+    GATA2:   ["chr3",  128481912, 128483849, "Intron4 (b/w exon4-5) in NM_001145662"]
+    ANKRD26: ["chr10",  27100074,  27100510, "Promotor and exon1"]
+    TP53:    ["chr17",   7687366,   7687500, "Exon1 non-coding"]
+    NOTCH1:  ["chr9",  136494400, 136496072, "3UTR"]
+
+  # Positions shown in the Synonymous sheet. [chrom, pos, ref, alt]
+  synonymous_positions:
+    "NM_032638.5(GATA2):c.1416G>A": ["chr3",  128481046, "C", "T"]
+    "NM_032638.5(GATA2):c.1023C>T": ["chr3",  128481939, "G", "A"]
+    "NM_032638.5(GATA2):c.981G>A":  ["chr3",  128483896, "C", "T"]
+    "NM_032638.5(GATA2):c.649C>T":  ["chr3",  128485949, "G", "A"]
+    "NM_032638.5(GATA2):c.351C>G":  ["chr3",  128486247, "G", "C"]
+    "NM_000546.6(TP53):c.375G>A":   ["chr17",   7675994, "C", "T"]
+    "NM_000546.6(TP53):c.375G>T":   ["chr17",   7675994, "C", "A"]
+    "NM_000546.6(TP53):c.375G>C":   ["chr17",   7675994, "C", "G"]
+    "NM_000546.6(TP53):c.672G>A":   ["chr17",   7674859, "C", "T"]
+    "NM_000546.6(TP53):c.993G>A":   ["chr17",   7673535, "C", "T"]
+
+  # Hotspot coverage sheet.
+  # Set to a BED file of hotspot regions to add a "Hotspot Coverage" sheet
+  # showing mosdepth per-base coverage across those regions.
+  # Set to null to skip the sheet.
+  hotspot_bed: null   # e.g. "/path/to/hotspot_regions.bed"
+
+# Uncomment to enable panel sub-sheets (CLL / Myeloid / Hotspot).
+# The corresponding filtered VCFs must already exist (produced by
+# bcftools_filter_include_region in the main pipeline).
+# bcftools_filter_include_region:
+#   cll:     "/path/to/cll.bed"
+#   myeloid: "/path/to/myeloid.bed"
+#   hotspot: "/path/to/hotspot.bed"
+
+# CNV sheets (GATK + CNVkit).
+# Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology").
+# Set to null to skip CNV sheets entirely.
+report_cnv:
+  tc_method: null
+  # File path patterns; {sample}, {type}, {tc_method} are substituted at runtime.
+  cnvkit_cns: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.cns"
+  gatk_seg:   "cnv_sv/gatk_model_segments/{sample}_{type}.{tc_method}.seg"
+  # Optional whole-genome scatter plot PNG to embed in the CNVkit sheet.
+  scatter_png: null  # e.g. "cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.scatter.png"
+
+# BAM snapshot sheet (integrated and standalone mode).
+# Set enabled: true to generate per-variant BAM screenshots with bamsnap,
+# add a "bamsnap" sheet to the Excel report, and produce a combined PDF.
+bamsnap:
+  enabled: false
+  margin: "50"            # bp on each side of the variant
+  extra: "-coverage_vaf 0.05 -show_soft_clipped -read_thickness 2 -read_gap_height 1"
+  container: "docker://hydragenetics/bamsnap:0.2.19"
+
+bamsnap_create_pos_list:
+  af: "0.05"              # minimum allele frequency to include a variant
+
+bamsnap_samtools_view_dedup:
+  container: "docker://hydragenetics/common:3.1.1.2"
+
+bamsnap_downsample_bam:
+  container: "docker://hydragenetics/common:3.1.1.2"
+  max_reads: 6000000      # downsample to this many reads before running bamsnap
+
+bamsnap_pdf:
+  container: "docker://hydragenetics/bamsnap:0.2.19"  # Pillow at /usr/local/lib/python3.9
+
+# Container for re-running mosdepth in standalone mode.
+# Threads and other resources are set in resources_report.yaml.
+report_mosdepth:
+  container: "docker://hydragenetics/mosdepth:0.3.2"
+
+

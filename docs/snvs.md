@@ -4,7 +4,7 @@ This section describes the SNV and indel calling steps in the Poppy pipeline. St
 
 A separate germline‑filtered branch of the Mutect2 calls is also created and used as input by the [CNV](cnvs.md) module (PureCN / CNVkit).
 
-Rules are provided by the [Hydra‑Genetics snv_indels module](https://github.com/hydra-genetics/snv_indels) (v0.6.0), the [annotation module](https://github.com/hydra-genetics/annotation) (v1.0.0), and the [filtering module](https://github.com/hydra-genetics/filtering) (v0.3.0).
+Rules are provided by the [Hydra‑Genetics snv_indels module](https://github.com/hydra-genetics/snv_indels) (v2.1.0), the [annotation module](https://github.com/hydra-genetics/annotation) (v1.4.1), and the [filtering module](https://github.com/hydra-genetics/filtering) (v1.1.0).
 
 ![SNV and Indel Workflow](static/snvs.svg){: .responsive-diagram}
 
@@ -27,7 +27,7 @@ Somatic variant calling is performed per chromosome (using the same split strate
 
 | Item      | Value                                                   |
 | --------- | ------------------------------------------------------- |
-| Container | `hydragenetics/gatk4:4.1.9.0`                           |
+| Container | `hydragenetics/gatk4:4.6.2.0`                           |
 | Input     | `alignment/samtools_merge_bam/{sample}_{type}.bam`      |
 | Output    | `snv_indels/gatk_mutect2/{sample}_{type}.merged.vcf.gz` |
 
@@ -75,7 +75,7 @@ All variants are annotated with functional consequences, population allele frequ
 
 | Item      | Value                                                                                       |
 | --------- | ------------------------------------------------------------------------------------------- |
-| Container | `hydragenetics/vep:111.0`                                                                   |
+| Container | `hydragenetics/vep:113.0`                                                                   |
 | Output    | `snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.vcf.gz` |
 
 Key VEP options configured in Poppy:
@@ -178,9 +178,10 @@ The germline SNP VCF feeds into:
 
 ## Configuration
 
-The relevant sections in `config.yaml`:
+The relevant sections in `config_static.yaml` and `config_custom.yaml`:
 
 ```yaml
+# ── config_static.yaml (static tool settings) ────────────────────────────────
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
   callers:
@@ -188,17 +189,12 @@ bcbio_variation_recall_ensemble:
     - vardict
 
 gatk_mutect2:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  container: "docker://hydragenetics/gatk4:4.6.2.0"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
   extra: " -Q 1 --nosv "
   bed_columns: "-c 1 -S 2 -E 3"
-
-vep:
-  container: "docker://hydragenetics/vep:111.0"
-  mode: "--offline --cache --merged "
-  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything …"
 
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"
@@ -207,9 +203,29 @@ vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
 
 filter_vcf:
-  germline: "config/config_hard_filter_germline.yaml"
-  somatic: "config/config_soft_filter_somatic.yaml"
-  somatic_hard: "config/config_hard_filter_somatic.yaml"
+  germline: "config/filters/config_hard_filter_germline.yaml"
+  somatic: "config/filters/config_soft_filter_somatic.yaml"
+  somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
+  pindel: "config/filters/config_soft_filter_pindel.yaml"
+  cnv_hard_filter: "config/filters/config_hard_filter_cnv.yaml"
+  cnv_filter: "config/config_hard_filter_cnv_report.yaml"
+
+# vep contains both static settings and custom paths:
+vep:
+  # Defined in config_static.yaml (static tool settings):
+  container: "docker://hydragenetics/vep:113.0"
+  mode: "--offline --cache --merged "
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything …"
+  # Defined in config_custom.yaml (user paths):
+  vep_cache: "/path/to/vep_cache"
+
+# ── config_custom.yaml (user paths) ──────────────────────────────────────────
+reference:
+  fasta: "/path/to/your/reference.fasta"  # used by all variant callers
+  design_bed: "/path/to/your/design.bed"  # target regions BED used by VarDict
+
+bcftools_annotate:
+  annotation_db: "/path/to/gnomad_annotation.vcf.gz"
 ```
 
-See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.

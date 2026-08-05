@@ -88,7 +88,7 @@ properties:
         description: >
           Path to genome fasta file
         format: uri-reference
-      skip_chrs:
+      skip_contigs:
         type: array
         description: >
           Reference sequences that should be excluded from analysis
@@ -109,6 +109,35 @@ properties:
     description: >
       Path to resources.yaml file
     format: uri-reference
+
+  resources_report:
+    type: string
+    description: >
+      Path to resources_report.yaml file containing per-rule resource overrides
+      (threads, mem_mb, mem_per_cpu, partition, time) for the report add-on rules
+    format: uri-reference
+
+  sequenceid:
+    type: string
+    description: >
+      Sequencing run identifier embedded in the report Version sheet.
+      When not set, it is derived automatically from the flowcell column in units.tsv.
+
+  poppy_version:
+    type: string
+    description: >
+      Pipeline version string shown in the report Version sheet (e.g. "2.0.0").
+      Typically set in the main Snakefile via config["poppy_version"].
+
+  bcftools_filter_include_region:
+    type: object
+    description: >
+      Optional panel BED files used to filter variants to a sub-panel.
+      Each key is a panel name (e.g. cll, myeloid, hotspot); value is the path to
+      the corresponding BED file. When set, a matching sub-sheet is added to the report.
+    additionalProperties:
+      type: string
+      format: uri-reference
 
   samples:
     type: string
@@ -366,10 +395,7 @@ properties:
           type: string
           format: uri-reference
       ref_genes:
-        type: array
-        items:
-          type: string
-          format: uri-reference
+        type: string
         description: >
           Path to refGene.txt file for gene annotation in CNV reports
       filtered_cnv_vcfs:
@@ -393,6 +419,235 @@ properties:
       - filtered_cnv_vcfs
       - germline_vcf
       - unfiltered_cnv_vcfs
+
+  generate_final_report:
+    type: boolean
+    description: >
+      When true, include the reporting rules in the pipeline and produce per-sample
+      Excel reports at reports/xlsx/{sample}_{type}.xlsx
+    default: false
+
+  results_report_xlsx:
+    type: object
+    description: >
+      Settings for the Excel report content
+    properties:
+      wanted_transcripts:
+        type: [string, "null"]
+        description: >
+          Path to a two-column TSV (no header) mapping gene to preferred transcript.
+          When set, the Low Coverage sheet marks which exon belongs to the preferred
+          transcript. Set to null to skip.
+        format: uri-reference
+      non_coding_regions:
+        type: object
+        description: >
+          Regions shown in the Intron/non-coding sheet.
+          Each key is a gene name; value is [chrom, start, end, description].
+        additionalProperties:
+          type: array
+          items: {}
+          minItems: 4
+          maxItems: 4
+      synonymous_positions:
+        type: object
+        description: >
+          Positions shown in the Synonymous sheet.
+          Each key is an HGVS name; value is [chrom, pos, ref, alt].
+        additionalProperties:
+          type: array
+          items: {}
+          minItems: 4
+          maxItems: 4
+      hotspot_bed:
+        type: [string, "null"]
+        description: >
+          Path to a BED file of hotspot regions. When set, adds a Hotspot Coverage
+          sheet showing mosdepth per-base coverage across those regions.
+          Set to null to skip.
+        format: uri-reference
+
+  report_tabix_vcf:
+    type: object
+    description: >
+      Resource overrides for the report_tabix_vcf rule.
+      Creates .tbi indexes for VCF files in results/vcf/ in both integrated and standalone modes.
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: Container image providing tabix
+        format: uri-reference
+
+  report_mosdepth:
+    type: object
+    description: >
+      Resource and container overrides for the report_mosdepth rule (standalone mode only)
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: >
+          Name or path to container containing the mosdepth executable
+        format: uri-reference
+
+  report_bedtools_intersect:
+    type: object
+    description: >
+      Resource and container overrides for the report_bedtools_intersect rule
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: >
+          Name or path to container containing the bedtools executable
+        format: uri-reference
+      extra:
+        type: string
+        description: Extra arguments to pass to bedtools intersect
+
+  results_report:
+    type: object
+    description: >
+      Resource and container overrides for the report_xlsx rule
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: >
+          Name or path to container for the report_xlsx rule
+        format: uri-reference
+
+  report_bedtools_intersect_hotspot:
+    type: object
+    description: >
+      Container and extra-argument overrides for the hotspot coverage bedtools intersect rule.
+      Active only when results_report_xlsx.hotspot_bed is set.
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: Number of times to repeat the benchmark
+      container:
+        type: string
+        description: >
+          Name or path to container containing the bedtools executable
+        format: uri-reference
+      extra:
+        type: string
+        description: Extra arguments to pass to bedtools intersect
+
+  report_cnv:
+    type: object
+    description: >
+      Settings for the CNV sheets (GATK CNV and CNVkit).
+      Set tc_method to enable; leave null to skip CNV sheets entirely.
+    properties:
+      tc_method:
+        type: [string, "null"]
+        description: >
+          Tumour-content method used (e.g. "purecn" or "pathology").
+          Set to null to disable CNV sheets.
+      cnvkit_cns:
+        type: string
+        description: >
+          Path pattern for CNVkit .cns file.
+          Supports {sample}, {type}, {tc_method} placeholders.
+      gatk_seg:
+        type: string
+        description: >
+          Path pattern for GATK ModelSegments .seg file.
+          Supports {sample}, {type}, {tc_method} placeholders.
+      scatter_png:
+        type: [string, "null"]
+        description: >
+          Path pattern for a CNVkit scatter plot PNG to embed in the CNVkit sheet.
+          Supports {sample}, {type}, {tc_method} placeholders. Set to null to skip.
+
+  bamsnap:
+    type: object
+    description: >
+      Settings for the bamsnap screenshot sheet.
+      Set enabled: true to generate per-variant BAM screenshots with bamsnap.
+    properties:
+      enabled:
+        type: boolean
+        description: When true, run bamsnap and add a bamsnap sheet to the Excel report
+        default: false
+      margin:
+        type: string
+        description: Base pairs to show on each side of the variant position
+      extra:
+        type: string
+        description: Extra arguments to pass to bamsnap
+      container:
+        type: string
+        description: >
+          Container image providing the bamsnap executable
+        format: uri-reference
+
+  bamsnap_create_pos_list:
+    type: object
+    description: >
+      Settings for the bamsnap position list creation rule.
+    properties:
+      af:
+        type: string
+        description: Minimum allele frequency for a PASS variant to be included
+      container:
+        type: string
+        description: Container image providing pysam
+        format: uri-reference
+
+  bamsnap_samtools_view_dedup:
+    type: object
+    description: >
+      Settings for the BAM deduplication step before bamsnap.
+    properties:
+      extra:
+        type: string
+        description: Extra arguments to pass to samtools view
+      container:
+        type: string
+        description: Container image providing samtools
+        format: uri-reference
+
+  bamsnap_downsample_bam:
+    type: object
+    description: >
+      Settings for the BAM downsampling step before bamsnap.
+    properties:
+      max_reads:
+        type: integer
+        description: Downsample to this many reads before running bamsnap
+      filter_reads:
+        type: string
+        description: samtools view flags used when counting reads for downsampling
+      float_precision:
+        type: integer
+        description: Decimal places used when computing the subsample fraction
+      container:
+        type: string
+        description: Container image providing samtools
+        format: uri-reference
+
+  bamsnap_pdf:
+    type: object
+    description: >
+      Settings for the bamsnap PDF generation rule.
+      Combines all per-variant bamsnap PNGs into a single multi-page PDF.
+    properties:
+      container:
+        type: string
+        description: Container image providing Python with Pillow
+        format: uri-reference
 
   mosdepth_bed:
     type: object
@@ -505,6 +760,17 @@ properties:
     required:
       - extra
       - include_bed
+
+  normalize_pindel_insert_size_metrics:
+    type: object
+    description: Configuration for normalize_pindel_insert_size_metrics rule
+    properties:
+      min_insert_size:
+        type: number
+        description: Minimum allowed insert size before replacement
+      replace_insert_size:
+        type: number
+        description: Insert size value used when below minimum threshold
 
   pindel_processing_add_missing_csq:
     type: object

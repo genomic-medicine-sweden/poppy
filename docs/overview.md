@@ -10,14 +10,14 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 
 | Module         | Version |
 | -------------- | ------- |
-| alignment      | v0.5.1  |
-| annotation     | v1.0.0  |
-| cnv_sv         | v3.1.0  |
-| filtering      | v0.3.0  |
-| prealignment   | v1.2.0  |
-| reports        | v1.1.1  |
-| snv_indels_gms | v0.6.0  |
-| qc             | v0.4.1  |
+| alignment      | v0.8.0  |
+| annotation     | v1.4.1  |
+| cnv_sv         | v3.2.1  |
+| filtering      | v1.1.0  |
+| prealignment   | v1.4.0  |
+| reports        | v2.0.0  |
+| snv_indels_gms | v2.1.0  |
+| qc             | v0.8.0  |
 
 ---
 
@@ -35,7 +35,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 
 ## Annotation
 
-**Description:** Annotate VCF files with VEP (Docker image `hydragenetics/vep:111.0`) and/or custom annotations such as artifact and background annotation from the reference pipeline.
+**Description:** Annotate VCF files with VEP (Docker image `hydragenetics/vep:113.0`) and/or custom annotations such as artifact and background annotation from the reference pipeline.
 **Key Outputs**
 
 | Output File                                                                                                                         | Description                                                                             |
@@ -60,7 +60,7 @@ Poppy uses [Hydra-Genetics](https://hydra-genetics.readthedocs.io/en/latest/) mo
 
 ## Filtering
 
-**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/`).
+**Description:** Apply hard/soft filters to germline and somatic VCFs (config files under `config/filters/`).
 **Key Outputs**
 
 | Output File                                         | Description           |

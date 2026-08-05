@@ -9,10 +9,6 @@ rule svdb_merge_wo_priority:
         vcfs=get_vcfs_for_svdb_merge,
     output:
         vcf=temp("cnv_sv/svdb_merge/{sample}_{type}.{tc_method}.merged.vcf"),
-    params:
-        extra=config.get("svdb_merge", {}).get("extra", ""),
-        overlap=config.get("svdb_merge", {}).get("overlap", 0.6),
-        bnd_distance=config.get("svdb_merge", {}).get("bnd_distance", 10000),
     log:
         "cnv_sv/svdb_merge/{sample}_{type}.{tc_method}.merged.vcf.log",
     benchmark:
@@ -20,6 +16,8 @@ rule svdb_merge_wo_priority:
             "cnv_sv/svdb_merge/{sample}_{type}.{tc_method}.merged.benchmark.tsv",
             config.get("svdb_merge", {}).get("benchmark_repeats", 1),
         )
+    container:
+        config.get("svdb_merge", {}).get("container", config["default_container"])
     threads: config.get("svdb_merge", {}).get("threads", config["default_resources"]["threads"])
     resources:
         mem_mb=config.get("svdb_merge", {}).get("mem_mb", config["default_resources"]["mem_mb"]),
@@ -27,8 +25,10 @@ rule svdb_merge_wo_priority:
         partition=config.get("svdb_merge", {}).get("partition", config["default_resources"]["partition"]),
         threads=config.get("svdb_merge", {}).get("threads", config["default_resources"]["threads"]),
         time=config.get("svdb_merge", {}).get("time", config["default_resources"]["time"]),
-    container:
-        config.get("svdb_merge", {}).get("container", config["default_container"])
+    params:
+        extra=config.get("svdb_merge", {}).get("extra", ""),
+        overlap=config.get("svdb_merge", {}).get("overlap", 0.6),
+        bnd_distance=config.get("svdb_merge", {}).get("bnd_distance", 10000),
     message:
         "{rule}: merges vcf files from different cnv callers into {output.vcf}"
     shell:
