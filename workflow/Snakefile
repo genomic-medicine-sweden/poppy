@@ -10,7 +10,11 @@ __license__ = "GPL-3"
 ruleorder: pindel_processing_annotation_vep > annotation_vep
 ruleorder: pindel_processing_artifact_annotation > annotation_artifact_annotation
 ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
-
+ruleorder: snv_indels_gatk_mutect2 > annotation_tabix_vcf
+ruleorder: snv_indels_tabix > annotation_tabix_vcf
+ruleorder: snv_indels_bgzip > annotation_bgzip_vcf
+ruleorder: cnv_sv_bgzip > annotation_bgzip_vcf
+ruleorder: cnv_sv_tabix > annotation_tabix_vcf
 
 include: "rules/common.smk"
 include: "rules/svdb.smk"
@@ -82,7 +86,12 @@ use rule cnvkit_call from cnv_sv as cnv_sv_cnvkit_call with:
         segment="cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.cns",
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz",
         tc_file=cnv_sv.get_tc_file,
+    wildcard_constraints:
+        tc_method="pathology|purecn",
 
+use rule cnvkit_vcf from cnv_sv as cnv_sv_cnvkit_vcf with:
+    wildcard_constraints:
+        tc_method="pathology|purecn",
 
 use rule pindel_generate_config from cnv_sv as cnv_sv_pindel_generate_config with:
     input:

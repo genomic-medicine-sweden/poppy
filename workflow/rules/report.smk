@@ -21,6 +21,8 @@ config["bcftools_filter_include_region"] is present with the relevant key.
 __author__ = "Carolina Barros"
 __license__ = "GPL-3"
 
+ruleorder: report_tabix_vcf > annotation_tabix_vcf
+
 # In integrated mode, generate_report is defined in the main Snakefile.
 # In standalone mode it is not, so we fall back to qc/mosdepth_report/.
 _integrated = globals().get("generate_report", False)

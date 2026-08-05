@@ -1,6 +1,7 @@
 include: "rules/common_references.smk"
 include: "rules/reference_rules.smk"
 
+ruleorder: snv_indels_gatk_mutect2_gvcf > annotation_tabix_vcf
 
 rule all:
     input:
@@ -55,7 +56,7 @@ module references:
         github(
             repo="hydra-genetics/references",
             path="workflow/Snakefile",
-            tag="f0aa9bc",
+            tag=config["modules"]["references"],
         )
     config:
         config
@@ -120,7 +121,7 @@ use rule purecn_coverage from references as references_purecn_coverage with:
         bam_files=get_bams(),
         bai_files=get_bais(),
     params:
-        intervals="references/purecn_interval_file/targets_intervals.txt",
+        intervals=lambda wildcards, input: input.intervals,
         extra=config.get("purecn_coverage", {}).get("extra", ""),
 
 
