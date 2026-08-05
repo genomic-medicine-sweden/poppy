@@ -1,34 +1,17 @@
 ---
-resources: "{{POPPY_HOME}}/config/resources.yaml"
-samples: "samples.tsv"
-units: "units.tsv"
-output: "{{POPPY_HOME}}/config/output_files.yaml"
-general_report: "{{POPPY_HOME}}/config/output_files.yaml"
-
-default_container: "docker://hydragenetics/common:4.0.0"
-
-trimmer_software: "fastp_pe"
-
-modules:
-  alignment: v0.5.1
-  annotation: v1.0.0
-  cnv_sv: v3.1.1
-  filtering: v0.3.0
-  prealignment: v1.2.0
-  qc: v0.4.1
-  reports: v1.1.1
-  snv_indels_gms: v0.6.0
+# GRCh38 site-specific overrides — use together with config_static.yaml
+# --configfile config_static.yaml config_GRCh38.yaml
 
 reference:
-  fasta: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta"
-  fai: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.fai"
-  dict: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.dict"
-  design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed"
-  design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/all_targets_covered_by_probes_combined_sorted_merged_ann_padd6.bed.interval_list"
-  design_intervals_gatk_cnv: "{{POPPY_HOME}}/initial_references/ref_data/design/design_files/design.preprocessed.interval_list"
-  artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv" # created by the ref pipeline
-  artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv" #  artifact freq for pindel calls in normal samples, created with reference pipeline
-  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv" # -background freq in normal samples, created with reference pipeline.
+  fasta: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna"
+  fai: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.fai"
+  dict: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.dict"
+  design_bed: "{{POPPY_HOME}}/initial_references/ref_data/design/design.bed"
+  design_intervals: "{{POPPY_HOME}}/initial_references/ref_data/design/Probes_merged_ok_combined_Lund_hem-gene-panel-myeloid_v1p2_TE-99236228_hg38.interval_list"
+  design_intervals_gatk_cnv: "{{POPPY_HOME}}/reference_files/design.preprocessed.interval_list"
+  artifacts: "{{POPPY_HOME}}/reference_files/artifact_panel.tsv"
+  artifacts_pindel: "{{POPPY_HOME}}/reference_files/artifact_panel_pindel.tsv"
+  background: "{{POPPY_HOME}}/reference_files/background_panel.tsv"
   skip_chrs:
     - "chrM"
     - "chr1_KI270706v1_random"
@@ -203,200 +186,65 @@ reference:
     - "chrEBV"
 
 annotate_cnv:
-  cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
-
-bcbio_variation_recall_ensemble:
-  container: "docker://hydragenetics/bcbio-vc:0.2.6"
-  callers:
-    - gatk_mutect2
-    - vardict
+  germline: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
 
 bcftools_annotate:
-  annotation_db: "{{POPPY_HOME}}/initial_references/annotation_db/small_exac_common_3.hg38.vcf.gz"
-bwa_mem:
-  amb: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.amb"
-  ann: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.ann"
-  bwt: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.bwt"
-  pac: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.pac"
-  sa: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/human_GRCh38_no_alt_analysis_set/human_GRCh38_no_alt_analysis_set.fasta.sa"
-  container: "docker://hydragenetics/bwa_mem:0.7.17"
+  annotation_db: "{{POPPY_HOME}}/initial_references/ref_data/annotation_db/small_exac_common_3.hg38.vcf.gz"
 
-cnv_html_report:
-  cytobands: false
-  show_table: true
+bcftools_filter_include_region:
+  panel: "{{POPPY_HOME}}/initial_references/ref_data/design/design.bed"
+
+bwa_mem:
+  amb: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.amb"
+  ann: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.ann"
+  bwt: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.bwt"
+  pac: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.pac"
+  sa: "{{POPPY_HOME}}/initial_references/ref_data/genome/GRCh38/hg38_masked/GCA_000001405.15_GRCh38_no_alt_analysis_set_masked.fna.sa"
 
 cnvkit_batch:
-  container: "docker://hydragenetics/cnvkit:0.9.13"
-  normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn" # created by the ref pipeline
-  method: hybrid
+  normal_reference: "{{POPPY_HOME}}/reference_files/cnvkit.PoN.cnn"
   extra: ""
 
-cnvkit_call:
-  container: "docker://hydragenetics/cnvkit:0.9.13"
-
-cnvkit_vcf:
-  container: "docker://hydragenetics/cnvkit:0.9.13"
-  hom_del_limit: 0.47
-  het_del_limit: 1.68 
-  dup_limit: 2.3 
-
-fastp_pe:
-  container: "docker://hydragenetics/fastp:0.20.1"
-
-fastqc:
-  container: "docker://hydragenetics/fastqc:0.11.9"
-
-filter_vcf:
-  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
-  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml" 
-  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml" 
-  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml" 
-  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml" 
-
 gatk_collect_allelic_counts:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
   SNP_interval: "{{POPPY_HOME}}/initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.annotated.hg38.interval_list"
 
-gatk_collect_read_counts:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
 gatk_denoise_read_counts:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: "{{POPPY_HOME}}/reference_files/gatk.PoN.hdf5" # created by the ref pipeline
-
-gatk_model_segments:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_filter:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_gvcf:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
-
-gatk_mutect2_merge_stats:
-  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  normal_reference: "{{POPPY_HOME}}/reference_files/gatk.PoN.hdf5"
 
 merge_cnv_json:
   ref_genes: "{{POPPY_HOME}}/initial_references/ref_data/refGene.txt"
-  annotations:
-    - "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
-  germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
-  filtered_cnv_vcfs:
-    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
-  unfiltered_cnv_vcfs:
-    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
-
-mosdepth_bed:
-  container: "docker://hydragenetics/mosdepth:0.3.2"
-  thresholds: "100,200,1000"
-  extra: " --mapq 20 "
-
-multiqc:
-  container: "docker://hydragenetics/multiqc:1.21"
-  reports:
-    DNA:
-      config: "{{POPPY_HOME}}/config/config_multiqc.yaml"
-      included_unit_types:
-        - T
-        - N
-      qc_files:
-        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
-        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
-        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
-        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
-        - "qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"
-        - "qc/mosdepth_bed/{sample}_{type}.thresholds.bed.gz"
-        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
-        - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
-        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
-        - "qc/picard_collect_insert_size_metrics/{sample}_{type}.insert_size_metrics.txt"
-        - "qc/picard_collect_gc_bias_metrics/{sample}_{type}.gc_bias.summary_metrics"
-        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
-
-picard_collect_alignment_summary_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_duplication_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_gc_bias_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_hs_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_collect_insert_size_metrics:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-picard_mark_duplicates:
-  container: "docker://hydragenetics/picard:2.25.0"
-
-normalize_pindel_insert_size_metrics:
-  min_insert_size: 200
-  replace_insert_size: 250
+  table_filter_config: "{{POPPY_HOME}}/config/table_filter.yaml"
 
 pindel_call:
-  container: "docker://hydragenetics/pindel:0.2.5b9"
-  extra: "-x 2 -B 60" #x och B?
-  include_bed: "{{POPPY_HOME}}/initial_references/ref_data/pindel/Twist_myeloid_pindel_240628.uppsala.bed"
-
-pindel_update_vcf:
-  container: "docker://hydragenetics/picard:2.25.4"
+  include_bed: "{{POPPY_HOME}}/initial_references/ref_data/pindel/genes_pindel.bed"
 
 pindel2vcf:
-  container: "docker://hydragenetics/pindel:0.2.5b9"
-  extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
   refname: "human_GRCh38_no_alt"
   refdate: "2023"
 
 purecn:
-  container: docker://hydragenetics/purecn:2.2.0
   genome: hg38
-  interval_padding: 100
-  segmentation_method: internal
-  fun_segmentation: PSCBS
-  normaldb: "{{POPPY_HOME}}/reference_files/purecn_normal_db.rds" # created by the ref pipeline
-  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
-  mapping_bias_file: "{{POPPY_HOME}}/reference_files/purecn_mapping_bias.rds" # created by the ref pipeline
+  normaldb: "{{POPPY_HOME}}/reference_files/purecn_normal_db.rds"
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt"
+  mapping_bias_file: "{{POPPY_HOME}}/reference_files/purecn_mapping_bias.rds"
 
 purecn_coverage:
-  container: docker://hydragenetics/purecn:2.2.0
-  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt" # created by the ref pipeline
+  intervals: "{{POPPY_HOME}}/reference_files/purecn_targets_intervals.txt"
 
-svdb_merge:
-  container: docker://hydragenetics/svdb:2.6.0
-  tc_method:
-    - name: purecn
-      cnv_caller:
-        - cnvkit
-        - gatk
-    - name: pathology
-      cnv_caller:
-        - cnvkit
-        - gatk
-
-svdb_query: # svdb file comes from references workflow
-  container: docker://hydragenetics/svdb:2.6.0
+svdb_query:
   db_string: "--db {{POPPY_HOME}}/reference_files/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
 
-vardict:
-  container: "docker://hydragenetics/vardict:1.8.3"
-  extra: " -Q 1 --nosv "
-  bed_columns: "-c 1 -S 2 -E 3"
-
 vep:
-  container: "docker://hydragenetics/vep:111.0"
-  vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_111_GRCh38/homo_sapiens_merged/" # had to download v111_GRCh37
+  vep_cache: "{{POPPY_HOME}}/initial_references/ref_data/vep_cache/homo_sapiens_merged_vep_113_GRCh38/"
 
-  mode: "--offline --cache --merged "
-  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
+deepsomatic_t_only:
+  container: "docker://google/deepsomatic:1.8.0"
+  extra: ""
+  model: "WGS_TUMOR_ONLY"
+  pon: "--use_default_pon_filtering=true"
 
-vt_decompose:
-  container: "docker://hydragenetics/vt:2015.11.10"
+whatshap_phase:
+  container: "docker://hydragenetics/whatshap:2.8"
 
-vt_normalize:
-  container: "docker://hydragenetics/vt:2015.11.10"
+compile_xlsx_report:
+  filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"

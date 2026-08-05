@@ -178,9 +178,10 @@ The germline SNP VCF feeds into:
 
 ## Configuration
 
-The relevant sections in `config.yaml`:
+The relevant sections in `config_static.yaml` and `config_custom.yaml`:
 
 ```yaml
+# ── config_static.yaml (static tool settings) ────────────────────────────────
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
   callers:
@@ -195,11 +196,6 @@ vardict:
   extra: " -Q 1 --nosv "
   bed_columns: "-c 1 -S 2 -E 3"
 
-vep:
-  container: "docker://hydragenetics/vep:111.0"
-  mode: "--offline --cache --merged "
-  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything …"
-
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"
 
@@ -207,9 +203,26 @@ vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
 
 filter_vcf:
-  germline: "config/config_hard_filter_germline.yaml"
-  somatic: "config/config_soft_filter_somatic.yaml"
-  somatic_hard: "config/config_hard_filter_somatic.yaml"
+  germline: "config/filters/config_hard_filter_germline.yaml"
+  somatic: "config/filters/config_soft_filter_somatic.yaml"
+  somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
+
+# vep contains both static settings and custom paths:
+vep:
+  # Defined in config_static.yaml (static tool settings):
+  container: "docker://hydragenetics/vep:111.0"
+  mode: "--offline --cache --merged "
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything …"
+  # Defined in config_custom.yaml (user paths):
+  vep_cache: "/path/to/vep_cache"
+
+# ── config_custom.yaml (user paths) ──────────────────────────────────────────
+reference:
+  fasta: "/path/to/your/reference.fasta"  # used by all variant callers
+  design_bed: "/path/to/your/design.bed"  # target regions BED used by VarDict
+
+bcftools_annotate:
+  annotation_db: "/path/to/gnomad_annotation.vcf.gz"
 ```
 
-See the full [config.yaml](https://github.com/genomic-medicine-sweden/poppy) for all available settings.
+See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.
