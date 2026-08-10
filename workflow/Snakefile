@@ -128,6 +128,22 @@ module reports:
 use rule * from reports as reports_*
 
 
+use rule merge_cnv_json from reports as reports_merge_cnv_json with:
+    input:
+        json=reports.get_json_for_merge_cnv_json,
+        fai=config.get("reference", {}).get("fai", ""),
+        annotation_bed=config.get("merge_cnv_json", {}).get("annotations", []),
+        germline_vcf=reports.get_germline_vcf,
+        germline_vcf_tbi=config.get("merge_cnv_json", {}).get("germline_vcf_tbi", []),
+        filtered_cnv_vcfs=reports.get_filtered_cnv_vcf,
+        filtered_cnv_vcf_tbis=config.get("merge_cnv_json", {}).get("filtered_cnv_vcf_tbis", []),
+        cnv_vcfs=reports.get_unfiltered_cnv_vcf,
+        cnv_vcfs_tbi=config.get("merge_cnv_json", {}).get("unfiltered_cnv_vcfs_tbi", []),
+        cytobands=lambda wildcards: config.get("merge_cnv_json", {}).get("cytobands", []),
+        ref_genes=lambda wildcards: config.get("merge_cnv_json", {}).get("ref_genes", []),
+        cancer_genes=reports.get_cancer_genes,
+
+
 module snv_indels:
     snakefile:
         get_module_snakefile(

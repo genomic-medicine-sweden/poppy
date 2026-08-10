@@ -5,14 +5,14 @@ units: "units.tsv"
 output: "{{POPPY_HOME}}/config/output_files.yaml"
 general_report: "{{POPPY_HOME}}/config/output_files.yaml" # Not used but required from reports module v1.1.1
 
-default_container: "docker://hydragenetics/common:1.10.2"
+default_container: "docker://hydragenetics/common:4.0.0"
 
 trimmer_software: "fastp_pe"
 
 modules:
   alignment: v0.5.1
   annotation: v1.0.0
-  cnv_sv: v3.1.0
+  cnv_sv: v3.1.1
   filtering: v0.3.0
   prealignment: v1.2.0
   qc: v0.4.1
@@ -20,17 +20,10 @@ modules:
   snv_indels_gms: v0.6.0
 
 reference:
-  fasta: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta"
-  fai: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fai"
-  dict: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.dict"
-  design_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.bed"
-  design_intervals: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/Twist_myeloid_v.1.1_padd6_201126.sorted.intervals"
   design_intervals_gatk_cnv: "{{REFERENCE_DIRECTORY}}/reference_files/design.preprocessed.interval_list"
   artifacts: "{{REFERENCE_DIRECTORY}}/reference_files/artifact_panel.tsv"
   artifacts_pindel: "{{REFERENCE_DIRECTORY}}/reference_files/artifact_panel_pindel.tsv"
   background: "{{REFERENCE_DIRECTORY}}/reference_files/background_panel.tsv"
-  skip_chrs:
-    - "chrM"
 
 annotate_cnv:
   cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
@@ -41,15 +34,7 @@ bcbio_variation_recall_ensemble:
     - gatk_mutect2
     - vardict
 
-bcftools_annotate:
-  annotation_db: /storage/userdata/references/homo_sapiens/hg19/hydra-genetics/poppy/ref_data/GNOMAD/small_exac_common_3.hg19.vcf.gz
-
 bwa_mem:
-  amb: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.amb"
-  ann: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.ann"
-  bwt: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.bwt"
-  pac: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.pac"
-  sa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.sa"
   container: "docker://hydragenetics/bwa_mem:0.7.17"
 
 cnv_html_report:
@@ -57,15 +42,15 @@ cnv_html_report:
   show_table: true
 
 cnvkit_batch:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
 
 cnvkit_call:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
 
 cnvkit_vcf:
-  container: "docker://hydragenetics/cnvkit:0.9.9"
+  container: "docker://hydragenetics/cnvkit:0.9.11"
   hom_del_limit: 0.47
   het_del_limit: 1.68
   dup_limit: 2.3
@@ -77,15 +62,14 @@ fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
 filter_vcf:
-  germline: "{{POPPY_HOME}}/config/config_hard_filter_germline.yaml"
-  somatic: "{{POPPY_HOME}}/config/config_soft_filter_somatic.yaml"
-  somatic_hard: "{{POPPY_HOME}}/config/config_hard_filter_somatic.yaml"
-  pindel: "{{POPPY_HOME}}/config/config_soft_filter_pindel.yaml"
-  cnv_hard_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv.yaml"
+  germline: "{{POPPY_HOME}}/config/filters/config_hard_filter_germline.yaml"
+  somatic: "{{POPPY_HOME}}/config/filters/config_soft_filter_somatic.yaml"
+  somatic_hard: "{{POPPY_HOME}}/config/filters/config_hard_filter_somatic.yaml"
+  pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
+  cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  SNP_interval: "FILL_IN"
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -110,15 +94,18 @@ gatk_mutect2_merge_stats:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
 
 merge_cnv_json:
-  ref_genes:
-    - "/path/to/refGene.txt"
   annotations:
     - "{{POPPY_HOME}}/config/cnv_genes.hg19.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  germline_vcf_tbi: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz.tbi
   filtered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
+  filtered_cnv_vcfs_tbi:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz.tbi
   unfiltered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
+  unfiltered_cnv_vcfs_tbi:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
@@ -169,7 +156,6 @@ picard_mark_duplicates:
 pindel_call:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-x 2 -B 60" #x och B?
-  include_bed: "/projects/wp2/nobackup/Twist_Myeloid/Bed_files/twist_shortlist_pindel-201214.bed"
 
 pindel_update_vcf:
   container: "docker://hydragenetics/picard:2.25.4"
@@ -177,8 +163,6 @@ pindel_update_vcf:
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
   extra: "-e 10 -mc 10 -is 5 -he 0.01 -G" # num reads support
-  refname: "hg19"
-  refdate: "2009"
 
 purecn:
   container: docker://hydragenetics/purecn:2.2.0
@@ -189,6 +173,7 @@ purecn:
   normaldb: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_normal_db.rds"
   intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
   mapping_bias_file: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_mapping_bias.rds"
+  extra: "--model betabin --post-optimize"
 
 purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
@@ -217,11 +202,8 @@ vardict:
 
 vep:
   container: "docker://hydragenetics/vep:111.0"
-  vep_cache: "FILL_IN"
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
-  # vep109: VEP:gnomAD_${pop}e or g for exome/genome. Both --af_gnomade and --af_gnomadg included in everything
-  #extra: " --assembly GRCh37 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class "
 
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"

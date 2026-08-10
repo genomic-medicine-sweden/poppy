@@ -5,6 +5,11 @@ reference:
   dict: "reference/hg19.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
+  skip_chrs:
+    - "chrM"
+
+bcftools_annotate:
+  annotation_db: "reference/small_exac_common_3.hg19.vcf.gz"
 
 bwa_mem:
   amb: "reference/hg19.fasta.amb"
@@ -13,18 +18,21 @@ bwa_mem:
   pac: "reference/hg19.fasta.pac"
   sa: "reference/hg19.fasta.sa"
 
-cnv_html_report:
-  template_dir: ../../config/cnv_report_template
-
 gatk_collect_allelic_counts:
   SNP_interval: "data/gatk/gnomad_SNP_0.001_target.annotated.interval_list"
 
 merge_cnv_json:
-  ref_genes:
-    - "reference/refGene.txt"
+  ref_genes: "reference/refGene.txt"
 
 pindel_call:
   include_bed: "data/bed/pindel_regions.bed"
+
+pindel2vcf:
+  refname: "hg19"
+  refdate: "2009"
+
+purecn:
+  genome: hg19
 
 vep:
   vep_cache: "data/vep_cache"

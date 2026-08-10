@@ -33,6 +33,8 @@ source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile \
 --profile $POPPY_HOME/profiles/grid_engine/ \
---configfile $POPPY_HOME/config/config_<GENOME>.yaml \
+--configfiles \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME REFERENCE_DIRECTORY=$REFERENCE_DIRECTORY
 ```

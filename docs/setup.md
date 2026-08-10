@@ -72,9 +72,9 @@ N1
 N2
 ```
 
-> Note: N1 and N2 are just examples to show how the `samples.tsv` and `units.tsv` files should look like. There are no N1 and N2 fastq files included in this repository.
+!!! note
+    N1 and N2 are just examples to show how the `samples.tsv` and `units.tsv` files should look like. There are no N1 and N2 fastq files included in this repository.
 
-Rename files to `units_ref.tsv` and `samples_ref.tsv`.
 
 ### 3. Required files for references pipeline and Poppy
 
@@ -108,7 +108,7 @@ sed -i 's/^chr//' initial_references/ref_data/GNOMAD/gnomad_SNP_0.001_target.ann
 
 ##### Download files for hg19 and GRCh38
 
-The initial reference files are defined in the `config/references/required_references_hg19.yaml` or `config/references/required_references_GRCh38.yaml` files. Some will be downloaded from public resources, and some need to be provided by the user (design files, pindel bed file). The latter should be created together with the center's geneticists, see above.
+The initial reference files are defined in `config/references/required_references_hg19.yaml` or `config/references/required_references_GRCh38.yaml`. Some will be downloaded from public resources, and some need to be provided by the user (design files, pindel bed file). The latter should be created together with the center's geneticists, see above.
 
 - design files
 - pindel bed file
@@ -151,28 +151,83 @@ These are the general references to run poppy. The references pipeline will crea
 
 ### 4. Set up config files
 
-Genome version, GENOME: `hg19` or `GRCH38`
+The pipeline uses four configuration files, split into **static** (shipped with the repo, rarely need changing) and **custom** (must be adapted to your local environment):
 
-The `config_references_pipeline_<GENOME>.yaml` and `config_<genome>.yaml` don't have to be changed before running the references pipeline or Poppy, given that the references pipeline is run on the Poppy directory.
+| Config file | Purpose |
+|---|---|
+| `config/config_static.yaml` | Tool versions, container definitions, algorithm parameters |
+| `config/config_custom.yaml` | **User-supplied** local paths (genome, BED files, VEP cache, etc.) |
+| `config/config_references_pipeline_static.yaml` | Reference pipeline tool versions and default algorithm parameters |
+| `config/config_references_pipeline_custom.yaml` | **User-supplied** paths specific to the reference pipeline (e.g., mappability BED file) |
 
-- `config/config_references_pipeline_<GENOME>.yaml` - necessary to run the references pipeline.
-- `config_<GENOME>.yaml` - main config necessary to run both the references pipeline and Poppy.
-- `config/cnv_genes.<GENOME>.bed` - Optional - make sure that the chromosome column matches the chromosome notation your references are using (chromosome name starts with or without "chr", according to your reference genome).
-- `profiles/grid_engine/config.yaml` - config with cluster execution parameters. The config provided is an example config for a SGE cluster using Singularity. Adjust settings as needed. The snakefile and the config files can be specified in this file or on the command line.
+!!! warning
+    Before running either the references pipeline or the main pipeline, you must replace all example paths in **`config_custom.yaml`** and **`config_references_pipeline_custom.yaml`** with the actual paths on your local system.
 
-Command line:
-`--snakefile <filename>`
-`--config_file config_references_pipeline_<GENOME>.yaml --config_file config_<GENOME>.yaml`
+#### What to configure in `config_custom.yaml`
 
-In profile config:
-Attention! the order of the config files matters, as the latter will override the settings of the previous ones.
+At minimum, the following must be adapted to your local environment:
+
+```yaml
+reference:
+  fasta: "/path/to/your/reference.fasta"
+  fai: "/path/to/your/reference.fasta.fai"
+  dict: "/path/to/your/reference.dict"
+  design_bed: "/path/to/your/design.bed"
+  design_intervals: "/path/to/your/design.intervals"
+
+bcftools_annotate:
+  annotation_db: "/path/to/gnomad_annotation.vcf.gz"  # e.g. small_exac_common_3.hg19.vcf.gz
+
+bwa_mem:
+  amb: "/path/to/your/reference.amb"
+  ann: "/path/to/your/reference.ann"
+  bwt: "/path/to/your/reference.bwt"
+  pac: "/path/to/your/reference.pac"
+  sa: "/path/to/your/reference.sa"
+
+gatk_collect_allelic_counts:
+  SNP_interval: "/path/to/gnomad_SNP_interval.interval_list"
+
+merge_cnv_json:
+  ref_genes:
+    - "/path/to/refGene.txt"
+
+pindel_call:
+  include_bed: "/path/to/your/pindel_regions.bed"
+
+pindel2vcf:
+  refname: "hg19"   # or GRCh38 — the reference genome name used in the VCF header
+  refdate: "2009"   # date of the reference genome
+
+purecn:
+  genome: hg19  # or GRCh38
+
+vep:
+  vep_cache: "/path/to/vep_cache"
+```
+
+#### What to configure in `config_references_pipeline_custom.yaml`
+
+```yaml
+reference:
+  mappability: "/path/to/mappability.bed"
+```
+
+#### Optional: CNV gene annotation BED
+
+`config/cnv_genes.<GENOME>.bed` can be customised to match the chromosome notation of your reference (with or without `chr` prefix).
+
+#### Cluster profile
+
+`profiles/grid_engine/config.yaml` contains cluster execution parameters. The provided config is an example for an SGE cluster using Singularity/Apptainer — adapt resource limits and queue names as needed. The Snakefile and config files can be specified in this file or on the command line:
 
 ```
 snakefile: /path/to/Snakefile
 configfile:
-  - /path/to/config_references_pipeline_<GENOME>.yaml,
-  - /path/to/config_<GENOME>.yaml
+  - /path/to/config_static.yaml
+  - /path/to/config_custom.yaml
 ```
+
 
 ### 5. Run References pipeline
 
@@ -185,8 +240,10 @@ source $POPPY_HOME/poppy_env/bin/activate
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
 --profile $POPPY_HOME/profiles/grid_engine/ \
 --configfiles \
-$POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
-$POPPY_HOME/config/config_<GENOME>.yaml \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
+$POPPY_HOME/config/config_references_pipeline_static.yaml \
+$POPPY_HOME/config/config_references_pipeline_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
@@ -238,6 +295,8 @@ source $POPPY_HOME/poppy_env/bin/activate
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile \
 --profile $POPPY_HOME/profiles/grid_engine/ \
---configfile $POPPY_HOME/config/config_<GENOME>.yaml \
+--configfiles \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME REFERENCE_DIRECTORY=$REFERENCE_DIRECTORY
 ```

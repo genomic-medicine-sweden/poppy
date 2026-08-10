@@ -20,7 +20,7 @@ The following files are located in the `results/`-folder:
 | `bam/{sample}_{type}.bam.bai` | bai | Index to deduplicated alignmentfile |
 |`vcf/{sample}_{type}.filter.somatic.vcf.gz`| vcf.gz| Called snvs decopressed, normalized, vep annotated and softfilterd in variant call format (bgzipped)|
 |`vcf/{sample}_{type}.{caller}.vcf.gz` | vcf.gz | SNVs called by each caller ([see snvs for more detail](snvs.md))|
-|`vcf/{sample}_{type}.pindel.filter.pindel.vcf.gz`| vcf.gz | Sdmall indels called by pindel over limited regions defined in `config[pindel_call][include_bed]` |
+|`vcf/{sample}_{type}.pindel.filter.pindel.vcf.gz`| vcf.gz | Small indels called by pindel over limited regions defined in `config_custom.yaml` (`pindel_call: include_bed`) |
 | `cnv/{sample}/{sample}_{type}.pathology.svdb_query.vcf.gz` | vcf.gz | CNV calls from CNVkit and GATK in variant call format|
 |`cnv/{sample}/{sample}_{type}.pathology.cnv_report.html` | html | html-report with CNV calls using tumour content defined in `samples.tsv`|
 |`cnv/{sample}/{sample}_{type}.purecn.cnv_report.html`* | html | html-report with CNV calls using tumour content estimated by pureCN |

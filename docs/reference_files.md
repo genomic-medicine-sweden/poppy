@@ -12,6 +12,72 @@ hydra-genetics create-input-files -d <path to fastqs> -p <seq machine>
 
 Make sure that all the references are downloaded. See [Set up and configuration](setup.md)
 
+## Configuration files
+
+The pipeline uses four configuration files, split into **static** (shipped with the repo, rarely need changing) and **custom** (must be adapted to your local environment):
+
+| Config file | Purpose |
+|---|---|
+| `config/config_static.yaml` | Tool versions, container definitions, algorithm parameters |
+| `config/config_custom.yaml` | **User-supplied** local paths (genome, BED files, VEP cache, etc.) |
+| `config/config_references_pipeline_static.yaml` | Reference pipeline tool versions and default algorithm parameters |
+| `config/config_references_pipeline_custom.yaml` | **User-supplied** paths specific to the reference pipeline (e.g., mappability BED file) |
+
+!!! warning
+    Before running either the references pipeline or the main pipeline, you must replace all example paths in **`config_custom.yaml`** and **`config_references_pipeline_custom.yaml`** with the actual paths on your local system.
+
+### What to configure in `config_custom.yaml`
+
+At minimum, the following must be adapted to your local environment:
+
+```yaml
+reference:
+  fasta: "/path/to/your/reference.fasta"
+  fai: "/path/to/your/reference.fasta.fai"
+  dict: "/path/to/your/reference.dict"
+  design_bed: "/path/to/your/design.bed"
+  design_intervals: "/path/to/your/design.intervals"
+
+bcftools_annotate:
+  annotation_db: "/path/to/gnomad_annotation.vcf.gz"  # e.g. small_exac_common_3.hg19.vcf.gz
+
+bwa_mem:
+  amb: "/path/to/your/reference.amb"
+  ann: "/path/to/your/reference.ann"
+  bwt: "/path/to/your/reference.bwt"
+  pac: "/path/to/your/reference.pac"
+  sa: "/path/to/your/reference.sa"
+
+gatk_collect_allelic_counts:
+  SNP_interval: "/path/to/gnomad_SNP_interval.interval_list"
+
+merge_cnv_json:
+  ref_genes:
+    - "/path/to/refGene.txt"
+
+pindel_call:
+  include_bed: "/path/to/your/pindel_regions.bed"
+
+pindel2vcf:
+  refname: "hg19"   # or GRCh38 — the reference genome name used in the VCF header
+  refdate: "2009"   # date of the reference genome
+
+purecn:
+  genome: hg19  # or GRCh38
+
+vep:
+  vep_cache: "/path/to/vep_cache"
+```
+
+### What to configure in `config_references_pipeline_custom.yaml`
+
+```yaml
+reference:
+  mappability: "/path/to/mappability.bed"
+```
+
+## Running the reference pipeline
+
 The reference pipeline can then be run with the following command:
 
 ```bash
@@ -21,32 +87,23 @@ source $POPPY_HOME/poppy_env/bin/activate
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
 --profile $POPPY_HOME/profiles/grid_engine/ \
 --configfiles \
-$POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
-$POPPY_HOME/config/config_<GENOME>.yaml \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
+$POPPY_HOME/config/config_references_pipeline_static.yaml \
+$POPPY_HOME/config/config_references_pipeline_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
 
-Using the config files available in the pipeline repository provides sane defaults. If, for example, you want to change the path to the reference genome fasta file and corresponding index, create a new config file (`local_config.yaml`):
+The order of the config files matters — later files override settings from earlier ones. If you want to override specific settings without modifying the repo files, you can append an additional local config file:
 
-```yaml
-reference:
-   fasta: /path/to/my/reference.fasta
-   fai: /path/to/my/reference.fasta.fai
-```
-
-You can add the local config files to your command:
-
-```
---configfiles config/config.yaml config/config_references.yaml local_config.yaml
-```
-
-Or you can add all configs to the profile. The order of the configs matters, as the latter will override the settings:
-
-```yaml
-config-files:
-   - $POPPY_HOME/config/config_references_pipeline_<GENOME>.yaml \
-   - $POPPY_HOME/config/config_<GENOME>.yaml
-   - local_config.yaml
+```bash
+--configfiles \
+$POPPY_HOME/config/config_static.yaml \
+$POPPY_HOME/config/config_custom.yaml \
+$POPPY_HOME/config/config_references_pipeline_static.yaml \
+$POPPY_HOME/config/config_references_pipeline_custom.yaml \
+local_overrides.yaml \
+--config POPPY_HOME=$POPPY_HOME
 ```
 
 ### Output files
