@@ -1,2 +1,6 @@
 reference:
   mappability: "{{POPPY_HOME}}/initial_references/ref_data/mappability/access-10kb.hg38.bed"
+
+create_background_file:
+  min_dp: 500 # default 500
+  min_af: 0.015 # default 0.015

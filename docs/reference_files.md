@@ -27,6 +27,7 @@ $POPPY_HOME/config/config_references_pipeline_static.yaml \
 $POPPY_HOME/config/config_references_pipeline_custom.yaml \
 --config POPPY_HOME=$POPPY_HOME
 ```
+The order of the config files matters — varibles defined in later files override their namesakes from earlier ones.
 
 ## Configuration files
 
