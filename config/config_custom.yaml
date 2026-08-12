@@ -5,9 +5,10 @@ reference:
   dict: "/path/to/your/reference.dict"
   design_bed: "/path/to/your/design.bed"
   design_intervals: "/path/to/your/design.intervals"
-  skip_chrs:
+  skip_chrs: # Both needed due to different modules have different variable names
     - "chrM"
-  #skip_contigs:
+  skip_contigs: # Both needed due to different modules have different variable names
+    - "chrM"
 
 bcftools_annotate:
   annotation_db: "/path/to/gnomad_annotation.vcf.gz"  # e.g. small_exac_common_3.hg38.vcf.gz

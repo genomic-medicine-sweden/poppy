@@ -3,7 +3,7 @@ resources: "{{POPPY_HOME}}/config/resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
 output: "{{POPPY_HOME}}/config/output_files.yaml"
-general_report: "{{POPPY_HOME}}/config/output_files.yaml" # Not used but required from reports module v1.1.1
+general_report: "{{POPPY_HOME}}/config/output_files.yaml" # Not used but required from reports module v2.0.0
 
 default_container: "docker://hydragenetics/common:4.1.1"
 
@@ -109,6 +109,7 @@ merge_cnv_json:
   unfiltered_cnv_vcfs_tbi:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
   table_filter_config: "{{POPPY_HOME}}/config/table_filter.yaml"
+
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.6"
   thresholds: "100,200,1000"
@@ -215,15 +216,6 @@ vt_decompose:
 
 vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
-
-deepsomatic_t_only:
-  container: "docker://google/deepsomatic:1.8.0"
-  extra: ""
-  model: "WGS_TUMOR_ONLY" # WGS,WES,PACBIO,ONT,FFPE_WGS,FFPE_WES,WGS_TUMOR_ONLY,PACBIO_TUMOR_ONLY,ONT_TUMOR_ONLY
-  pon: "--use_default_pon_filtering=true" # or --pon_filtering="pon.vcf" --process_somatic=true or ""
-
-whatshap_phase:
-  container: "docker://hydragenetics/whatshap:2.8"
 
 compile_xlsx_report:
   filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"
