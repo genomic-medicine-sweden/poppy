@@ -206,26 +206,23 @@ filter_vcf:
   germline: "config/filters/config_hard_filter_germline.yaml"
   somatic: "config/filters/config_soft_filter_somatic.yaml"
   somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
-  pindel: "config/filters/config_soft_filter_pindel.yaml"
-  cnv_hard_filter: "config/filters/config_hard_filter_cnv.yaml"
-  cnv_filter: "config/config_hard_filter_cnv_report.yaml"
 
-# vep contains both static settings and custom paths:
 vep:
-  # Defined in config_static.yaml (static tool settings):
   container: "docker://hydragenetics/vep:113.0"
   mode: "--offline --cache --merged "
-  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything …"
-  # Defined in config_custom.yaml (user paths):
-  vep_cache: "/path/to/vep_cache"
+  extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --buffer_size 1500 --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
 
 # ── config_custom.yaml (user paths) ──────────────────────────────────────────
 reference:
   fasta: "/path/to/your/reference.fasta"  # used by all variant callers
+  fai: "/path/to/your/reference.fasta.fai"
   design_bed: "/path/to/your/design.bed"  # target regions BED used by VarDict
 
 bcftools_annotate:
   annotation_db: "/path/to/gnomad_annotation.vcf.gz"
+
+vep:
+  vep_cache: "/path/to/vep_cache"
 ```
 
 See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for all available settings.
