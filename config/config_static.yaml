@@ -216,6 +216,3 @@ vt_decompose:
 
 vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
-
-compile_xlsx_report:
-  filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"
