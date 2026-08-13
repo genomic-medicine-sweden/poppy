@@ -68,7 +68,7 @@ filter_vcf:
   somatic_hard: "{{POPPY_HOME}}/config/filters/config_hard_filter_somatic.yaml"
   pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
   cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
-  cnv_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv_report.yaml"
+  cnv_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv_report.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.6.2.0"
@@ -108,7 +108,7 @@ merge_cnv_json:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
   unfiltered_cnv_vcfs_tbi:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
-  table_filter_config: "{{POPPY_HOME}}/config/table_filter.yaml"
+  table_filter_config: "{{POPPY_HOME}}/config/filters/table_filter.yaml"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.6"
