@@ -448,11 +448,12 @@ rule report_xlsx:
       Overview, SNVs, Pindel, Intron, Synonymous,
       Low Coverage, Coverage, QCI, Version
     Optional sheets (controlled by config_report.yaml):
+      Gene-specific tabs   (results_report_xlsx.gene_tabs configured)
       CLL / Myeloid / Hotspot panel variant sheets
-      Hotspot Coverage  (hotspot_bed configured)
-      GATK CNV          (report_cnv.tc_method configured)
-      CNVkit            (report_cnv.tc_method configured)
-      bamsnap           (bamsnap.enabled: true)
+      Hotspot Coverage     (hotspot_bed configured)
+      GATK CNV             (report_cnv.tc_method configured)
+      CNVkit               (report_cnv.tc_method configured)
+      bamsnap              (bamsnap.enabled: true)
     """
     input:
         unpack(_get_panel_vcfs),
@@ -500,6 +501,9 @@ rule report_xlsx:
         filter_somatic_hard=config["filter_vcf"]["somatic_hard"],
         filter_pindel=config["filter_vcf"]["pindel"],
         wanted_transcripts=config.get("results_report_xlsx", {}).get("wanted_transcripts", None),
+        low_cov_gene_filter=config.get("results_report_xlsx", {}).get("low_cov_gene_filter", None),
+        gene_tabs=config.get("results_report_xlsx", {}).get("gene_tabs", []),
+        disabled_sheets=config.get("results_report_xlsx", {}).get("disabled_sheets", []),
         non_coding_regions=config.get("results_report_xlsx", {}).get("non_coding_regions", {}),
         synonymous_positions=config.get("results_report_xlsx", {}).get("synonymous_positions", {}),
         panels=list(config.get("bcftools_filter_include_region", {}).keys()),

@@ -79,6 +79,22 @@ if wanted_transcripts_file:
         for line in f:
             wanted_transcripts.append(line.split()[1].split(".")[0])
 
+# Optional: gene filter for the Low Coverage sheet
+low_cov_gene_filter_file = snakemake.params.low_cov_gene_filter
+low_cov_gene_filter = set()
+if low_cov_gene_filter_file:
+    with open(low_cov_gene_filter_file) as f:
+        for line in f:
+            gene = line.strip()
+            if gene:
+                low_cov_gene_filter.add(gene.upper())
+
+# Optional gene-specific variant tabs (unfiltered SNV view per gene set)
+gene_tabs = snakemake.params.gene_tabs
+
+# Sheets to omit from the workbook entirely
+disabled_sheets = {s.strip() for s in snakemake.params.disabled_sheets}
+
 # Feature flags: keys are only present in snakemake.input when enabled
 has_hotspot_cov = hasattr(snakemake.input, "hotspot_perbase")
 has_cnv = hasattr(snakemake.input, "cnvkit_cns")
@@ -210,6 +226,8 @@ for line in lowcov_lines:
         bl[3] for bl in bed_table
         if line[0] == bl[0] and int(line[1]) >= int(bl[1]) and int(line[2]) <= int(bl[2])
     ]
+    if low_cov_gene_filter:
+        exons = [e for e in exons if e.split("_")[0].upper() in low_cov_gene_filter]
     if exons:
         if wanted_transcripts:
             wanted_found = [e for e in exons if "_".join(e.split("_")[1:3]) in wanted_transcripts]
@@ -386,6 +404,19 @@ if has_cnv:
 logging.info(f"Writing {snakemake.output.xlsx}")
 workbook = xlsxwriter.Workbook(snakemake.output.xlsx)
 
+class _NullSheet:
+    """Drop-in replacement for a disabled xlsxwriter worksheet.
+    Every method call is silently ignored so writing blocks need no guards."""
+    def __getattr__(self, _):
+        return lambda *_, **__: None
+
+
+def _add_sheet(name):
+    """Return a new worksheet, or a _NullSheet if the name is disabled."""
+    if name in disabled_sheets:
+        return _NullSheet()
+    return workbook.add_worksheet(name)
+
 # Sheets
 worksheet_overview = workbook.add_worksheet("Overview")
 if is_hd829:
@@ -393,13 +424,14 @@ if is_hd829:
 else:
     for panel in panels:
         panels[panel]["sheet"] = workbook.add_worksheet(panel.upper())
-worksheet_snv = workbook.add_worksheet("SNVs")
-worksheet_pindel = workbook.add_worksheet("Pindel")
-worksheet_intron = workbook.add_worksheet("Intron")
-worksheet_syno = workbook.add_worksheet("Synonymous")
-worksheet_lowcov = workbook.add_worksheet("Low Coverage")
-worksheet_cov = workbook.add_worksheet("Coverage")
-worksheet_qci = workbook.add_worksheet("QCI")
+worksheet_snv = _add_sheet("SNVs")
+gene_tab_sheets = [(gt, workbook.add_worksheet(gt["name"])) for gt in gene_tabs]
+worksheet_pindel = _add_sheet("Pindel")
+worksheet_intron = _add_sheet("Intron")
+worksheet_syno = _add_sheet("Synonymous")
+worksheet_lowcov = _add_sheet("Low Coverage")
+worksheet_cov = _add_sheet("Coverage")
+worksheet_qci = _add_sheet("QCI")
 if has_hotspot_cov:
     worksheet_hotspot_cov = workbook.add_worksheet("Hotspot Coverage")
 if has_cnv:
@@ -408,7 +440,7 @@ if has_cnv:
 if has_bamsnap:
     worksheet_bamsnap = workbook.add_worksheet("bamsnap")
     worksheet_screenshots = workbook.add_worksheet("Screenshots")
-worksheet_version = workbook.add_worksheet("Version")
+worksheet_version = _add_sheet("Version")
 
 empty_list = ["", "", "", "", "", ""]
 fmt_heading = workbook.add_format({"bold": True, "font_size": 18})
@@ -445,14 +477,19 @@ else:
             string="{} panel variants".format(panel.upper()),
         )
         i += 1
-worksheet_overview.write_url(i, 0, "internal:'SNVs'!A1", string="SNVs identified")
-worksheet_overview.write_url(i + 1, 0, "internal:'Pindel'!A1", string="Pindel results")
-worksheet_overview.write_url(i + 2, 0, "internal:'Intron'!A1", string="Intron and non-coding variants")
-worksheet_overview.write_url(i + 3, 0, "internal:'Synonymous'!A1", string="Synonymous variants")
-worksheet_overview.write_url(i + 4, 0, "internal:'Low Coverage'!A1", string="Low Coverage regions")
-worksheet_overview.write_url(i + 5, 0, "internal:'Coverage'!A1",     string="Coverage")
-worksheet_overview.write_url(i + 6, 0, "internal:'QCI'!A1",          string="QCI")
-i += 7
+_core_sheet_links = [
+    ("SNVs",         "SNVs identified"),
+    ("Pindel",       "Pindel results"),
+    ("Intron",       "Intron and non-coding variants"),
+    ("Synonymous",   "Synonymous variants"),
+    ("Low Coverage", "Low Coverage regions"),
+    ("Coverage",     "Coverage"),
+    ("QCI",          "QCI"),
+]
+for _sheet_name, _label in _core_sheet_links:
+    if _sheet_name not in disabled_sheets:
+        worksheet_overview.write_url(i, 0, f"internal:'{_sheet_name}'!A1", string=_label)
+        i += 1
 if has_hotspot_cov:
     worksheet_overview.write_url(i, 0, "internal:'Hotspot Coverage'!A1", string="Hotspot coverage")
     i += 1
@@ -464,7 +501,8 @@ if has_bamsnap:
     worksheet_overview.write_url(i, 0, "internal:'bamsnap'!A1", string="BAM snapshots")
     worksheet_overview.write_url(i + 1, 0, "internal:'Screenshots'!A1", string="BAM screenshots (images)")
     i += 2
-worksheet_overview.write_url(i, 0, "internal:'Version'!A1", string="Software versions")
+if "Version" not in disabled_sheets:
+    worksheet_overview.write_url(i, 0, "internal:'Version'!A1", string="Software versions")
 i += 2
 
 if is_hd829:
@@ -601,6 +639,40 @@ for row_data in snv_table["data"]:
     i += 1
 
 
+# --- Gene-specific tabs (unfiltered) ----------------------------------------
+
+for gt, ws in gene_tab_sheets:
+    logging.debug(f"Gene tab sheet: {gt['name']}")
+    gene_set = {g.upper() for g in gt["genes"]}
+    tab_data = [row for row in snv_table["data"] if row[3].upper() in gene_set]
+    ws.set_column(2, 2, 10)
+    ws.set_column(5, 5, 10)
+    ws.set_column(11, 13, 10)
+    ws.write("A1", f"Variants found – {gt['name']}", fmt_heading)
+    ws.write("A3", f"Sample: {sample}")
+    ws.write("A4", f"Reference used: {snakemake.params.ref}")
+    ws.write("A6", f"Databases used: {vep_line}")
+    ws.write("A8", "Filters: ", fmt_orange)
+    for j, txt in enumerate(filters_snv):
+        ws.write(f"B{9 + j}", txt, fmt_orange)
+    i = 9 + len(filters_snv) + 2
+    ws.write(f"A{i}", "All variants shown (no AF or filter-flag restriction).", fmt_orange)
+    i += 3
+    n_cols = len(snv_table["headers"])
+    col_end = columns_to_letter(n_cols)
+    n_rows = max(len(tab_data), 1)
+    area = "A{}:{}{}".format(i, col_end, i + n_rows)
+    ws.add_table(area, {"columns": snv_table["headers"], "style": "Table Style Light 1"})
+    cond = '=LEFT($A{}, 4)<>"PASS"'.format(i + 1)
+    ws.conditional_format(
+        "A{}:{}{}".format(i + 1, col_end, i + n_rows),
+        {"type": "formula", "criteria": cond, "format": fmt_orange},
+    )
+    for row_data in tab_data:
+        ws.write_row(i, 0, row_data)
+        i += 1
+
+
 # --- Pindel sheet -----------------------------------------------------------
 
 logging.debug("Pindel sheet")
@@ -711,20 +783,21 @@ worksheet_cov.add_table(area, {"data": regionscov_table["data"], "columns": regi
 
 # --- QCI sheet --------------------------------------------------------------
 
-logging.debug("QCI sheet")
-qci_headers = [
-    "DNA nr", "Chromosome", "Position", "Gene Region", "Gene Symbol",
-    "Transcript ID", "Transcript Variant", "Protein Variant", "Variant Findings",
-    "Sample Genotype Quality", "Read Depth", "Allele Fraction", "Translation Impact",
-    "dbSNP ID", "1000 Genomes Frequency", "ExAC Frequency", "HGMD", "COSMIC ID",
-    "Artefacts_without_ASXL1", "ASXL1_variant_filter",
-]
-worksheet_qci.set_column("C:C", 10)
-worksheet_qci.write("A1", "Results from QCI", fmt_heading)
-worksheet_qci.write_row("A2", empty_list, fmt_line)
-worksheet_qci.write("A5", "Analysen utfördes i enlighet med dokumentationen.")
-worksheet_qci.write("A6", "Eventuella avvikelser: ")
-worksheet_qci.write_row(9, 0, qci_headers, fmt_table_heading)
+if worksheet_qci is not None:
+    logging.debug("QCI sheet")
+    qci_headers = [
+        "DNA nr", "Chromosome", "Position", "Gene Region", "Gene Symbol",
+        "Transcript ID", "Transcript Variant", "Protein Variant", "Variant Findings",
+        "Sample Genotype Quality", "Read Depth", "Allele Fraction", "Translation Impact",
+        "dbSNP ID", "1000 Genomes Frequency", "ExAC Frequency", "HGMD", "COSMIC ID",
+        "Artefacts_without_ASXL1", "ASXL1_variant_filter",
+    ]
+    worksheet_qci.set_column("C:C", 10)
+    worksheet_qci.write("A1", "Results from QCI", fmt_heading)
+    worksheet_qci.write_row("A2", empty_list, fmt_line)
+    worksheet_qci.write("A5", "Analysen utfördes i enlighet med dokumentationen.")
+    worksheet_qci.write("A6", "Eventuella avvikelser: ")
+    worksheet_qci.write_row(9, 0, qci_headers, fmt_table_heading)
 
 # --- Hotspot Coverage sheet -------------------------------------------------
 

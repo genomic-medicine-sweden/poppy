@@ -24,6 +24,27 @@ resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
 results_report_xlsx:
   wanted_transcripts: null  # path to gene -> preferred-transcript TSV, or null
 
+  # Optional: path to a plain-text file with gene names (one per line) used to
+  # filter the "Low Coverage" sheet. Only positions overlapping a listed gene
+  # will appear. Set to null to show all genes (default behaviour).
+  low_cov_gene_filter: null  # e.g. "/path/to/panel_genes.txt"
+
+  # Sheets to omit from the workbook entirely. List any sheet names to skip.
+  # The bamsnap and Screenshots sheets are already absent unless bamsnap.enabled: true.
+  # Example: disabled_sheets: ["QCI"]
+  disabled_sheets: []
+
+  # Optional gene-specific variant tabs. Each entry creates a new sheet showing
+  # ALL variants for the listed genes from the SNV table without the PASS / AF
+  # display filter, so the lab can review these genes before uploading to QCI.
+  # Remove or leave empty to add no extra tabs.
+  #gene_tabs: []
+  gene_tabs:
+    - name: "TP53"
+      genes: ["TP53"]
+    - name: "MYD88 CXCR4"
+      genes: ["MYD88", "CXCR4"]
+
   # Regions shown in the Intron/non-coding sheet. [chrom, start, end, description]
   non_coding_regions:
     TERC:    ["chr3",  169764300, 169766000, "entire gene + promotor"]

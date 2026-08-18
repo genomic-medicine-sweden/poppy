@@ -26,6 +26,9 @@ mem, time) live in `config/resources_report.yaml`, which is referenced from
 | `generate_final_report` | `true` | Triggers integrated mode when provided to the main Snakefile |
 | `resources_report` | auto | Path to `resources_report.yaml`; set via `{{POPPY_HOME}}` template — loaded automatically |
 | `results_report_xlsx.wanted_transcripts` | `null` | Path to gene → preferred-transcript TSV, or null |
+| `results_report_xlsx.disabled_sheets` | `[]` | List of sheet names to omit from the workbook entirely (e.g. `["QCI"]`). The bamsnap and Screenshots sheets are already absent unless `bamsnap.enabled: true`. |
+| `results_report_xlsx.low_cov_gene_filter` | `null` | Path to a plain-text file of gene names (one per line); when set, only positions overlapping a listed gene appear in the Low Coverage sheet. Set to null to show all genes. |
+| `results_report_xlsx.gene_tabs` | `[]` | List of `{name, genes}` entries; each creates a gene-specific variant sheet showing all variants for those genes from the SNV table without the PASS / AF ≥ 2 % display filter. See [Gene-specific tabs](#gene-specific-tabs). |
 | `results_report_xlsx.non_coding_regions` | pre-filled | Regions shown in the Intron sheet (genome-build specific) |
 | `results_report_xlsx.synonymous_positions` | pre-filled | Positions shown in the Synonymous sheet (genome-build specific) |
 | `results_report_xlsx.hotspot_bed` | `null` | BED file of hotspot regions; enables the Hotspot Coverage sheet |
@@ -83,6 +86,49 @@ bcftools_filter_include_region:
   hotspot: "/path/to/hotspot.bed"
 ```
 
+### Filtering the Low Coverage sheet by gene list
+
+By default the Low Coverage sheet lists every position in the design BED that falls
+below the first configured coverage threshold. For panels covering many genes this can
+be a very long list. Set `low_cov_gene_filter` to a plain-text file of gene names
+(one per line, matching the gene name prefix of the design BED name column) to restrict
+the sheet to only those genes:
+
+```yaml
+results_report_xlsx:
+  low_cov_gene_filter: "/path/to/panel_genes.txt"
+```
+
+`panel_genes.txt` example:
+```
+TP53
+MYD88
+CXCR4
+```
+
+Leave at `null` (the default) to show all genes.
+
+### Gene-specific tabs
+
+`gene_tabs` adds one sheet per entry to the report, placed immediately after the SNVs
+sheet. Each sheet shows **all** variants for the listed genes from the SNV table
+(hard-filter threshold AF > 1 % still applies) without hiding rows based on PASS status
+or AF ≥ 2 %. Non-PASS rows are highlighted orange so the filter status remains visible.
+This lets the lab review key genes before uploading a sample to QCI, avoiding the cost
+for clearly negative samples.
+
+```yaml
+results_report_xlsx:
+  gene_tabs:
+    - name: "TP53"
+      genes: ["TP53"]
+    - name: "MYD88 CXCR4"
+      genes: ["MYD88", "CXCR4"]
+```
+
+Any number of tabs can be configured; each `name` becomes the Excel sheet tab label.
+Remove or leave `gene_tabs: []` to add no extra tabs (default).
+
 ## Integrated mode
 
 Provide `config_report.yaml` and `resources_report.yaml` alongside the main configs
@@ -136,15 +182,16 @@ temporary.
 | Sheet | Content | When |
 |-------|---------|------|
 | **Overview** | Run metadata, coverage summary, duplication rate, breadth of coverage at configured thresholds | Always |
-| **SNVs** | All somatic SNV/indel calls; pre-filtered to PASS + AF ≥ 2 % by default | Always |
+| **SNVs** | All somatic SNV/indel calls; rows with PASS + AF ≥ 2 % shown by default, others hidden | Always |
 | **Pindel** | Structural variants from Pindel; pre-filtered to PASS by default | Always |
 | **Intron** | Intron and non-coding variants in regions defined by `non_coding_regions` | Always |
 | **Synonymous** | Synonymous variants at positions defined by `synonymous_positions` | Always |
-| **Low Coverage** | Regions with coverage below the first configured threshold | Always |
+| **Low Coverage** | Regions with coverage below the first configured threshold; optionally filtered to a gene list via `low_cov_gene_filter` | Always |
 | **Coverage** | Average coverage per exon from the coding-exon BED | Always |
 | **QCI** | Empty template for manual QCI entry | Always |
 | **Version** | Pipeline version, reference, VEP databases, filter files, tool containers | Always |
 | **Known variants** | Pre-defined expected variants for the HD829 control sample | HD829 only |
+| **Gene-specific tabs** | One sheet per `gene_tabs` entry; shows all variants (AF > 1 %) for the listed genes without the PASS / AF ≥ 2 % display filter — non-PASS rows are highlighted orange | `results_report_xlsx.gene_tabs` configured |
 | **CLL / Myeloid / Hotspot** | Panel-specific variant sheets | `bcftools_filter_include_region` configured |
 | **Hotspot Coverage** | Per-base coverage across hotspot regions | `results_report_xlsx.hotspot_bed` set |
 | **GATK CNV** | GATK ModelSegments copy-number calls | `report_cnv.tc_method` set |
