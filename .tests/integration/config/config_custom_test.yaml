@@ -5,6 +5,7 @@ reference:
   dict: "reference/hg19.dict"
   design_intervals: "data/bed/design.intervals"
   design_bed: "data/bed/design.bed"
+  coverage_bed: "data/bed/design.bed"
   skip_contigs: # Both needed due to different modules have different varible names
     - "chrM"
   skip_chrs: # Both needed due to different modules have different varible names

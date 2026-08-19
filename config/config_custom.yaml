@@ -5,6 +5,8 @@ reference:
   dict: "/path/to/your/reference.dict"
   design_bed: "/path/to/your/design.bed"
   design_intervals: "/path/to/your/design.intervals"
+  coverage_bed: "/path/to/your/coverage.bed" # needed for xlsx
+  hotspot_bed: "/path/to/your/hotspot.bed" # if wanted in xlsx report
   skip_chrs: # Both needed due to different modules have different variable names
     - "chrM"
   skip_contigs: # Both needed due to different modules have different variable names
@@ -12,6 +14,10 @@ reference:
 
 bcftools_annotate:
   annotation_db: "/path/to/gnomad_annotation.vcf.gz"  # e.g. small_exac_common_3.hg38.vcf.gz
+
+bcftools_filter_include_region: # if subset of the panel is wanted in xlsx-report
+  panel1: "/path/to/panel1.bed"
+  panel2: "/path/to/panel2.bed"
 
 bwa_mem:
   amb: "/path/to/your/reference.amb"
