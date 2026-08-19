@@ -16,6 +16,10 @@ files:
     input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz
     output: vcf/{sample}_{type}.filter.somatic.vcf.gz
 
+  - name: SNV ensemble soft filtered VCF index
+    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz.tbi
+    output: vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi
+  
   - name: Caller-specific VCF file
     input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
     output: vcf/{sample}_{type}.{caller}.vcf.gz
@@ -32,11 +36,14 @@ files:
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
 
-  # - name: "XLSX Variants Report"
-  #   input: "reports/xlsx_reports/{sample}_{type}_combined_report.xlsx"
-  #   output: "reports/{sample}_{type}_combined_report.xlsx"
-  #   types:
-  #     - T
+  - name: "XLSX Variants Report"
+    input: "reports/xlsx/{sample}_{type}.xlsx"
+    output: "reports/{sample}_{type}_combined_report.xlsx"
+
+  - name: "Bamsnap PDF"
+    input: "reports/bamsnap/{sample}_{type}.pdf"
+    output: "bamsnap/{sample}_{type}.pdf"
+
   # - name: CNV HTML report, purecn TC
   #   input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
   #   output: cnv/{sample}/{sample}_{type}.purecn.cnv_report.html

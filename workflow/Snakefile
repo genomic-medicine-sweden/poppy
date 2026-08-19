@@ -20,21 +20,15 @@ ruleorder: cnv_sv_tabix > annotation_tabix_vcf
 include: "rules/common.smk"
 include: "rules/svdb.smk"
 include: "rules/pindel_processing.smk"
+include: "rules/report.smk"
 
 
-if generate_report:
-    if config.get("resources_report"):
-        config = load_resources(config, config["resources_report"])
-
-    include: "rules/report.smk"
-
-
-report: "report/workflow.rst"
+# report: "report/workflow.rst"
 
 
 rule all:
     input:
-        _get_all_outputs(),
+        compile_output_file_list,
 
 
 module alignment:

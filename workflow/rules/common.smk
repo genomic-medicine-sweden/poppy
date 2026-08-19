@@ -85,6 +85,8 @@ except WorkflowError as we:
         sys.exit(f"{error_msg} in {schema_section}")
 config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
+config = load_resources(config, config["resources_report"])
+validate(config, schema="../schemas/resources_report.schema.yaml")
 
 ### Read and validate samples file
 samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
@@ -109,6 +111,13 @@ for fq1, fq2 in zip(units["fastq1"].values, units["fastq2"].values):
 with open(config["output"], "r") as f:
     output_spec = yaml.safe_load(f.read())
     validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
+
+
+# if any bamsnap is defined in the output file, run bamsnap rules and include in xlsx report
+if "bamsnap" in str(output_spec).lower():
+    _bamsnap_enabled = True
+else:
+    _bamsnap_enabled = False
 
 
 ### Set wildcard constraints
@@ -141,13 +150,3 @@ def get_vcfs_for_svdb_merge(wildcards, add_suffix=False):
 
 
 generate_copy_rules(output_spec)
-
-generate_report = config.get("generate_final_report", False)
-
-
-def _get_all_outputs():
-    outputs = [compile_output_file_list]
-    if generate_report:
-        sample_types = list({(row.sample, row.type) for row in units.itertuples()})
-        outputs += [f"results/report/{s}_{t}.xlsx" for s, t in sample_types]
-    return outputs

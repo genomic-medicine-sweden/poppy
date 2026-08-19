@@ -427,7 +427,7 @@ properties:
       Excel reports at reports/xlsx/{sample}_{type}.xlsx
     default: false
 
-  results_report_xlsx:
+  report_xlsx:
     type: object
     description: >
       Settings for the Excel report content
@@ -530,7 +530,7 @@ properties:
     type: object
     description: >
       Container and extra-argument overrides for the hotspot coverage bedtools intersect rule.
-      Active only when results_report_xlsx.hotspot_bed is set.
+      Active only when report_xlsx.hotspot_bed is set.
     properties:
       benchmark_repeats:
         type: integer

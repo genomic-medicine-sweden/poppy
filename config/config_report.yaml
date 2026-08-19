@@ -21,7 +21,7 @@
 generate_final_report: true
 resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
 
-results_report_xlsx:
+report_xlsx:
   wanted_transcripts: null  # path to gene -> preferred-transcript TSV, or null
 
   # Regions shown in the Intron/non-coding sheet. [chrom, start, end, description]
@@ -60,21 +60,20 @@ results_report_xlsx:
 #   hotspot: "/path/to/hotspot.bed"
 
 # CNV sheets (GATK + CNVkit).
-# Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology").
+# Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology"). Must match the one used in svdb_merge.
 # Set to null to skip CNV sheets entirely.
 report_cnv:
-  tc_method: null
-  # File path patterns; {sample}, {type}, {tc_method} are substituted at runtime.
-  cnvkit_cns: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.cns"
-  gatk_seg:   "cnv_sv/gatk_model_segments/{sample}_{type}.{tc_method}.seg"
+  tc_method: pathology
+  # If filepath is different than default, provide the path here. Default values below, uncomment and change if needed:
+  # cnvkit: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns" 
+  # gatk: "cnv_sv/gatk_model_segments/{sample}_{type}.clean.modelFinal.seg"
   # Optional whole-genome scatter plot PNG to embed in the CNVkit sheet.
-  scatter_png: null  # e.g. "cnv_sv/cnvkit_batch/{sample}/{sample}_{type}.scatter.png"
+  scatter_png: null  # If null, skip the scatter png. If wanted the default location in cnv_sv module is "cnv_sv/cnvkit_scatter/{sample}_{type}.png
 
 # BAM snapshot sheet (integrated and standalone mode).
 # Set enabled: true to generate per-variant BAM screenshots with bamsnap,
 # add a "bamsnap" sheet to the Excel report, and produce a combined PDF.
 bamsnap:
-  enabled: false
   margin: "50"            # bp on each side of the variant
   extra: "-coverage_vaf 0.05 -show_soft_clipped -read_thickness 2 -read_gap_height 1"
   container: "docker://hydragenetics/bamsnap:0.2.19"
@@ -82,19 +81,11 @@ bamsnap:
 bamsnap_create_pos_list:
   af: "0.05"              # minimum allele frequency to include a variant
 
-bamsnap_samtools_view_dedup:
-  container: "docker://hydragenetics/common:3.1.1.2"
-
 bamsnap_downsample_bam:
-  container: "docker://hydragenetics/common:3.1.1.2"
   max_reads: 6000000      # downsample to this many reads before running bamsnap
 
 bamsnap_pdf:
   container: "docker://hydragenetics/bamsnap:0.2.19"  # Pillow at /usr/local/lib/python3.9
 
-# Container for re-running mosdepth in standalone mode.
-# Threads and other resources are set in resources_report.yaml.
-report_mosdepth:
-  container: "docker://hydragenetics/mosdepth:0.3.2"
 
 
