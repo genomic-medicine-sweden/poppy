@@ -3,23 +3,29 @@
 # Provide this file alongside the main genome config in BOTH run modes.
 # resources_report.yaml is referenced below and loaded automatically.
 #
-#   Integrated (runs report at end of main pipeline):
-#     snakemake --snakefile workflow/Snakefile \
-#       --configfile config/config_GRCh38.yaml \
-#       --configfile config/config_report.yaml
-#
 #   Standalone (run after main pipeline has completed):
-#     snakemake --snakefile workflow/Snakefile_report \
-#       --configfile config/config_GRCh38.yaml \
-#       --configfile config/config_report.yaml
+#     snakemake --snakefile workflow/Snakefile_report.smk \
+#       --configfile config_static.yaml config_custom.yaml  config_report.yaml \
+#       --config POPPY_HOME=/path/to/poppy REFERENCE_DIRECTORY=path/to/reference_data poppy_version=v3.0.0 sequenceid=XYZ
 #
+# For standalone mode, we do not recommend adding cnv-sheets since this will rerun the entire pipeline. If this is needed, rerun the pipeline in integrated mode instead.
+# Prerequisites:
+#   - report_cnv: tc_method must be set to null
+#   - Main pipeline must have completed successfully.
+#   - results/bam/{sample}_{type}.bam files must be present (non-temp).
+#   - results/vcf/{sample}_{type}.filter.somatic.vcf.gz files must be present.
+#   - sequenceid is derived automatically from the flowcell column in units.tsv if not explicitly set with --config
+#   - poppy_version must be set with --config if not running on an offline system
+#   - results folder must exist and contain the results from the main pipeline.
+
 # Coordinates below are for GRCh38 (chr-prefixed).
 # For hg19 runs, replace with liftover equivalents.
 
 # Triggers integrated mode when provided to the main Snakefile.
 # Has no effect when provided to Snakefile_report (always runs standalone).
-generate_final_report: true
+poppy_home: "{{POPPY_HOME}}"
 resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
+output_report: "{{POPPY_HOME}}/config/output_files_report.yaml"
 
 report_xlsx:
   wanted_transcripts: null  # path to gene -> preferred-transcript TSV, or null
@@ -63,7 +69,7 @@ report_xlsx:
 # Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology"). Must match the one used in svdb_merge.
 # Set to null to skip CNV sheets entirely.
 report_cnv:
-  tc_method: pathology
+  tc_method: "pathology" # null
   # If filepath is different than default, provide the path here. Default values below, uncomment and change if needed:
   # cnvkit: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns" 
   # gatk: "cnv_sv/gatk_model_segments/{sample}_{type}.clean.modelFinal.seg"

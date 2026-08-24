@@ -83,7 +83,6 @@ def _get_optional_inputs(wildcards):
     # bamsnap screenshots
     if _bamsnap_enabled:
         d["bamsnap_dir"] = f"reports/bamsnap/{s}_{t}/"
-
     return d
 
 
@@ -281,11 +280,11 @@ if config.get("report_xlsx", {}).get("hotspot_bed"):
 
 
 rule report_bedtools_intersect:
-    """Intersect mosdepth per-base output with exon bed for low-coverage analysis."""
+    """Intersect mosdepth per-base output with coverage bed for low-coverage analysis."""
     input:
         left="qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz",
         coverage_csi="qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz.csi",
-        right=config["reference"]["exon_bed"],
+        right=config["reference"]["coverage_bed"],
     output:
         results=temp("qc/mosdepth_bed/{sample}_{type}.mosdepth.per-base.exon_bed.txt"),
     log:
