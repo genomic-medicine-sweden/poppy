@@ -10,11 +10,6 @@ __license__ = "GPL-3"
 ruleorder: pindel_processing_annotation_vep > annotation_vep
 ruleorder: pindel_processing_artifact_annotation > annotation_artifact_annotation
 ruleorder: svdb_merge_wo_priority > cnv_sv_svdb_merge
-ruleorder: snv_indels_gatk_mutect2 > annotation_tabix_vcf
-ruleorder: snv_indels_tabix > annotation_tabix_vcf
-ruleorder: snv_indels_bgzip > annotation_bgzip_vcf
-ruleorder: cnv_sv_bgzip > annotation_bgzip_vcf
-ruleorder: cnv_sv_tabix > annotation_tabix_vcf
 
 
 include: "rules/common.smk"
@@ -59,6 +54,16 @@ module annotation:
 
 
 use rule * from annotation as annotation_*
+
+
+use rule tabix_vcf from annotation as annotation_tabix_vcf with:
+    wildcard_constraints:
+        file="^annotation/.+",
+
+
+use rule bgzip_vcf from annotation as annotation_bgzip_vcf with:
+    wildcard_constraints:
+        file="^annotation/.+",
 
 
 module cnv_sv:
@@ -154,16 +159,6 @@ module snv_indels:
 
 
 use rule * from snv_indels as snv_indels_*
-
-
-use rule bgzip from snv_indels as snv_indels_bgzip with:
-    wildcard_constraints:
-        file="^snv_indels/.+",
-
-
-use rule tabix from snv_indels as snv_indels_tabix with:
-    wildcard_constraints:
-        file="^snv_indels/.+",
 
 
 use rule vt_normalize from snv_indels as snv_indels_vt_normalize_pindel with:
