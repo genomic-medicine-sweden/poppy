@@ -4,7 +4,7 @@
 """
 Reporting rules for GMS-Poppy.
 
-Will generate an xlsx-file summerizing the variants and qc metrics.
+Will generate an xlsx-file summarizing the variants and qc metrics.
 
 Optional sheets for panel VCFs (e.g. cll, myeloid, hotspot) are used when
 config["bcftools_filter_include_region"] is provided in config.

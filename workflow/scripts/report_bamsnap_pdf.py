@@ -3,11 +3,12 @@ import glob
 import logging
 import os
 import traceback
+import sys
 
 from PIL import Image, ImageDraw
 
 bamsnap_dir = snakemake.input.bamsnap_dir
-output_pdf = snakemake.output.bamsnap_pdf
+output_pdf = snakemake.output.pdf
 
 logging.basicConfig(
     level=logging.INFO,

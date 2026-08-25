@@ -38,6 +38,7 @@ from snakemake.utils import min_version
 from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.resources import load_resources
 
+
 include: "rules/common_report.smk"
 
 
@@ -46,7 +47,7 @@ rule all:
         compile_output_file_list,
 
 
-#In case running on an offline system. Snakefile need to be locally available. 
+# In case running on an offline system. Snakefile need to be locally available.
 # try:
 #     response = requests.get("https://github.com/genomic-medicine-sweden/poppy.git", timeout=3)
 #     poppy_snakefile = github(
@@ -54,16 +55,17 @@ rule all:
 #         path="workflow/Snakefile",
 #         tag=config["poppy_version"],
 #     )
-
 # except OSError as e:
-poppy_snakefile = os.path.join(config["poppy_home"], "workflow", "Snakefile")
+poppy_snakefile = os.path.join(config["POPPY_HOME"], "workflow", "Snakefile")
 
 
+# Importing rules from the main pipeline, but excluding the rule all to ensure that Snakefile_report's rule all is used instead.
+# Imported rules input/output can then be redefined to match available files.
 module poppy:
     snakefile:
         poppy_snakefile
     config:
-        config  
+        config
 
 
 use rule * from poppy exclude all
@@ -85,8 +87,8 @@ use rule report_xlsx from poppy with:
     input:
         unpack(poppy._get_panel_vcfs),
         unpack(poppy._get_optional_inputs),
-        vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz", # should not use results folder since that might change. It should be in snv_indels
-        vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi", 
+        vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz",
+        vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
         pindel="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz",
         pindel_tbi="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz.tbi",
         bedfile=config["reference"]["design_bed"],
@@ -98,7 +100,7 @@ use rule report_xlsx from poppy with:
         picard_dupl="qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt",
     output:
         xlsx="reports/xlsx/{sample}_{type}.xlsx",
-    
+
 
 module qc:
     snakefile:

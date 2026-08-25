@@ -23,7 +23,6 @@
 
 # Triggers integrated mode when provided to the main Snakefile.
 # Has no effect when provided to Snakefile_report (always runs standalone).
-poppy_home: "{{POPPY_HOME}}"
 resources_report: "{{POPPY_HOME}}/config/resources_report.yaml"
 output_report: "{{POPPY_HOME}}/config/output_files_report.yaml"
 
@@ -74,7 +73,7 @@ report_cnv:
   # cnvkit: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns" 
   # gatk: "cnv_sv/gatk_model_segments/{sample}_{type}.clean.modelFinal.seg"
   # Optional whole-genome scatter plot PNG to embed in the CNVkit sheet.
-  scatter_png: null  # If null, skip the scatter png. If wanted the default location in cnv_sv module is "cnv_sv/cnvkit_scatter/{sample}_{type}.png
+  scatter_png: cnv_sv/cnvkit_scatter/{sample}_{type}.png  # If null, skip the scatter png. If wanted the default location in cnv_sv module is "cnv_sv/cnvkit_scatter/{sample}_{type}.png"
 
 # BAM snapshot sheet (integrated and standalone mode).
 # Set enabled: true to generate per-variant BAM screenshots with bamsnap,
