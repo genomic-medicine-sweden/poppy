@@ -68,7 +68,7 @@ report_xlsx:
 # Set tc_method to the tumour-content method used (e.g. "purecn" or "pathology"). Must match the one used in svdb_merge.
 # Set to null to skip CNV sheets entirely.
 report_cnv:
-  tc_method: "pathology" # null
+  tc_method: null #"pathology" # null
   # If filepath is different than default, provide the path here. Default values below, uncomment and change if needed:
   # cnvkit: "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns" 
   # gatk: "cnv_sv/gatk_model_segments/{sample}_{type}.clean.modelFinal.seg"
@@ -81,7 +81,7 @@ report_cnv:
 bamsnap:
   margin: "50"            # bp on each side of the variant
   extra: "-coverage_vaf 0.05 -show_soft_clipped -read_thickness 2 -read_gap_height 1"
-  container: "docker://hydragenetics/bamsnap:0.2.19"
+  container: "docker://hydragenetics/bamsnap:c134440"
 
 bamsnap_create_pos_list:
   af: "0.05"              # minimum allele frequency to include a variant
@@ -90,7 +90,7 @@ bamsnap_downsample_bam:
   max_reads: 6000000      # downsample to this many reads before running bamsnap
 
 bamsnap_pdf:
-  container: "docker://hydragenetics/bamsnap:0.2.19"  # Pillow at /usr/local/lib/python3.9
+  container: "docker://hydragenetics/bamsnap:c134440"
 
 
 

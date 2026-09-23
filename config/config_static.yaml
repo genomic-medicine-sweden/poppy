@@ -56,6 +56,9 @@ cnvkit_vcf:
   het_del_limit: 1.68
   dup_limit: 2.3
 
+cnvkit_scatter:
+  container: "docker://hydragenetics/cnvkit:0.9.13"
+
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.24.3"
 
