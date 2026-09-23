@@ -63,7 +63,7 @@ def _get_optional_inputs(wildcards):
             if caller.lower() == "gatk":
                 d["gatk_seg"] = (
                     config.get("report_cnv", {})
-                    .get("gatk", "cnv_sv/gatk_model_segments/{sample}_{type}.clean.modelFinal.seg")
+                    .get("gatk", "cnv_sv/gatk_model_segments/{sample}_{type}.clean.cr.seg")
                     .format(**fmt)
                 )
             elif caller.lower() == "cnvkit":
