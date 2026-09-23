@@ -67,7 +67,7 @@ rule pindel_processing_add_missing_csq:
     message:
         "{rule}: if need be, add missing CSQ annotation to variants in {input.vcf}"
     script:
-        "../scripts/pindel_processing_add_missing_csq.py"
+        "../scripts/pindel_processing_add_missing_info_field.py"
 
 
 rule pindel_processing_annotation_vep:
@@ -131,7 +131,7 @@ rule pindel_processing_artifact_annotation:
         threads=config.get("pindel_processing_artifact_annotation", {}).get("threads", config["default_resources"]["threads"]),
         time=config.get("pindel_processing_artifact_annotation", {}).get("time", config["default_resources"]["time"]),
     message:
-        "{rule}: add artifact annotation on {input.vcf}, based on arifact_panel_pindel.tsv "
+        "{rule}: add artifact annotation on {input.vcf}, based on {input.artifacts} "
     script:
         "../scripts/pindel_processing_artifact_annotation.py"
 
