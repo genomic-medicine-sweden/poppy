@@ -56,6 +56,9 @@ cnvkit_vcf:
   het_del_limit: 1.68
   dup_limit: 2.3
 
+cnvkit_scatter:
+  container: "docker://hydragenetics/cnvkit:0.9.13"
+
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.24.3"
 
@@ -68,7 +71,7 @@ filter_vcf:
   somatic_hard: "{{POPPY_HOME}}/config/filters/config_hard_filter_somatic.yaml"
   pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
   cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
-  cnv_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv_report.yaml"
+  cnv_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv_report.yaml"
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.6.2.0"
@@ -108,7 +111,7 @@ merge_cnv_json:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
   unfiltered_cnv_vcfs_tbi:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
-  table_filter_config: "{{POPPY_HOME}}/config/table_filter.yaml"
+  table_filter_config: "{{POPPY_HOME}}/config/filters/table_filter.yaml"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.6"
@@ -185,6 +188,9 @@ purecn_coverage:
   container: docker://hydragenetics/purecn:2.2.0
   intervals: "{{REFERENCE_DIRECTORY}}/reference_files/purecn_targets_intervals.txt"
 
+report_bedtools_intersect_hotspot:
+  extra: "-wb "
+
 svdb_merge:
   container: docker://hydragenetics/svdb:2.10.2
   tc_method:
@@ -207,7 +213,7 @@ vardict:
   bed_columns: "-c 1 -S 2 -E 3"
 
 vep:
-  container: "docker://hydragenetics/vep:113.0"
+  container: "docker://hydragenetics/vep:116.1"
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --buffer_size 1500 --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
 
@@ -216,6 +222,3 @@ vt_decompose:
 
 vt_normalize:
   container: "docker://hydragenetics/vt:2015.11.10"
-
-compile_xlsx_report:
-  filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"

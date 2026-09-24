@@ -28,14 +28,14 @@ def add_missing_annotation(vcf_in, vcf_out, field="CSQ"):
     """
     Add missing annotation field to the VCF file and set all annotations to blank.
 
-    :param vcf_in: input VCF file to check for missing CSQ field
-    :param vcf_out: corrected VCF file with added CSQ field where needed
+    :param vcf_in: input VCF file to check for missing  INFO field, CSQ in this case
+    :param vcf_out: corrected VCF file with added  INFO field where needed
     :param field: the annotation field to check and add if missing, default is "CSQ".
     :return:
     """
     nb_annot = check_info_field(vcf_in, field=field)
     if nb_annot:
-        logger.info(f"Field {field} is present in the VCF header. All variants must have INFO/CSQ.")
+        logger.info(f"Field {field} is present in the VCF header. All variants must have INFO/{field}.")
         vcfobj = VariantFile(vcf_in, "r")
         variants = vcfobj.fetch()
         logger.info(f"Opening output vcf: {vcf_out}")

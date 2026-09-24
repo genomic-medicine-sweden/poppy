@@ -2,19 +2,18 @@
 # coding: utf-8
 
 __author__ = "Arielle R Munters"
-__copyright__ = "Copyright 2022, Arielle R Munters"
+__copyright__ = "Copyright 2026, Arielle R Munters"
 __email__ = "arielle.munters@scilifelab.uu.se"
 __license__ = "GPL-3"
 
 import itertools
 import numpy as np
-import pandas as pd
 import pathlib
-import re
-from snakemake.utils import validate
-from snakemake.utils import min_version
+import pandas
 import yaml
 from datetime import datetime
+from snakemake.utils import validate
+from snakemake.utils import min_version
 
 from hydra_genetics.utils.misc import get_module_snakefile
 from hydra_genetics.utils.resources import load_resources
@@ -22,16 +21,15 @@ from hydra_genetics.utils.samples import *
 from hydra_genetics.utils.units import *
 from hydra_genetics import min_version as hydra_min_version
 
-from hydra_genetics.utils.misc import replace_dict_variables
 from hydra_genetics.utils.misc import export_config_as_file
 from hydra_genetics.utils.software_versions import add_version_files_to_multiqc
 from hydra_genetics.utils.software_versions import add_software_version_to_config
 from hydra_genetics.utils.software_versions import export_pipeline_version_as_file
 from hydra_genetics.utils.software_versions import export_software_version_as_file
 from hydra_genetics.utils.software_versions import get_pipeline_version
-from hydra_genetics.utils.software_versions import use_container
-from hydra_genetics.utils.software_versions import touch_software_version_file
 from hydra_genetics.utils.software_versions import touch_pipeline_version_file_name
+from hydra_genetics.utils.software_versions import touch_software_version_file
+from hydra_genetics.utils.software_versions import use_container
 
 
 include: "results.smk"
@@ -40,30 +38,10 @@ include: "results.smk"
 hydra_min_version("3.0.0")
 min_version("7.32.0")
 
-## Version logging for MultiQC
-date_string = datetime.now().strftime("%Y%m%d")
 
-# Create empty version files and add to multiqc input
-pipeline_version = get_pipeline_version(workflow, pipeline_name="poppy")
-version_files = touch_pipeline_version_file_name(pipeline_version, date_string=date_string, directory="versions/software")
-if use_container(workflow):
-    version_files.append(touch_software_version_file(config, date_string=date_string, directory="versions/software"))
-add_version_files_to_multiqc(config, version_files)
-
-
-onstart:
-    export_pipeline_version_as_file(pipeline_version, date_string=date_string, directory="versions/software")
-    # Make sure that the user have the requested containers to be used
-    if use_container(workflow):
-        update_config, software_info = add_software_version_to_config(config, workflow, False)
-        export_software_version_as_file(software_info, date_string=date_string)
-
-
-### Set and validate config file
-
+## Set and validate config file
 if not workflow.overwrite_configfiles:
-    sys.exit("At least one config file must be passed using --configfile/" "--configfiles, by command line or a profile!")
-
+    sys.exit("At least one config file must be passed using --configfile/--configfiles, by command line or a profile!")
 
 config = replace_dict_variables(config)
 
@@ -83,41 +61,52 @@ except WorkflowError as we:
         schema_hiearachy = parent_rule_.split()[-1]
         schema_section = ".".join(re.findall(r"\['([^']+)'\]", schema_hiearachy)[1::2])
         sys.exit(f"{error_msg} in {schema_section}")
+
+## Read and validate resources files
 config = load_resources(config, config["resources"])
 validate(config, schema="../schemas/resources.schema.yaml")
 config = load_resources(config, config["resources_report"])
 validate(config, schema="../schemas/resources_report.schema.yaml")
 
-### Read and validate samples file
+
+## Read and validate samples file
 samples = pd.read_table(config["samples"], comment="#").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
-
-### Read and validate units file
+## Read and validate units file
 units = (
     pandas.read_table(config["units"], dtype=str, comment="#")
     .set_index(["sample", "type", "flowcell", "lane"], drop=False)
     .sort_index()
 )
 validate(units, schema="../schemas/units.schema.yaml")
-# Check that fastq files actually exist. If not, this might result in other
-# errors that can be hard to interpret
-for fq1, fq2 in zip(units["fastq1"].values, units["fastq2"].values):
-    if not pathlib.Path(fq1).exists():
-        sys.exit(f"fastq file not found: {fq1}\ncontrol the paths in {config['units']}")
-    if not pathlib.Path(fq2).exists():
-        sys.exit(f"fastq file not found: {fq2}\ncontrol the paths in {config['units']}")
 
-with open(config["output"], "r") as f:
-    output_spec = yaml.safe_load(f.read())
-    validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
+## Read and validate output file
+with open(config["output_report"]) as output:
+    if config["output_report"].endswith("json"):
+        output_spec = json.load(output)
+    elif config["output_report"].endswith("yaml") or config["output_report"].endswith("yml"):
+        output_spec = yaml.safe_load(output.read())
+validate(output_spec, schema="../schemas/output_files.schema.yaml", set_default=True)
 
+### Derive sequenceid from units if not explicitly set
+if not config.get("sequenceid"):
+    flowcells = units["flowcell"].unique().tolist()
+    config["sequenceid"] = ",".join(flowcells)
 
 # if any bamsnap is defined in the output file, run bamsnap rules and include in xlsx report
 if "bamsnap" in str(output_spec).lower():
     _bamsnap_enabled = True
 else:
     _bamsnap_enabled = False
+
+# Make sure CNV sheets are not enabled.
+if config.get("report_cnv", {}).get("tc_method"):
+    print("ERROR: CNV sheets are not supported in standalone mode. ")
+    print(
+        "ERROR: Please run the pipeline in integrated mode instead, or set config['report_cnv']['tc_method'] to null in config_report.yaml."
+    )
+    sys.exit(1)
 
 
 ### Set wildcard constraints
@@ -192,25 +181,6 @@ def _get_optional_inputs_report_xlsx(wildcards):
     if _bamsnap_enabled:
         d["bamsnap_dir"] = f"reports/bamsnap/{s}_{t}/"
     return d
-
-
-def get_vcfs_for_svdb_merge(wildcards, add_suffix=False):
-    vcf_dict = {}
-    for v in config.get("svdb_merge", {}).get("tc_method"):
-        tc_method = v["name"]
-        callers = v["cnv_caller"]
-        for caller in callers:
-            if add_suffix:
-                caller_suffix = f":{caller}"
-            else:
-                caller_suffix = ""
-            if tc_method in vcf_dict:
-                vcf_dict[tc_method].append(
-                    f"cnv_sv/{caller}_vcf/{wildcards.sample}_{wildcards.type}.{tc_method}.vcf{caller_suffix}"
-                )
-            else:
-                vcf_dict[tc_method] = [f"cnv_sv/{caller}_vcf/{wildcards.sample}_{wildcards.type}.{tc_method}.vcf{caller_suffix}"]
-    return vcf_dict[wildcards.tc_method]
 
 
 generate_copy_rules(output_spec)

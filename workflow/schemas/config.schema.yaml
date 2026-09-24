@@ -427,7 +427,7 @@ properties:
       Excel reports at reports/xlsx/{sample}_{type}.xlsx
     default: false
 
-  results_report_xlsx:
+  report_xlsx:
     type: object
     description: >
       Settings for the Excel report content
@@ -530,7 +530,7 @@ properties:
     type: object
     description: >
       Container and extra-argument overrides for the hotspot coverage bedtools intersect rule.
-      Active only when results_report_xlsx.hotspot_bed is set.
+      Active only when report_xlsx.hotspot_bed is set.
     properties:
       benchmark_repeats:
         type: integer
@@ -915,6 +915,22 @@ properties:
         format: uri-reference
         description: >
           Name or path to container containing the svdb executable
+
+  report_bedtools_intersect_hotspot:
+    type: object
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        format: uri-reference
+        description: >
+          Name or path to container containing the bedtools executable
+      extra:
+        type: string
+        description: extra params for bedtools intersect, default -wb always needed
+        default: "-wb "
 
   svdb_merge:
     type: object

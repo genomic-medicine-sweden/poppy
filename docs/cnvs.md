@@ -161,14 +161,11 @@ cnvkit_vcf:
   het_del_limit: 1.68
   dup_limit: 2.3
 
-compile_xlsx_report:
-  filters: "{{POPPY_HOME}}/config/compile_xlsx_report_filters.yaml"
-
 filter_vcf:
   germline: "{{POPPY_HOME}}/config/filters/config_hard_filter_germline.yaml"
   pindel: "{{POPPY_HOME}}/config/filters/config_soft_filter_pindel.yaml"
   cnv_hard_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv.yaml"
-  cnv_filter: "{{POPPY_HOME}}/config/config_hard_filter_cnv_report.yaml"
+  cnv_filter: "{{POPPY_HOME}}/config/filters/config_hard_filter_cnv_report.yaml"
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.6.2.0"
@@ -181,10 +178,17 @@ merge_cnv_json:
   annotations:
     - "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
   germline_vcf: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz
+  germline_vcf_tbi: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf.gz.tbi
   filtered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz
+  filtered_cnv_vcf_tbis:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.filter.cnv_hard_filter.vcf.gz.tbi
   unfiltered_cnv_vcfs:
     - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz
+  unfiltered_cnv_vcfs_tbi:
+    - cnv_sv/svdb_query/{sample}_{type}.{tc_method}.svdb_query.annotate_cnv.cnv_genes.vcf.gz.tbi
+  table_filter_config: "{{POPPY_HOME}}/config/filters/table_filter.yaml"
+
 
 normalize_pindel_insert_size_metrics:
   min_insert_size: 200
@@ -247,7 +251,7 @@ purecn:
   genome: "GRCh38"
 ``
 
-`config_hard_filter_cnv_report.yaml` defines the hard filters applied when producing the CNV report table (separate from the pipeline-level `config_hard_filter_cnv.yaml`). `compile_xlsx_report_filters.yaml` controls which VEP fields and columns are included in the Excel report. `table_filter.yaml` is an optional user-supplied filter applied to the CNV JSON merge step — leave it empty (`{}`) to apply no additional filters.
+`config_hard_filter_cnv_report.yaml` defines the hard filters applied when producing the CNV report table (separate from the pipeline-level `config_hard_filter_cnv.yaml`). `table_filter.yaml` is an optional user-supplied filter applied to the CNV JSON merge step — leave it empty (`{}`) to apply no additional filters for the table in the cnv report.
 
 See the full configuration files (`config_static.yaml` and `config_custom.yaml`) for comprehensive configurations, including references to the filters applied.
 
