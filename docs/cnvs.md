@@ -144,7 +144,6 @@ The relevant sections governing CNV calling, SVDB merging, Pindel processing, an
 ```yaml
 annotate_cnv:
   cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
-  germline: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
 
 cnv_html_report:
   cytobands: false
@@ -154,6 +153,9 @@ cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.13"
   normal_reference: "{{REFERENCE_DIRECTORY}}/reference_files/cnvkit.PoN.cnn"
   method: hybrid
+
+cnvkit_call:
+  container: "docker://hydragenetics/cnvkit:0.9.13"
 
 cnvkit_vcf:
   container: "docker://hydragenetics/cnvkit:0.9.13"

@@ -208,7 +208,7 @@ filter_vcf:
   somatic_hard: "config/filters/config_hard_filter_somatic.yaml"
 
 vep:
-  container: "docker://hydragenetics/vep:113.0"
+  container: "docker://hydragenetics/vep:116.1"
   mode: "--offline --cache --merged "
   extra: " --assembly GRCh38 --check_existing --pick --variant_class --everything --buffer_size 1500 --pick_order mane_select,mane_plus_clinical,canonical,biotype,rank,appris,tsl,ccds,length,ensembl,refseq"
 

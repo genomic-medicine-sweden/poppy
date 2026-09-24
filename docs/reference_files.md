@@ -12,11 +12,9 @@ hydra-genetics create-input-files -d <path to fastqs> -p <seq machine>
 
 Make sure that all the references are downloaded. See [Set up and configuration](setup.md)
 
-The reference pipeline can then be run with the following command:
+## Configuration files
 
-```bash
-POPPY_HOME=/path/to/poppy_repo
-source $POPPY_HOME/poppy_env/bin/activate
+The pipeline uses four configuration files, split into **static** (shipped with the repo, rarely need changing) and **custom** (must be adapted to your local environment):
 
 snakemake --snakefile $POPPY_HOME/workflow/Snakefile_references.smk \
 --profile $POPPY_HOME/profiles/grid_engine/ \

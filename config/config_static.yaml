@@ -27,7 +27,6 @@ reference:
 
 annotate_cnv:
   cnv_genes: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
-  germline: "{{POPPY_HOME}}/config/cnv_genes.GRCh38.bed"
 
 bcbio_variation_recall_ensemble:
   container: "docker://hydragenetics/bcbio-vc:0.2.6"
