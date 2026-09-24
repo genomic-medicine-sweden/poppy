@@ -916,6 +916,22 @@ properties:
         description: >
           Name or path to container containing the svdb executable
 
+  report_bedtools_intersect_hotspot:
+    type: object
+    properties:
+      benchmark_repeats:
+        type: integer
+        description: set number of times benchmark should be repeated
+      container:
+        type: string
+        format: uri-reference
+        description: >
+          Name or path to container containing the bedtools executable
+      extra:
+        type: string
+        description: extra params for bedtools intersect, default -wb always needed
+        default: "-wb "
+
   svdb_merge:
     type: object
     description: >

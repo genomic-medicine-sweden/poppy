@@ -130,6 +130,70 @@ wildcard_constraints:
     type="N|T|R",
 
 
+def _get_panel_vcfs(wildcards):
+    """Return dict of optional panel VCF inputs if configured."""
+    base = (
+        "snv_indels/bcbio_variation_recall_ensemble/"
+        f"{wildcards.sample}_{wildcards.type}"
+        ".ensembled.vep_annotated.artifact_annotated"
+        ".background_annotated.filter.somatic_hard"
+        ".filter.somatic.include.{panel}.vcf.gz"
+    )
+    panels = {}
+    for panel in config.get("bcftools_filter_include_region", {}):
+        panels[f"{panel}_vcf"] = base.format(panel=panel)
+        panels[f"{panel}_tbi"] = base.format(panel=panel) + ".tbi"
+        panels[f"{panel}bed"] = config.get("bcftools_filter_include_region", {}).get(panel, "")
+    return panels
+
+
+def _get_optional_inputs_report_xlsx(wildcards):
+    """Return dict of optional inputs gated by config: hotspot, CNV, bamsnap."""
+    d = {}
+    s, t = wildcards.sample, wildcards.type
+
+    # Software versions (populated in onstart, only when running with containers)
+    if software_version_file:
+        d["software_versions"] = ancient(software_version_file)
+
+    # Hotspot coverage sheet
+    hotspot_bed = config.get("report_xlsx", {}).get("hotspot_bed")
+    if hotspot_bed:
+        d["hotspot_perbase"] = f"qc/mosdepth_bed/{s}_{t}.mosdepth.per-base.hotspot.txt"
+
+    # CNV sheets (GATK + CNVkit)
+    tc_report = config.get("report_cnv", {}).get("tc_method")
+    if tc_report:
+        fmt = dict(sample=s, type=t, tc_method=tc_report)
+        for caller in next(
+            (m.get("cnv_caller", []) for m in config.get("svdb_merge", {}).get("tc_method", []) if m.get("name") == tc_report), []
+        ):
+            if caller.lower() == "gatk":
+                d["gatk_seg"] = (
+                    config.get("report_cnv", {})
+                    .get("gatk", "cnv_sv/gatk_model_segments/{sample}_{type}.clean.cr.seg")
+                    .format(**fmt)
+                )
+            elif caller.lower() == "cnvkit":
+                d["cnvkit_cns"] = (
+                    config.get("report_cnv", {})
+                    .get("cnvkit", "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns")
+                    .format(**fmt)
+                )
+            else:
+                print(f"ERROR: Unknown CNV caller for xlsx-report: {caller}")
+                sys.exit(1)
+
+        scatter = config.get("report_cnv", {}).get("scatter_png")
+        if scatter:
+            d["cnv_scatter"] = scatter.format(**fmt)
+
+    # bamsnap screenshots
+    if _bamsnap_enabled:
+        d["bamsnap_dir"] = f"reports/bamsnap/{s}_{t}/"
+    return d
+
+
 def get_vcfs_for_svdb_merge(wildcards, add_suffix=False):
     vcf_dict = {}
     for v in config.get("svdb_merge", {}).get("tc_method"):

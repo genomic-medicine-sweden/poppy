@@ -26,66 +26,6 @@ __author__ = "Carolina Barros"
 __license__ = "GPL-3"
 
 
-def _get_panel_vcfs(wildcards):
-    """Return dict of optional panel VCF inputs if configured."""
-    base = (
-        "snv_indels/bcbio_variation_recall_ensemble/"
-        f"{wildcards.sample}_{wildcards.type}"
-        ".ensembled.vep_annotated.artifact_annotated"
-        ".background_annotated.filter.somatic_hard"
-        ".filter.somatic.include.{panel}.vcf.gz"
-    )
-    panels = {}
-    for panel in config.get("bcftools_filter_include_region", {}):
-        panels[f"{panel}_vcf"] = base.format(panel=panel)
-        panels[f"{panel}_tbi"] = base.format(panel=panel) + ".tbi"
-        panels[f"{panel}bed"] = config.get("bcftools_filter_include_region", {}).get(panel, "")
-    return panels
-
-
-def _get_optional_inputs(wildcards):
-    """Return dict of optional inputs gated by config: hotspot, CNV, bamsnap."""
-    d = {}
-    s, t = wildcards.sample, wildcards.type
-
-    # Hotspot coverage sheet
-    hotspot_bed = config.get("report_xlsx", {}).get("hotspot_bed")
-    if hotspot_bed:
-        d["hotspot_perbase"] = f"qc/mosdepth_bed/{s}_{t}.mosdepth.per-base.hotspot.txt"
-
-    # CNV sheets (GATK + CNVkit)
-    tc_report = config.get("report_cnv", {}).get("tc_method")
-    if tc_report:
-        fmt = dict(sample=s, type=t, tc_method=tc_report)
-        for caller in next(
-            (m.get("cnv_caller", []) for m in config.get("svdb_merge", {}).get("tc_method", []) if m.get("name") == tc_report), []
-        ):
-            if caller.lower() == "gatk":
-                d["gatk_seg"] = (
-                    config.get("report_cnv", {})
-                    .get("gatk", "cnv_sv/gatk_model_segments/{sample}_{type}.clean.cr.seg")
-                    .format(**fmt)
-                )
-            elif caller.lower() == "cnvkit":
-                d["cnvkit_cns"] = (
-                    config.get("report_cnv", {})
-                    .get("cnvkit", "cnv_sv/cnvkit_call/{sample}_{type}.{tc_method}.loh.cns")
-                    .format(**fmt)
-                )
-            else:
-                print(f"ERROR: Unknown CNV caller for xlsx-report: {caller}")
-                sys.exit(1)
-
-        scatter = config.get("report_cnv", {}).get("scatter_png")
-        if scatter:
-            d["cnv_scatter"] = scatter.format(**fmt)
-
-    # bamsnap screenshots
-    if _bamsnap_enabled:
-        d["bamsnap_dir"] = f"reports/bamsnap/{s}_{t}/"
-    return d
-
-
 rule report_bamsnap_create_pos_list:
     """Create BED file of PASS variants (above AF threshold) for bamsnap."""
     input:
@@ -274,7 +214,7 @@ if config.get("report_xlsx", {}).get("hotspot_bed"):
             threads=config.get("report_bedtools_intersect_hotspot", {}).get("threads", config["default_resources"]["threads"]),
             time=config.get("report_bedtools_intersect_hotspot", {}).get("time", config["default_resources"]["time"]),
         params:
-            extra="-wb " + config.get("report_bedtools_intersect_hotspot", {}).get("extra", ""),
+            extra=config.get("report_bedtools_intersect_hotspot", {}).get("extra", ""),
         wrapper:
             "v1.32.0/bio/bedtools/intersect"
 
@@ -327,7 +267,7 @@ rule report_xlsx:
     """
     input:
         unpack(_get_panel_vcfs),
-        unpack(_get_optional_inputs),
+        unpack(_get_optional_inputs_report_xlsx),
         vcf="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz",
         vcf_tbi="snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz.tbi",
         pindel="cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz",
