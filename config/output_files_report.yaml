@@ -1,0 +1,10 @@
+directory: ./results
+files:
+  - name: "XLSX Variants Report"
+    input: "reports/xlsx/{sample}_{type}.xlsx2"
+    output: "reports/{sample}_{type}_combined_report.xlsx"
+
+  - name: "Bamsnap PDF"
+    input: "reports/bamsnap/{sample}_{type}.pdf"
+    output: "bamsnap/{sample}_{type}.pdf"
+

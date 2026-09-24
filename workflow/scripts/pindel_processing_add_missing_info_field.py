@@ -28,28 +28,28 @@ def add_missing_annotation(vcf_in, vcf_out, field="CSQ"):
     """
     Add missing annotation field to the VCF file and set all annotations to blank.
 
-    :param vcf_in: input VCF file to check for missing CSQ field
-    :param vcf_out: corrected VCF file with added CSQ field where needed
+    :param vcf_in: input VCF file to check for missing  INFO field, CSQ in this case
+    :param vcf_out: corrected VCF file with added  INFO field where needed
     :param field: the annotation field to check and add if missing, default is "CSQ".
     :return:
     """
     nb_annot = check_info_field(vcf_in, field=field)
     if nb_annot:
-        logger.info(f"Field {field} is present in the VCF header. All variants must have INFO/CSQ.")
+        logger.info(f"Field {field} is present in the VCF header. All variants must have INFO/{field}.")
         vcfobj = VariantFile(vcf_in, "r")
         variants = vcfobj.fetch()
-        logger.info("Opening output vcf: {}".format(vcf_out))
+        logger.info(f"Opening output vcf: {vcf_out}")
         with VariantFile(vcf_out, 'w', header=vcfobj.header) as vcfobjout:
             for variant in variants:
                 field_value = variant.info.get(field, None)
                 if field_value is None:
                     logger.info(f"Field {field} is missing in variant {variant.chrom}:{variant.pos}. Adding it now.")
                     blank_csq = [""] * nb_annot
-                    variant.info.update({"CSQ": "|".join(blank_csq)})
+                    variant.info.update({field: "|".join(blank_csq)})
                     print(f"{variant.info[field]}")
                     print(variant.info.items())
                 vcfobjout.write(variant)
-        logger.info("Closing output vcf: {}".format(vcf_out))
+        logger.info(f"Closing output vcf: {vcf_out}")
 
 
 if __name__ == "__main__":
