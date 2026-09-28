@@ -2,6 +2,9 @@ include: "rules/common_references.smk"
 include: "rules/reference_rules.smk"
 
 
+ruleorder: snv_indels_gatk_mutect2_gvcf > annotation_tabix_vcf
+
+
 rule all:
     input:
         compile_output_file_list,

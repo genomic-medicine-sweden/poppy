@@ -1,10 +1,11 @@
-# Adjust as needed
+#/path/to/singularity_cache Adjust as needed
 jobs: 100
-drmaa: "  -V -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
+cores: 20
+drmaa: "  -V -cwd -q {resources.queue} -pe mpi {resources.threads} -l excl=1 -o logs/{rule}.stdout -e logs/{rule}.stderr"
 printshellcmds: True
 use-singularity: True
-singularity-prefix: "/path/to/singularity_cache"
-singularity-args: "-e --bind <your bind>"
+singularity-prefix: "/clinical/dev/cgg-cancer/poppy/singularity_cache/"
+singularity-args: "-e --bind /seqstore --bind /medstore --bind /clinical"
 rerun-incomplete: True
 restart-times: 1
 latency-wait: 180

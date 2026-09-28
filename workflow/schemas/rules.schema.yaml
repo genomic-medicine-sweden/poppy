@@ -2,6 +2,25 @@ $schema: "http://json-schema.org/draft-04/schema#"
 description: snakemake rule input and output files description file
 type: object
 properties:
+  normalize_pindel_insert_size_metrics:
+    type: object
+    description: rule to normalize insert size metrics for pindel config generation
+    properties:
+      input:
+        type: object
+        description: list of inputs
+        properties:
+          metrics:
+            type: string
+            description: picard insert size metrics file
+      output:
+        type: object
+        description: list of outputs
+        properties:
+          metrics:
+            type: string
+            description: adjusted insert size metrics file for pindel
+
   pindel_processing_add_missing_csq:
     type: object
     description: rule to add any missing CSQ-field to a vep annotated pindel-vcf

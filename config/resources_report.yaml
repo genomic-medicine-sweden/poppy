@@ -1,0 +1,25 @@
+---
+# Per-rule resource settings for the Poppy report add-on.
+#
+# Provide this file alongside resources.yaml when running the report:
+#
+#   Standalone:
+#     snakemake --snakefile workflow/Snakefile_report \
+#       --configfile config/config_GRCh38.yaml \
+#       --configfile config/config_report.yaml
+#
+#   Integrated: supply via profile or alongside the main configfiles.
+#
+# Only resource settings are defined here; container paths live in config_report.yaml.
+# Adjust partition and memory to match your cluster.
+
+default_resources:
+  threads: 1
+  time: "01:00:00"
+  mem_mb: 6144
+  mem_per_cpu: 6144
+  partition: low
+
+report_mosdepth:
+  threads: 4
+
