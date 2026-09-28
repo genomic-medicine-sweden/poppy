@@ -316,23 +316,5 @@ rule report_xlsx:
         panels=list(config.get("bcftools_filter_include_region", {}).keys()),
         cnv_tc_method=config.get("report_cnv", {}).get("tc_method"),
         bamsnap_af=float(config.get("bamsnap_create_pos_list", {}).get("af", "0.05")),
-        containers={
-            k: c
-            for k, c in {
-                "bwa-mem2": config.get("bwa_mem2", {}).get("container") or config.get("bwa_mem", {}).get("container"),
-                "samtools": config.get("samtools_sort", {}).get("container")
-                or config.get("samtools_stats", {}).get("container"),
-                "picard": config.get("picard_collect_duplication_metrics", {}).get("container"),
-                "gatk mutect2": config.get("gatk_mutect2", {}).get("container"),
-                "vardict": config.get("vardict", {}).get("container"),
-                "pindel": config.get("pindel_call", {}).get("container"),
-                "vep": config.get("vep", {}).get("container"),
-                "bcbio ensemble": config.get("bcbio_variation_recall_ensemble", {}).get("container"),
-                "mosdepth": config.get("mosdepth_bed", {}).get("container"),
-                "bedtools": config.get("report_bedtools_intersect", {}).get("container"),
-                "report": config.get("results_report", {}).get("container"),
-            }.items()
-            if c
-        },
     script:
         "../scripts/report_xlsx.py"

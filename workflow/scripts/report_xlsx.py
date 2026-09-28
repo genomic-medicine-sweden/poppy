@@ -85,7 +85,6 @@ has_cnv = hasattr(snakemake.input, "cnvkit_cns")
 has_bamsnap = hasattr(snakemake.input, "bamsnap_dir")
 
 cnv_tc_method = snakemake.params.cnv_tc_method
-containers = snakemake.params.containers
 bamsnap_af = snakemake.params.bamsnap_af
 
 # Optional panels: present in snakemake.input only if configured in config
@@ -875,13 +874,25 @@ worksheet_version.write(9, 0, "Filter files:", fmt_bold)
 worksheet_version.write(10, 0, f"  Somatic hard filter: {snakemake.params.filter_somatic_hard}")
 worksheet_version.write(11, 0, f"  Somatic filter: {snakemake.params.filter_somatic}")
 worksheet_version.write(12, 0, f"  Pindel filter: {snakemake.params.filter_pindel}")
-worksheet_version.write(14, 0, "Containers used:", fmt_bold)
-worksheet_version.write(15, 0, "Tool", fmt_bold)
-worksheet_version.write(15, 1, "Container", fmt_bold)
-for j, (tool, container) in enumerate(containers.items()):
-    worksheet_version.write(16 + j, 0, tool)
-    worksheet_version.write(16 + j, 1, container)
-
+worksheet_version.write(14, 0, "Software versions:", fmt_bold)
+software_versions = {}
+if hasattr(snakemake.input, "software_versions"):
+    with open(snakemake.input.software_versions) as f:
+        software_versions = yaml.safe_load(f) or {}
+if not software_versions:
+    worksheet_version.write(15, 0, "No container version information available")
+else:
+    worksheet_version.write(15, 0, "Container", fmt_bold)
+    worksheet_version.write(15, 1, "Software", fmt_bold)
+    worksheet_version.write(15, 2, "Version", fmt_bold)
+    row = 16
+    for container, softwares in software_versions.items():
+        worksheet_version.write(row, 0, container)
+        for software, version in (softwares or {}).items():
+            worksheet_version.write(row, 1, software)
+            worksheet_version.write(row, 2, str(version))
+            row += 1
+        row += 1  # blank separator between containers
 
 workbook.close()
 logging.info("Done!")

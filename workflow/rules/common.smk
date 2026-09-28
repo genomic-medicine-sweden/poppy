@@ -46,8 +46,10 @@ date_string = datetime.now().strftime("%Y%m%d")
 # Create empty version files and add to multiqc input
 pipeline_version = get_pipeline_version(workflow, pipeline_name="poppy")
 version_files = touch_pipeline_version_file_name(pipeline_version, date_string=date_string, directory="versions/software")
+software_version_file = None
 if use_container(workflow):
-    version_files.append(touch_software_version_file(config, date_string=date_string, directory="versions/software"))
+    software_version_file = touch_software_version_file(config, date_string=date_string, directory="versions/software")
+    version_files.append(software_version_file)
 add_version_files_to_multiqc(config, version_files)
 
 
