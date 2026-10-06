@@ -138,7 +138,7 @@ rule report_bamsnap:
         margin=config.get("bamsnap", {}).get("margin", "50"),
         extra=config.get("bamsnap", {}).get("extra", "-show_soft_clipped"),
     shell:
-        "bamsnap -bam {input.bam} -ref {input.fasta} -out {output.results_dir} -process {threads} -margin {params.margin} -bed {input.pos_list} {params.extra} &>{log}"
+        "bamsnap -bam {input.bam} -ref {input.fasta} -out {output.results_dir} -process {threads} -margin {params.margin} -bed {input.pos_list} -separated_bam {params.extra} &>{log}"
 
 
 rule report_bamsnap_hd829:
