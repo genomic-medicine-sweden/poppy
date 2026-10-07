@@ -231,3 +231,26 @@ use rule multiqc from qc as qc_multiqc with:
             ]
         ),
         config=lambda wildcards: config["multiqc"]["reports"][wildcards.report]["config"],
+
+
+use rule bcftools_concat from snv_indels as snv_indels_concat_vcfs with:
+    input:
+        calls=[
+            "snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz",
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz",
+        ],
+        index=[
+            "snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz.tbi",
+            "cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz.tbi",
+        ],
+    output:
+        vcf=temp("snv_indels/bcftools_concat/{sample}_{type}.filter.somatic.vcf.gz"),
+    params:
+        extra=config.get("bcftools_concat_vcfs", {}).get("extra", ""),
+    log:
+        "snv_indels/bcftools_concat/{sample}_{type}.filter.somatic.vcf.gz.log",
+    benchmark:
+        repeat(
+            "snv_indels/bcftools_concat/{sample}_{type}.filter.somatic.vcf.gz.benchmark.tsv",
+            config.get("bcftools_concat", {}).get("benchmark_repeats", 1),
+        )

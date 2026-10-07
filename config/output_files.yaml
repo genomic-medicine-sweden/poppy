@@ -36,13 +36,17 @@ files:
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
 
-  - name: "XLSX Variants Report"
-    input: "reports/xlsx/{sample}_{type}.xlsx"
-    output: "reports/{sample}_{type}_combined_report.xlsx"
+  - name: XLSX Variants Report
+    input: reports/xlsx/{sample}_{type}.xlsx
+    output: reports/{sample}_{type}_combined_report.xlsx
 
-  - name: "Bamsnap PDF"
-    input: "reports/bamsnap/{sample}_{type}.pdf"
-    output: "bamsnap/{sample}_{type}.pdf"
+  - name: Bamsnap PDF
+    input: reports/bamsnap/{sample}_{type}.pdf
+    output: bamsnap/{sample}_{type}.pdf
+
+  - name: SNVs and indels VCF file
+    input: snv_indels/bcftools_concat/{sample}_{type}.filter.somatic.vcf.gz
+    output: vcf/{sample}_{type}.snvs-indels.vcf.gz
 
   # - name: CNV HTML report, purecn TC
   #   input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
