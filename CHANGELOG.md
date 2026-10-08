@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v2.0.0...v3.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* insert size fix, add per sample variant report, update versions and others ([#105](https://github.com/genomic-medicine-sweden/poppy/issues/105))
+* move filterfiles, restructure configs into static and custom files ([#98](https://github.com/genomic-medicine-sweden/poppy/issues/98))
+
+### Features
+
+* insert size fix, add per sample variant report, update versions and others ([#105](https://github.com/genomic-medicine-sweden/poppy/issues/105)) ([5eeabe7](https://github.com/genomic-medicine-sweden/poppy/commit/5eeabe75cabba73c2aa41c4af8d5c6100159b75a))
+
+
+### Bug Fixes
+
+* add -seperated_bam to bamsnap ([#114](https://github.com/genomic-medicine-sweden/poppy/issues/114)) ([215b2dc](https://github.com/genomic-medicine-sweden/poppy/commit/215b2dc2b32fc14818d6733c90e62f250f8882b8))
+
+
+### Code Refactoring
+
+* move filterfiles, restructure configs into static and custom files ([#98](https://github.com/genomic-medicine-sweden/poppy/issues/98)) ([2af631c](https://github.com/genomic-medicine-sweden/poppy/commit/2af631c5b51114cec68392d62566c2bd8d9eed29))
+
 ## [2.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v1.1.0...v2.0.0) (2026-05-13)
 
 
