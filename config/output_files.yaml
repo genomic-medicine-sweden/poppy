@@ -12,21 +12,9 @@ files:
     input: qc/multiqc/multiqc_DNA.html
     output: qc/multiqc_DNA.html
 
-  - name: SNV ensemble soft filtered VCF file
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz
-    output: vcf/{sample}_{type}.filter.somatic.vcf.gz
-
-  - name: SNV ensemble soft filtered VCF index
-    input: snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.artifact_annotated.background_annotated.filter.somatic_hard.filter.somatic.vcf.gz.tbi
-    output: vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi
-  
   - name: Caller-specific VCF file
     input: snv_indels/{caller}/{sample}_{type}.merged.vcf.gz
     output: vcf/{sample}_{type}.{caller}.vcf.gz
-
-  - name: Pindel VCF file
-    input: cnv_sv/pindel_vcf/{sample}_{type}.no_tc.normalized.vep_annotated.artifact_annotated.filter.somatic_hard.filter.pindel.vcf.gz
-    output: vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz
 
   - name: SVDB CNV VCF file
     input: cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.vcf.gz
@@ -36,13 +24,17 @@ files:
     input: reports/cnv_html_report/{sample}_{type}.pathology.cnv_report.html
     output: cnv/{sample}/{sample}_{type}.pathology.cnv_report.html
 
-  - name: "XLSX Variants Report"
-    input: "reports/xlsx/{sample}_{type}.xlsx"
-    output: "reports/{sample}_{type}_combined_report.xlsx"
+  - name: XLSX Variants Report
+    input: reports/xlsx/{sample}_{type}.xlsx
+    output: reports/{sample}_{type}_combined_report.xlsx
 
-  - name: "Bamsnap PDF"
-    input: "reports/bamsnap/{sample}_{type}.pdf"
-    output: "bamsnap/{sample}_{type}.pdf"
+  - name: Bamsnap PDF
+    input: reports/bamsnap/{sample}_{type}.pdf
+    output: bamsnap/{sample}_{type}.pdf
+
+  - name: SNVs and indels VCF file
+    input: snv_indels/bcftools_concat/{sample}_{type}.filter.somatic.vcf.gz
+    output: vcf/{sample}_{type}.snvs-indels.vcf.gz
 
   # - name: CNV HTML report, purecn TC
   #   input: reports/cnv_html_report/{sample}_{type}.purecn.cnv_report.html
