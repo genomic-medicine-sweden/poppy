@@ -86,7 +86,7 @@ use rule report_bamsnap_samtools_view_dedup from poppy with:
 use rule report_xlsx from poppy with:
     input:
         unpack(poppy._get_panel_vcfs),
-        unpack(poppy._get_optional_inputs),
+        unpack(poppy._get_optional_inputs_report_xlsx),
         vcf="results/vcf/{sample}_{type}.filter.somatic.vcf.gz",
         vcf_tbi="results/vcf/{sample}_{type}.filter.somatic.vcf.gz.tbi",
         pindel="results/vcf/{sample}_{type}.pindel.vep_annotated.filter.pindel.vcf.gz",
