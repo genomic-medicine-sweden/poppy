@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/genomic-medicine-sweden/poppy/compare/v3.0.0...v3.0.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* correct function name in report rule ([#116](https://github.com/genomic-medicine-sweden/poppy/issues/116)) ([5169a15](https://github.com/genomic-medicine-sweden/poppy/commit/5169a159e27215bddbf657ce1a1ef01b17291bb0))
+
 ## [3.0.0](https://github.com/genomic-medicine-sweden/poppy/compare/v2.0.0...v3.0.0) (2026-10-14)
 
 
